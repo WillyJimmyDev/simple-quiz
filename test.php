@@ -28,7 +28,6 @@ session_start();
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;
 require_once('questionsandanswers.php');
 require_once('functions.php');
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -80,7 +79,7 @@ $file = "leaders.xml";
  $uname = $user->addChild('name',$_SESSION['user']);
  $uscore = $user->addChild('score',$_SESSION['score']);
  $xml->asXML("leaders.xml");
- 
+
 echo "<h2 id=\"score\">{$_SESSION['user']}, your final score is:</h2>\n
  <h3>{$_SESSION['score']}/20</h3><h4>Verdict:</h4>";
  if($_SESSION['score'] <= 5) echo "<p id=\"verdict\"><span>S</span>everely <span>H</span>indered <span>I</span>n the <span>T</span>est!</p>\n";
