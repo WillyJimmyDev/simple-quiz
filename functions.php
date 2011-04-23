@@ -93,7 +93,7 @@ function showAnswers($answers,$questions) {
 		} else { 
 			$output = "<div class=\"qanda\">";
   		}
- 	$output .= '<h4>Anacronym' . ($x+1) . ': ' . $questions[$x] . '</h4>'; 
+ 	$output .= '<h4>Acronym' . ($x+1) . ': ' . $questions[$x] . '</h4>'; 
 	$output .= "<ol>\n";
  	for ($y = 0;$y< count($answers[$x]); $y++) {
  		if (($answers[$x][$y] === $answers[$x][0]) && (in_array($answers[$x][$y],$_SESSION['correct']))) {
