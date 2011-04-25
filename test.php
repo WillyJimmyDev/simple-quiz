@@ -27,7 +27,8 @@ session_name("Acronym_Test");
 session_start();
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;
 require_once('questionsandanswers.php');
-require_once('functions.php');
+include_once('Quiz.php');
+$quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -59,7 +60,7 @@ if (!isset($_SESSION['last'])) {  ?>
 <?php 
 $pattern = ' ';
 $replace = '_';
-$shuffledAnswers = shuffle_assoc($answers[$num]);
+$shuffledAnswers = $quiz->shuffle_assoc($answers[$num]);
 #var_dump($newanswers);
 foreach ($shuffledAnswers as $answer) {
 	$answer2 = str_replace($pattern,$replace,$answer);

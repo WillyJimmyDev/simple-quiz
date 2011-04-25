@@ -31,7 +31,7 @@ exit();
 }
 include_once('questionsandanswers.php');
 include_once('Quiz.php');
-$quiz = new Quiz('leaders.xml', $answers, $questions)
+$quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html">
 <html>

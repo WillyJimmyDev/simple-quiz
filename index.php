@@ -29,7 +29,8 @@ $_SESSION['correct'] = array();
 $_SESSION['wrong'] = array();
 $_SESSION['finished'] = 'no'; 
 $_SESSION['num'] = 0;
-require_once ('functions.php');
+require('Quiz.php');
+$quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -48,7 +49,7 @@ require_once ('functions.php');
 <div id="leaderboard">
 <h2>Top 10 Scorers</h2>
 <?php 
- showLeaders('leaders.xml',10,5);
+ echo $quiz->showLeaders(20, 5);
  ?>
 </div><!-- leaderboard-->
 </div><!--intro-->
