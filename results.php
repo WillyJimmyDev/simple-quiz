@@ -27,12 +27,14 @@ session_start();
 $_SESSION['last'] = null;
 if($_SESSION['finished'] != 'yes') {
 header('Location: index.php');
+exit();
 }
 include_once('questionsandanswers.php');
-include_once('functions.php');
+include_once('Quiz.php');
+$quiz = new Quiz('leaders.xml', $answers, $questions)
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html">
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -43,10 +45,10 @@ include_once('functions.php');
 <h1>The Results Page For <span><?php echo $_SESSION['user']; ?></span></h1>
 <div id="intro">
 <h2>Top 20 Scorers</h2>
-<?php showLeaders('leaders.xml',20); ?>
+<?php echo $quiz->showLeaders(20); ?>
 </div><!--intro-->
 <div id="quiz">
-<?php showAnswers($answers,$questions); ?>	
+<?php echo $quiz->formatAnswers(); ?>	
 </div><!--quiz-->
 <ul id="footer" class="clear">
 <li><a href="index.php" title="Start The Quiz Again">Start Again</a></li>

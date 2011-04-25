@@ -10,7 +10,7 @@ class Quiz {
     private $_questions;
     private $_leaders = array();
     private $_formattedAnswers = array();
-    private $_output;
+    private $_leaderboard;
     private $_xml;
     //private $_reader;
 
@@ -56,7 +56,7 @@ class Quiz {
         $counter = 1;
 
         // Start a html ordered list to hold the leaders.
-        $output = "<ul class=\"leaders\">\n";
+        $this->_leaderboard = "<ul class=\"leaders\">\n";
 
         // Loop through the 'leaders' array and wrap each username and score
         // in <li> tags. If the user is the current $_SESSION['user'], wrap
@@ -65,16 +65,16 @@ class Quiz {
             // Check that $counter is less than $limit.
             if ($counter <= $limit) {
                 if ($key == $_SESSION['user']) {
-                    $output .= "<li><strong>$key:</strong> $value/20</li>\n";
+                    $this->_leaderboard .= "<li><strong>$key:</strong> $value/20</li>\n";
                 } else {
-                    $output .= "<li>$key: $value/20</li>\n";
+                    $this->_leaderboard .= "<li>$key: $value/20</li>\n";
                 }
                 // Check to see if $group parameter has been passed.
                 // If it has, create separate lists according to the $group variable.
                 if ($group) {
                     // Use the modulus operator(%) to create new sub-list.
                     if ($counter % $group == 0) {
-                        $output .= "</ul>\n<ul class=\"leaders\">\n";
+                        $this->_leaderboard .= "</ul>\n<ul class=\"leaders\">\n";
                     }
                 }
             }
@@ -82,10 +82,10 @@ class Quiz {
             $counter++;
         }
         // End the ordered list.
-        $output .= "</ul>\n";
+        $this->_leaderboard .= "</ul>\n";
 
         // return the ordered list.
-        echo $output;
+        return $this->_leaderboard;
     }
 
     public function formatAnswers() {
