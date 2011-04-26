@@ -27,7 +27,7 @@ session_name("Acronym_Test");
 session_start();
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;
 require_once('questionsandanswers.php');
-include_once('Quiz.php');
+include_once('classes/Quiz.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -61,7 +61,7 @@ if (!isset($_SESSION['last'])) {  ?>
 $pattern = ' ';
 $replace = '_';
 $shuffledAnswers = $quiz->shuffle_assoc($answers[$num]);
-#var_dump($newanswers);
+
 foreach ($shuffledAnswers as $answer) {
 	$answer2 = str_replace($pattern,$replace,$answer);
 	echo "<li><input type=\"radio\" id=\"$answer2\" value=\"$answer2\" name=\"answers\" />\n";
@@ -74,20 +74,7 @@ foreach ($shuffledAnswers as $answer) {
 <input type="submit" id="submit" name="submit" value="Submit Answer" /></p>
 </form>
 <?php } else { 
-$file = "leaders.xml";
- $xml = simplexml_load_file($file);
- $user = $xml->addChild('user');
- $uname = $user->addChild('name',$_SESSION['user']);
- $uscore = $user->addChild('score',$_SESSION['score']);
- $xml->asXML("leaders.xml");
-
-echo "<h2 id=\"score\">{$_SESSION['user']}, your final score is:</h2>\n
- <h3>{$_SESSION['score']}/20</h3><h4>Verdict:</h4>";
- if($_SESSION['score'] <= 5) echo "<p id=\"verdict\"><span>S</span>everely <span>H</span>indered <span>I</span>n the <span>T</span>est!</p>\n";
- if(($_SESSION['score'] > 5) && ($_SESSION['score'] <= 10)) echo "<p id=\"verdict\"><span>C</span>ould <span>R</span>ead <span>A</span>nd <span>P</span>ractice more.</p>\n";
- if(($_SESSION['score'] > 10) && ($_SESSION['score'] <= 15)) echo "<p id=\"verdict\"><span>A</span>cronyms a<span>R</span>e <span>S</span>o <span>E</span>asy!</p>\n";
- if($_SESSION['score'] > 15) echo "<p id=\"verdict\"><span>S</span>uper <span>A</span>cronym <span>S</span>pecialist</p>";
- echo "<p id=\"compare\"><a href=\"results.php\">See how you compare! <img src=\"images/arrow.png\" /></a></p>";
+    echo $quiz->giveVerdict();
 }
 ?>
 </div><!--quiz-->

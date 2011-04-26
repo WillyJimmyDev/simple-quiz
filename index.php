@@ -29,7 +29,8 @@ $_SESSION['correct'] = array();
 $_SESSION['wrong'] = array();
 $_SESSION['finished'] = 'no'; 
 $_SESSION['num'] = 0;
-require('Quiz.php');
+require('questionsandanswers.php');
+require('classes/Quiz.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

@@ -30,7 +30,7 @@ header('Location: index.php');
 exit();
 }
 include_once('questionsandanswers.php');
-include_once('Quiz.php');
+include_once('classes/Quiz.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html">

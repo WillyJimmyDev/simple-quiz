@@ -24,40 +24,15 @@ OTHER DEALINGS IN THE SOFTWARE.
  */
 session_name("Acronym_Test");
 session_start();
-require_once('questionsandanswers.php');
-require_once('functions.php');
+require('questionsandanswers.php');
+require('classes/Quiz.php');
+$quiz = new Quiz('leaders.xml', $answers, $questions);
 if (!isset($_POST['submitter'])) {
 
     if(isset($_POST['register'])) {
-		$username = trim(strip_tags(stripslashes($_POST['username'])));
-		$file = "leaders.xml";
- 		$xml = simplexml_load_file($file);
-		foreach($xml->user as $user) {
-			if ($user->name == $username) {
- 			$_SESSION['error'] = 'That name is already registered, please choose another.';
- 			header('Location: index.php');
- 			exit();
- 			}
- 		}
-
-		$_SESSION['user'] = $username;
-		$_SESSION['score'] = 0;
-		$_SESSION['correct'] = array();
-		$_SESSION['wrong'] = array();
-		$_SESSION['finished'] = 'no';
-		if (isset($_SESSION['error']))
-		unset($_SESSION['error']);
-		$_SESSION['num'] = 0;
-                header('Location: test.php');
+		$quiz->registerUser();
 	} else {
-		$random = rand(1,1000);
-		$_SESSION['user'] = 'Anon'. $random;
-		$_SESSION['score'] = 0;
-		$_SESSION['correct'] = array();
-		$_SESSION['wrong'] = array();
-		$_SESSION['finished'] = 'no';
-		$_SESSION['num'] = 0;
-                header('Location: test.php');
+		$quiz->createRandomUser();
 	}
 } else {
     
