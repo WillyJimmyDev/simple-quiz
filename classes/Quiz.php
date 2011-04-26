@@ -70,7 +70,7 @@ class Quiz {
         $user = $this->_xml->addChild('user');
         $uname = $user->addChild('name', $_SESSION['user']);
         $uscore = $user->addChild('score', $_SESSION['score']);
-        $this->_xml->asXML($this->_xml);
+        $this->_xml->asXML('leaders.xml');
 
         $this->_verdict .= "<h2 id=\"score\">{$_SESSION['user']}, your final score is:</h2>\n
  <h3>{$_SESSION['score']}/20</h3><h4>Verdict:</h4>";
@@ -161,8 +161,9 @@ class Quiz {
                 }
             }
             $this->_formattedAnswers .= "</ol></div>\n";
-            return $this->_formattedAnswers;
+            
         }
+        return $this->_formattedAnswers;
     }
 
 }
