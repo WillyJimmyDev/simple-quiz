@@ -37,7 +37,7 @@ $quiz = new Quiz('leaders.xml', $answers, $questions);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<!--<link rel="stylesheet" href="style.css" type="text/css" />-->
+<link rel="stylesheet" href="style.css" type="text/css" />
 <title>The Web Acronym Test</title>
 <script type="text/javascript" src="start.js"></script>
 </head>
