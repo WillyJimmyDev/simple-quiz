@@ -29,9 +29,22 @@ if($_SESSION['finished'] != 'yes') {
 header('Location: index.php');
 exit();
 }
+
 require('questionsandanswers.php');
 require('classes/Quiz.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
+
+// delete the session cookie.
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+//destroy the session before returning to the start page
+session_destroy();
 ?>
 <!DOCTYPE html>
 <html>
