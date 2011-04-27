@@ -57,8 +57,9 @@ session_destroy();
 <div id="wrapresult">
 <h1>The Results Page For <span><?php echo $_SESSION['user']; ?></span></h1>
 <div id="intro">
-<h2>Top 20 Scorers</h2>
-<?php echo $quiz->showLeaders(20); ?>
+<h2>Top Scorers</h2>
+<?php echo $quiz->showLeaders(30); //the top 30 scorers.  Change parameter if required
+?>
 </div><!--intro-->
 <div id="quiz">
 <?php echo $quiz->formatAnswers(); ?>	
