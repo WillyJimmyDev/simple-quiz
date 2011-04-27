@@ -49,7 +49,7 @@ session_destroy();
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="style.css" type="text/css" />
 <title>The Web Acronym Test Results</title>
 </head>
@@ -65,7 +65,7 @@ session_destroy();
 </div><!--quiz-->
 <ul id="footer" class="clear">
 <li><a href="index.php" title="Start The Quiz Again">Start Again</a></li>
-<li><a href="http://www.elanman.co.uk/2009/03/make-your-own-php-quiz-part-1/" title="Return To ElanMan's Drawers">Return To The Blog</a></li>
+<li><a href="http://www.elanman.co.uk/2009/03/make-your-own-php-quiz-part-1/" title="Return To ElanMan's Drawers">ElanMan</a></li>
 </ul>
 </div><!--wrapper-->
 </body>

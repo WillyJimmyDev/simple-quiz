@@ -32,7 +32,7 @@ $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="style.css" type="text/css" />
 <title>The Web Acronym Test</title>
 <?php 
