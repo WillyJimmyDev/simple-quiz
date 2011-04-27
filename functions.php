@@ -62,7 +62,7 @@ function showLeaders($file,$limit,$group = null) {
  	foreach ($leaders as $key => $value) {
  		// Check that $counter is less than $limit.
  		if ($counter <= $limit) {
- 			if ($key == $_SESSION['user']) {
+ 			if ( (isset($_SESSION['user'])) && ( $key == $_SESSION['user']) ) {
  				$output .= "<li><strong>$key:</strong> $value/20</li>\n";
  			} else {
  				$output .= "<li>$key: $value/20</li>\n";
