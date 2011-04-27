@@ -33,8 +33,7 @@ require('questionsandanswers.php');
 require('classes/Quiz.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -47,12 +46,12 @@ $quiz = new Quiz('leaders.xml', $answers, $questions);
 <h1>Take the test and see how well you know your web acronyms</h1>
 <p>Each acronym has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
 <p>There are 20 acronyms, so let's get cracking! You'll get your score at the end of the test. It's just like facebook (honest!).</p>
-<div id="leaderboard">
+<div id="leaders-score">
 <h2>Top 10 Scorers</h2>
 <?php 
  echo $quiz->showLeaders(10, 5);
  ?>
-</div><!-- leaderboard-->
+</div><!-- leaders-score-->
 </div><!--intro-->
 <div id="quiz">
 <h2>Start The Test</h2>

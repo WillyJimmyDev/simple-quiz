@@ -36,16 +36,16 @@ body {
 a img {
 border:none;
 }
-#leaderboard ul.leaders {
+#leaders-score ul.leaders {
 width:30%;
 padding-left:5%;
 float:left;
 }
-#leaderboard h2 {
+#leaders-score h2 {
 color:#017dc7;
 padding-left:10px;
 }
-#leaderboard li {
+#leaders-score li {
 	margin-top:0;
 	}
 #intro p {

@@ -29,11 +29,11 @@ if($_SESSION['finished'] != 'yes') {
 header('Location: index.php');
 exit();
 }
-include_once('questionsandanswers.php');
-include_once('classes/Quiz.php');
+require('questionsandanswers.php');
+require('classes/Quiz.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
-<!DOCTYPE html">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />

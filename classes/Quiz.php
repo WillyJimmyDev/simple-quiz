@@ -116,16 +116,16 @@ class Quiz {
         foreach ($this->_leaders as $key => $value) {
             // Check that $counter is less than $limit.
             if ($counter <= $limit) {
-                if ($key == $_SESSION['user']) {
-                    $this->_leaderboard .= "<li><strong>$key:</strong> $value/20</li>\n";
+                if ( (isset($_SESSION['user'])) && ($key == $_SESSION['user']) ) {
+                    $this->_leaderboard .= "<li><strong>$key:</strong> $value/". count($this->_questions) ."</li>\n";
                 } else {
-                    $this->_leaderboard .= "<li>$key: $value/20</li>\n";
+                    $this->_leaderboard .= "<li>$key: $value/". count($this->_questions) ."</li>\n";
                 }
                 // Check to see if $group parameter has been passed.
                 // If it has, create separate lists according to the $group variable.
                 if ($group) {
-                    // Use the modulus operator(%) to create new sub-liseXtensiblet.
-                    if ($counter % $group == 0) {
+                    // Use the modulus operator(%) to create new sub-list if required.
+                    if ( ($counter % $group == 0) && ($counter != $limit ) ) {
                         $this->_leaderboard .= "</ul>\n<ul class=\"leaders\">\n";
                     }
                 }
