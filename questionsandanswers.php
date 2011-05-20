@@ -1,6 +1,7 @@
 <?php
 $questions = array('FTP','AJAX','RSS','XSS','PHP','W3C','XML','YUI','HTML','CGI','SSL','SQL','HTTP','CSS','SOAP','WAI','SSI','JSON','XSLT','WCAG');
 $answers = array(
+    // the correct answer for each question must be the first array item 0=>'item'
 array(0 =>'File Transfer Protocol','Force Through Privately','File Through Protocol','File Test Protocol'),
 array(0 => 'Asynchronous JavaScript and XML','All JavaScript and XML','Alternative Java and XML','Actual JavaScript and XML'),
 array(0 => 'Really Simple Syndication','Really Simple Scripting','Ready-Styled Scripting','Really Stupid Syndication'),

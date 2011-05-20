@@ -16,6 +16,7 @@ class Quiz {
 
     public function __construct($leaderboardfile, array $answers, array $questions) {
         try {
+            // need to have singleton db class that pulls specific quiz info from db based on quiz name params
             $this->_answers = $answers;
             $this->_questions = $questions;
             $this->_xml = simplexml_load_file($leaderboardfile);
