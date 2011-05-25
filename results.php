@@ -27,14 +27,29 @@ session_start();
 $_SESSION['last'] = null;
 if($_SESSION['finished'] != 'yes') {
 header('Location: index.php');
+exit();
 }
-include_once('questionsandanswers.php');
-include_once('functions.php');
+
+require('questionsandanswers.php');
+require('classes/Quiz.php');
+$quiz = new Quiz('leaders.xml', $answers, $questions);
+
+// delete the session cookie.
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+//destroy the session before returning to the start page
+session_destroy();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="style.css" type="text/css" />
 <title>The Web Acronym Test Results</title>
 </head>
@@ -42,15 +57,16 @@ include_once('functions.php');
 <div id="wrapresult">
 <h1>The Results Page For <span><?php echo $_SESSION['user']; ?></span></h1>
 <div id="intro">
-<h2>Top 20 Scorers</h2>
-<?php showLeaders('leaders.xml',20); ?>
+<h2>Top Scorers</h2>
+<?php echo $quiz->showLeaders(30); //the top 30 scorers.  Change parameter if required
+?>
 </div><!--intro-->
 <div id="quiz">
-<?php showAnswers($answers,$questions); ?>	
+<?php echo $quiz->formatAnswers(); ?>	
 </div><!--quiz-->
 <ul id="footer" class="clear">
 <li><a href="index.php" title="Start The Quiz Again">Start Again</a></li>
-<li><a href="http://www.elanman.co.uk/2009/03/make-your-own-php-quiz-part-1/" title="Return To ElanMan's Drawers">Return To The Blog</a></li>
+<li><a href="http://www.elanman.co.uk/2009/03/make-your-own-php-quiz-part-1/" title="Return To ElanMan's Drawers">ElanMan</a></li>
 </ul>
 </div><!--wrapper-->
 </body>

@@ -29,12 +29,13 @@ $_SESSION['correct'] = array();
 $_SESSION['wrong'] = array();
 $_SESSION['finished'] = 'no'; 
 $_SESSION['num'] = 0;
-require_once ('functions.php');
+require('questionsandanswers.php');
+require('classes/Quiz.php');
+$quiz = new Quiz('leaders.xml', $answers, $questions);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="style.css" type="text/css" />
 <title>The Web Acronym Test</title>
 <script type="text/javascript" src="start.js"></script>
@@ -48,9 +49,9 @@ require_once ('functions.php');
 <div id="leaders-score">
 <h2>Top 10 Scorers</h2>
 <?php 
- showLeaders('leaders.xml',10,5);
+ echo $quiz->showLeaders(10, 5);
  ?>
-</div><!-- leaderboard-->
+</div><!-- leaders-score-->
 </div><!--intro-->
 <div id="quiz">
 <h2>Start The Test</h2>
