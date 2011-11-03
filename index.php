@@ -22,6 +22,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
  */
+include 'functions.php';
 session_name("Acronym_Test");
 session_start();
 $_SESSION['score'] = 0;
@@ -30,7 +31,6 @@ $_SESSION['wrong'] = array();
 $_SESSION['finished'] = 'no'; 
 $_SESSION['num'] = 0;
 require('questionsandanswers.php');
-require('classes/quiz.class.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
 ?>
 <!DOCTYPE html>

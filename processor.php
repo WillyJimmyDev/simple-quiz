@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
  */
+include 'functions.php';
 session_name("Acronym_Test");
 session_start();
 require('questionsandanswers.php');
-require('classes/quiz.class.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 if (!isset($_POST['submitter'])) {
 
