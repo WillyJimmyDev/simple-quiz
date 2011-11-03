@@ -25,7 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 session_name("Acronym_Test");
 session_start();
 require('questionsandanswers.php');
-require('classes/Quiz.php');
+require('classes/quiz.class.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 if (!isset($_POST['submitter'])) {
 

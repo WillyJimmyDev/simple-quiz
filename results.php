@@ -31,7 +31,7 @@ exit();
 }
 
 require('questionsandanswers.php');
-require('classes/Quiz.php');
+require('classes/quiz.class.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 
 // delete the session cookie.

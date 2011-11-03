@@ -30,7 +30,7 @@ $_SESSION['wrong'] = array();
 $_SESSION['finished'] = 'no'; 
 $_SESSION['num'] = 0;
 require('questionsandanswers.php');
-require('classes/Quiz.php');
+require('classes/quiz.class.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
 ?>
 <!DOCTYPE html>

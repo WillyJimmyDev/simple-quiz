@@ -27,7 +27,7 @@ session_name("Acronym_Test");
 session_start();
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;
 require('questionsandanswers.php');
-include('classes/Quiz.php');
+require('classes/quiz.class.php');
 $quiz = new Quiz('leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html>
