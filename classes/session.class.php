@@ -9,12 +9,12 @@ class Session {
     public function __construct(){
     }
     
-     public static function set($key, $value)
+     public function set($key, $value)
     {
         $_SESSION[$key] = $value;
     }
     
-    public static function get($key)
+    public function get($key)
     {
         if (isset($_SESSION[$key]))
         {
@@ -24,7 +24,7 @@ class Session {
        
     }
     
-    public static function remove($key)
+    public function remove($key)
     {
         if (isset($_SESSION[$key]))
         {
