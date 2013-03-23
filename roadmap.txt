@@ -1,0 +1,13 @@
+ROADMAP
+
+Config Options At Runtime
+Store sessions in db/xml
+Store scores/users in db/xml
+Store questions/answers in db/xml
+
+Use XPath for xml manipulation
+Use PDO for db 
+Add admin backend for creation of questions/answers and/or quizzes?
+
+js slides between questions
+js auto refresh of scores/leaderboard from db/xml
