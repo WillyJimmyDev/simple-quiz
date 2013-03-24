@@ -56,8 +56,9 @@ class Session {
 
     public function read($id)
     {
-        $sql = "SELECT * FROM sessions WHERE id =$id";
+        $sql = "SELECT * FROM sessions WHERE id = :id";
         $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['data'];
@@ -77,8 +78,9 @@ class Session {
 
     public function destroy($id)
     {
-        $sql = 'DELETE FROM sessions WHERE id = '.$id;
+        $sql = 'DELETE FROM sessions WHERE id = :id';
         $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
         $stmt->execute();
         return true;
     }

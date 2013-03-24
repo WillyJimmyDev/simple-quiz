@@ -23,8 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
  */
 include 'functions.php';
-session_name("Acronym_Test");
-session_start();
+$session = new Session();
+$session->start();
+
 $_SESSION['last'] = null;
 if($_SESSION['finished'] != 'yes') {
 header('Location: index.php');
@@ -32,7 +33,7 @@ exit();
 }
 
 require('questionsandanswers.php');
-$quiz = new Quiz('leaders.xml', $answers, $questions);
+$quiz = new Quiz($session, 'leaders.xml', $answers, $questions);
 
 // delete the session cookie.
 if (ini_get("session.use_cookies")) {

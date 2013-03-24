@@ -11,7 +11,7 @@ $session->set('finished','no');
 $session->set('num',0);
 
 require('questionsandanswers.php');
-$quiz = new Quiz('leaders.xml', $answers, $questions);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
+$quiz = new Quiz($session,'leaders.xml', $answers, $questions);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
 ?>
 <!DOCTYPE html>
 <head>
@@ -49,7 +49,7 @@ $quiz = new Quiz('leaders.xml', $answers, $questions);// need to allow for speci
                 <p><input type="hidden" name="register" value="TRUE" />
                     <input type="submit" id="submit" value="Register And Take The Test" /></p>
             </form> 
-            <p id="helper"><?php if (isset($_SESSION['error'])) echo $_SESSION['error']; ?></p>
+            <p id="helper"><?php if ( $session->get('error') ) echo $session->get('error'); ?></p>
         </div><!--quiz-->
     </div><!--wrapper-->
 </body>

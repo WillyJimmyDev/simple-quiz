@@ -1,11 +1,12 @@
 <?php //test.php
 
 include 'functions.php';
-session_name("Acronym_Test");
-session_start();
+$session = new Session();
+$session->start();
+
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;
 require('questionsandanswers.php');
-$quiz = new Quiz('leaders.xml', $answers, $questions);
+$quiz = new Quiz($session,'leaders.xml', $answers, $questions);
 ?>
 <!DOCTYPE html>
 <head>

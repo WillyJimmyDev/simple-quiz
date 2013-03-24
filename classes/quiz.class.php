@@ -18,14 +18,14 @@ class Quiz {
     private $_xml;
     private $_verdict = '';
     private $_verdicttext = '';
-    public $session;
+    private $_session;
 
-    public function __construct($leaderboardfile, array $answers, array $questions) 
+    public function __construct($session,$leaderboardfile, array $answers, array $questions) 
     {
         try 
         {
             // need to have singleton db class that pulls specific quiz info from db based on quiz name params
-            $this->session = new Session();
+            $this->_session = $session;
             $this->_answers = $answers;
             $this->_questions = $questions;
             $this->_xml = simplexml_load_file($leaderboardfile);
@@ -58,20 +58,20 @@ class Quiz {
         {
             if ($user->name == $username) 
             {
-                $this->session->set('error', 'That name is already registered, please choose another.');
+                $this->_session->set('error', 'That name is already registered, please choose another.');
                 header('Location: index.php');
                 exit();
             }
         }
         
-        $this->session->set('user',$username);
-        $this->session->set('score', 0);
-        $this->session->set('correct', array());
-        $this->session->set('wrong', array());
-        $this->session->set('finished','no');
-        $this->session->set('num',0);
+        $this->_session->set('user',$username);
+        $this->_session->set('score', 0);
+        $this->_session->set('correct', array());
+        $this->_session->set('wrong', array());
+        $this->_session->set('finished','no');
+        $this->_session->set('num',0);
         
-        $this->session->remove('error');
+        $this->_session->remove('error');
         
         header('Location: test.php');
     }
@@ -79,12 +79,12 @@ class Quiz {
     public function createRandomUser() 
     {
         $random = rand(1,1000);
-        $this->session->set('user', 'Anon' . $random);
-        $this->session->set('score', 0);
-        $this->session->set('correct', array()); 
-        $this->session->set('wrong', array());
-        $this->session->set('finished','no');
-        $this->session->set('num',0);
+        $this->_session->set('user', 'Anon' . $random);
+        $this->_session->set('score', 0);
+        $this->_session->set('correct', array()); 
+        $this->_session->set('wrong', array());
+        $this->_session->set('finished','no');
+        $this->_session->set('num',0);
         
         header('Location: test.php');
     }
@@ -100,19 +100,19 @@ class Quiz {
                                          <h3>{$_SESSION['score']}/20</h3>\n
                                          <h4>Verdict:</h4>";
                                          
-        if ( $this->session->get('score')  <= 5) 
+        if ( $this->_session->get('score')  <= 5) 
         {
             $this->_verdicttext = Config::$poorScoreVerdict;
         }
-        if ($this->session->get('score') > 5) 
+        if ($this->_session->get('score') > 5) 
         {
             $this->_verdicttext = Config::$averageScoreVerdict;
         }
-        if ($this->session->get('score') > 10) 
+        if ($this->_session->get('score') > 10) 
         {
             $this->_verdicttext= Config::$goodScoreVerdict;
         }
-        if ($this->session->get('score') > 15) 
+        if ($this->_session->get('score') > 15) 
         {
             $this->_verdicttext= Config::$greatScoreVerdict;
         }
@@ -153,7 +153,7 @@ class Quiz {
             // Check that $counter is less than $limit.
             if ($counter <= $limit) 
             {
-                if ( ( $this->session->get('user') ) && ($key == $this->session->get('user') ) ) 
+                if ( ( $this->_session->get('user') ) && ($key == $this->_session->get('user') ) ) 
                 {
                     $this->_leaderboard .= "<li><strong>$key:</strong> $value/". count($this->_questions) ."</li>\n";
                 } 
