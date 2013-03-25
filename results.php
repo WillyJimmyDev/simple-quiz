@@ -1,7 +1,7 @@
 <?php //results.php
 
 include 'functions.php';
-$session = new Session();
+$session = new SessionDB();
 $session->start();
 
 $session->set('last', null);

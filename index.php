@@ -1,7 +1,7 @@
 <?php //index.php
 
 include 'functions.php';
-$session = new Session();
+$session = new SessionDB();
 $session->start();
 
 $session->set('score', 0);
