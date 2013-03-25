@@ -10,7 +10,8 @@ $session->set('wrong', array());
 $session->set('finished','no');
 $session->set('num',0);
 
-require('questionsandanswers.php');
+require(Config::$questionsandanswersfile);
+
 $quiz = new Quiz($session,'leaders.xml', $answers, $questions);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
 ?>
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ $quiz = new Quiz($session,'leaders.xml', $answers, $questions);// need to allow 
             <div id="leaders-score">
                 <h2>Top 10 Scorers</h2>
                 <?php
-                echo $quiz->showLeaders(10, 5);
+                echo $quiz->showLeaders(Config::$leadersToShowOnFrontPage, 5);
                 ?>
             </div><!-- leaders-score-->
         </div><!--intro-->

@@ -5,8 +5,8 @@
  * 
  */
 
-
-class Config {
+class Config 
+{
     static $dbhost = 'localhost';
     static $dbname = 'simple-quiz';
     static $dbuser = 'quizmaster';

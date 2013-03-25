@@ -6,7 +6,8 @@
 
 class Session {
 
-    public function __construct(){
+    public function __construct()
+    {
     }
     
      public function set($key, $value)
@@ -21,10 +22,9 @@ class Session {
             return $_SESSION[$key]; 
         }
         return false;
-       
-    }
+     }
     
-    public function remove($key)
+     public function remove($key)
     {
         if (isset($_SESSION[$key]))
         {
@@ -32,9 +32,7 @@ class Session {
         }
         return;
     }
-/*
- * OPEN - replace with direct database handle if required
- */
+
     public function open()
     {
         try
@@ -78,6 +76,13 @@ class Session {
 
     public function destroy($id)
     {
+        // delete the session cookie if necessary.
+        if (ini_get("session.use_cookies")) 
+        {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        }
+        
         $sql = 'DELETE FROM sessions WHERE id = :id';
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id',$id,PDO::PARAM_STR);

@@ -6,7 +6,8 @@ include 'functions.php';
 $session = new Session();
 $session->start();
 
-require('questionsandanswers.php');
+require(Config::$questionsandanswersfile);
+
 $quiz = new Quiz($session,'leaders.xml', $answers, $questions);
 
 if ( ! isset($_POST['submitter']) ) 
