@@ -3,7 +3,7 @@
 /*********Copyright (c) 2009 ElanMan*********/
 
 include 'functions.php';
-$session = new Session();
+$session = new SessionFactory();
 $session->start();
 
 require(Config::$questionsandanswersfile);

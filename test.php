@@ -1,7 +1,7 @@
 <?php //test.php
 
 include 'functions.php';
-$session = new SessionDB();
+$session = new SessionFactory();
 $session->start();
 
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;

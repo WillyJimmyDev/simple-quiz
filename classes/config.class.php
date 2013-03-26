@@ -12,6 +12,8 @@ class Config
     static $dbuser = 'quizmaster';
     static $dbpassword = '3G8bVeH4dS5euTcF';
     
+    static $dbsessions =true;
+    
     static $questionsandanswersfile = 'questionsandanswers.php';
     static $leaderstoshow = 30;
     static $leadersToShowOnFrontPage = 10;
