@@ -1,14 +1,12 @@
 <?php 
 //processor.php
-/*********Copyright (c) 2009 ElanMan*********/
 
 include 'functions.php';
+
 $session = SessionFactory::getsession();
 $session->start();
 
-require(Config::$questionsandanswersfile);
-
-$quiz = new Quiz($session,'leaders.xml', $answers, $questions);
+$quiz = new Quiz($session,  Config::$leaderboardfile);
 
 if ( ! isset($_POST['submitter']) ) 
 {
@@ -23,6 +21,9 @@ if ( ! isset($_POST['submitter']) )
 } 
 else 
 {
+    $questions = $quiz->getQuestions();
+    $answers = $quiz->getAnswers();
+    
     $session->set('num',(int) $_POST['num']);
     $num = $session->get('num');
     $postedanswers = str_replace("_", " ", $_POST['answers']);

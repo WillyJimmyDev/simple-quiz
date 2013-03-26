@@ -12,9 +12,7 @@ if( $session->get('finished') != 'yes' )
     exit();
 }
 
-require(Config::$questionsandanswersfile);
-
-$quiz = new Quiz($session, 'leaders.xml', $answers, $questions);
+$quiz = new Quiz($session,  Config::$leaderboardfile);
 
 //destroy the session before returning to the start page
 $session->destroy();

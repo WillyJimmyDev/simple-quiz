@@ -5,8 +5,8 @@ $session = SessionFactory::getsession();
 $session->start();
 
 $num = isset($_SESSION['num']) ? $_SESSION['num']: 0;
-require('questionsandanswers.php');
-$quiz = new Quiz($session,'leaders.xml', $answers, $questions);
+
+$quiz = new Quiz($session,  Config::$leaderboardfile);
 ?>
 <!DOCTYPE html>
 <head>
@@ -14,8 +14,9 @@ $quiz = new Quiz($session,'leaders.xml', $answers, $questions);
 <link rel="stylesheet" href="style.css" type="text/css" />
 <title>The Web Acronym Test</title>
 <?php 
-if (!isset($_SESSION['last'])) {
-	echo "<script type=\"text/javascript\" src=\"form.js\"></script>";
+if (! $session->get('last')) 
+{
+    echo "<script type=\"text/javascript\" src=\"form.js\"></script>";
 }
 ?>
 </head>
@@ -29,7 +30,10 @@ if (!isset($_SESSION['last'])) {
 </div><!--intro-->
 <div id="quiz">
 <?php 
-if (!isset($_SESSION['last'])) {  ?>
+if (!isset($_SESSION['last'])) { 
+    $questions = $quiz->getQuestions();
+    $answers = $quiz->getAnswers();
+?>
 <h2>Acronym <?php echo $num+1; ?>:</h2>
 <p>What does <strong><?php echo $questions[$num]; ?></strong> stand for?</p>
 <form id="questionBox" method="post" action="processor.php">
@@ -39,7 +43,8 @@ $pattern = ' ';
 $replace = '_';
 $shuffledAnswers = $quiz->shuffle_assoc($answers[$num]);
 
-foreach ($shuffledAnswers as $answer) {
+foreach ($shuffledAnswers as $answer) 
+{
 	$answer2 = str_replace($pattern,$replace,$answer);
 	echo "<li><input type=\"radio\" id=\"$answer2\" value=\"$answer2\" name=\"answers\" />\n";
 	echo "<label for=\"$answer2\">$answer</label></li>\n";

@@ -4,10 +4,6 @@
  * @author ElanMan
  */
 
-/*TODO
- * 
- * remove all html from this class and place in config file
- */
 class Quiz {
 
     private $_answers;
@@ -20,20 +16,41 @@ class Quiz {
     private $_verdicttext = '';
     private $_session;
 
-    public function __construct($session,$leaderboardfile, array $answers, array $questions) 
+    public function __construct($session,$leaderboardfile) 
     {
-        try 
+        //need to delegate this shite
+        if ( ! Config::$dbquestions)
         {
-            // need to have singleton db class that pulls specific quiz info from db based on quiz name params
-            $this->_session = $session;
+            require Config::$questionsandanswersfile;
             $this->_answers = $answers;
             $this->_questions = $questions;
+        }
+        else
+        {
+            //db query to pull questions and answers
+            //$this->_answers = $answers;
+            //$this->_questions = $questions;
+        }
+        
+        try 
+        {
+            $this->_session = $session;
             $this->_xml = simplexml_load_file($leaderboardfile);
         } 
         catch (Exception $e) 
         {
             echo $e->getMessage();
         }
+    }
+    
+    public function getAnswers()
+    {
+        return $this->_answers;
+    }
+    
+    public function getQuestions() 
+    {
+        return $this->_questions;
     }
     
     public function shuffle_assoc($array) 
