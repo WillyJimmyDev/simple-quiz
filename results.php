@@ -1,7 +1,7 @@
 <?php //results.php
 
 include 'functions.php';
-$session = new SessionFactory();
+$session = SessionFactory::getsession();
 $session->start();
 
 $session->set('last', null);

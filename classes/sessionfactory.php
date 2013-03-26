@@ -1,7 +1,7 @@
 <?php
 class SessionFactory {
     
-    public function __construct()
+    static function getsession()
     {
         if (Config::$dbsessions)
         {

@@ -1,7 +1,7 @@
 <?php //index.php
 
 include 'functions.php';
-$session = new SessionFactory();
+$session = SessionFactory::getsession();
 $session->start();
 
 $session->set('score', 0);
