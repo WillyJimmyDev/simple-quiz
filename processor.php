@@ -26,7 +26,7 @@ else
     
     $session->set('num',(int) $_POST['num']);
     $num = $session->get('num');
-    $postedanswers = str_replace("_", " ", $_POST['answers']);
+    $postedanswers = $_POST['answers'];
     
     if ($postedanswers == $answers[$num]['0']) 
     {

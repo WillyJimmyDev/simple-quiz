@@ -15,9 +15,9 @@ $quiz = new Quiz($session, Config::$leaderboardfile);// need to allow for specif
 <!DOCTYPE html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="res/css/style.css" type="text/css" />
     <title>The Web Acronym Test</title>
-    <script type="text/javascript" src="start.js"></script>
+    <script type="text/javascript" src="res/js/start.js"></script>
 </head>
 <body id="splash">
     <div id="wrapper">

@@ -12,7 +12,8 @@ if( $session->get('finished') != 'yes' )
     exit();
 }
 
-$quiz = new Quiz($session,  Config::$leaderboardfile);
+$quiz = new Quiz($session, Config::$leaderboardfile);
+$formatter = new Formatter($quiz);
 
 //destroy the session before returning to the start page
 $session->destroy();
@@ -21,7 +22,7 @@ $session->destroy();
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link rel="stylesheet" href="style.css" type="text/css" />
+        <link rel="stylesheet" href="res/css/style.css" type="text/css" />
         <title>The Web Acronym Test Results</title>
     </head>
     <body id="resultpage">
@@ -32,7 +33,7 @@ $session->destroy();
                 <?php echo $quiz->showLeaders(Config::$leaderstoshow); //the top 30 scorers. ?>
             </div><!--intro-->
             <div id="quiz">
-                <?php echo $quiz->formatAnswers(); ?>	
+                <?php echo $formatter->formatAnswers(); ?>	
             </div><!--quiz-->
             <ul id="footer" class="clear">
                 <li><a href="index.php" title="Start The Quiz Again">Start Again</a></li>

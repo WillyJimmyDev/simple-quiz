@@ -1,9 +1,9 @@
 ROADMAP
 
 Config Options At Runtime
-Store sessions in db/xml
-Store scores/users in db/xml
-Store questions/answers in db/xml
+Store sessions in db or file system (DONE)
+Store scores/users in db or xml
+Store questions/answers in db or xml
 
 Use XPath for xml manipulation
 Use PDO for db 
