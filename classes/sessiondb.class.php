@@ -15,8 +15,7 @@ class SessionDB extends Session {
         }
         catch (PDOException $e)
         {
-            $this->error = $e;
-            return false;
+            return $e;
         }
     }
 

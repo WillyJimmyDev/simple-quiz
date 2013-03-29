@@ -35,31 +35,33 @@ if (! $session->get('last') )
     $questions = $quiz->getQuestions();
     $answers = $quiz->getAnswers();
 ?>
-<h2>Acronym <?php echo $num+1; ?>:</h2>
-<p>What does <strong><?php echo $questions[$num]; ?></strong> stand for?</p>
-<form id="questionBox" method="post" action="processor.php">
-<ul>
-<?php 
-$shuffledAnswers = $quiz->shuffle_assoc($answers[$num]);
+    <h2>Acronym <?php echo $num+1; ?>:</h2>
+    <p>What does <strong><?php echo $questions[$num]; ?></strong> stand for?</p>
+    <form id="questionBox" method="post" action="processor.php">
+        <ul>
+        <?php 
+        $shuffledAnswers = shuffle_assoc($answers[$num]);
 
-$acount = 0;
-foreach ($shuffledAnswers as $answer) 
-{
-	echo '<li><input type="radio" id="answer' . $acount . '" value="' . $answer . '" name="answers" />' .PHP_EOL;
-	echo '<label for="answer' . $acount . '">' . $answer . '</label></li>' . PHP_EOL;
-        $acount++;
-}
-?>
-</ul>
-<p><input type="hidden" name="num" value="<?php echo $num; ?>" />
-<input type="hidden" name="submitter" value="TRUE" />
-<input type="submit" id="submit" name="submit" value="Submit Answer" /></p>
-</form>
+        $acount = 0;
+        foreach ($shuffledAnswers as $answer) 
+        {
+            echo '<li><input type="radio" id="answer' . $acount . '" value="' . $answer . '" name="answers" />' .PHP_EOL;
+            echo '<label for="answer' . $acount . '">' . $answer . '</label></li>' . PHP_EOL;
+            $acount++;
+        }
+        ?>
+        </ul>
+        <p><input type="hidden" name="num" value="<?php echo $num; ?>" />
+            <input type="hidden" name="submitter" value="TRUE" />
+            <input type="submit" id="submit" name="submit" value="Submit Answer" />
+        </p>
+    </form>
 <?php 
 } 
 else 
 { 
     echo $quiz->giveVerdict();
+    echo '<p id="compare"><a href="results.php">See how you compare! <img src="images/arrow.png" /></a></p>';
 }
 ?>
 </div><!--quiz-->

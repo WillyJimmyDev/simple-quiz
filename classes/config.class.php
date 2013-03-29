@@ -14,6 +14,7 @@ class Config
     
     static $dbsessions = true;
     static $dbquestions = false;
+    static $dbusers = false;
     
     static $questionsandanswersfile = 'questionsandanswers.php';
     static $leaderboardfile = 'leaders.xml';

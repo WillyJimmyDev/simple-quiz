@@ -30,7 +30,7 @@ $session->destroy();
             <h1>The Results Page For <span><?php echo $session->get('user');  ?></span></h1>    
             <div id="intro">
                 <h2>Top Scorers</h2>
-                <?php echo $quiz->showLeaders(Config::$leaderstoshow); //the top 30 scorers. ?>
+                <?php echo $quiz->showLeaders(Config::$leaderstoshow); //the top scorers. ?>
             </div><!--intro-->
             <div id="quiz">
                 <?php echo $formatter->formatAnswers(); ?>	

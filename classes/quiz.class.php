@@ -5,22 +5,31 @@
  */
 
 class Quiz {
-
+    
+    private $_db;
     private $_answers;
     private $_questions;
-    private $_leaders = array();
-    private $_leaderboard;
     private $_xml;
-    private $_verdict = '';
-    private $_verdicttext = '';
+    private $_users;
     private $_session;
 
     public function __construct($session,$leaderboardfile) 
     {
+        try
+        {
+            $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+            $this->_session = $session;
+            $this->_xml = simplexml_load_file($leaderboardfile);
+        }
+        catch (PDOException $e)
+        {
+            return $e;
+        }
+        
         //need to delegate this shite
         if ( ! Config::$dbquestions)
         {
-            require Config::$questionsandanswersfile;
+            require Config::$questionsandanswersfile;//contains $answers and $questions arrays
             $this->_answers = $answers;
             $this->_questions = $questions;
         }
@@ -29,16 +38,6 @@ class Quiz {
             //db query to pull questions and answers
             //$this->_answers = $answers;
             //$this->_questions = $questions;
-        }
-        
-        try 
-        {
-            $this->_session = $session;
-            $this->_xml = simplexml_load_file($leaderboardfile);
-        } 
-        catch (Exception $e) 
-        {
-            echo $e->getMessage();
         }
     }
     
@@ -52,19 +51,19 @@ class Quiz {
         return $this->_questions;
     }
     
-    public function shuffle_assoc($array) 
-   {
-        $keys = array_keys($array);
-        shuffle($keys);
-        $shuffled = array();
-        foreach ($keys as $key) 
+    public  function getUsers()
+    {
+        if ( ! Config::$dbusers)
         {
-            $shuffled[$key] = $array[$key];
+            //load users from xml file
         }
-        
-        return $shuffled;
+        else
+        {
+            //load users from db
+        }
     }
-    
+
+
     public function registerUser() 
     {
         $username = trim(strip_tags(stripslashes($_POST['username'])));
@@ -107,76 +106,73 @@ class Quiz {
     
     public function giveVerdict() 
     {
+        $rtn = '';
+        
         $user = $this->_xml->addChild('user');
-        $uname = $user->addChild('name', $_SESSION['user']);
-        $uscore = $user->addChild('score', $_SESSION['score']);
+        $user->addChild('name', $this->_session->get('user') );
+        $user->addChild('score', $this->_session->get('score') );
         $this->_xml->asXML('leaders.xml');
 
-        $this->_verdict .= "<h2 id=\"score\">{$_SESSION['user']}, your final score is:</h2>\n
-                                         <h3>{$_SESSION['score']}/20</h3>\n
-                                         <h4>Verdict:</h4>";
+        $rtn .= '<h2 id="score">' . $this->_session->get('user') . ', your final score is:</h2>' . PHP_EOL;
+        $rtn .= '<h3>' . $this->_session->get('score') . '/20</h3>' . PHP_EOL;
+        $rtn .= '<h4>Verdict:</h4>' . PHP_EOL;
                                          
         if ( $this->_session->get('score')  <= 5) 
         {
-            $this->_verdicttext = Config::$poorScoreVerdict;
+            $rtn .= Config::$poorScoreVerdict;
         }
         if ($this->_session->get('score') > 5) 
         {
-            $this->_verdicttext = Config::$averageScoreVerdict;
+            $rtn .= Config::$averageScoreVerdict;
         }
         if ($this->_session->get('score') > 10) 
         {
-            $this->_verdicttext= Config::$goodScoreVerdict;
+            $rtn .= Config::$goodScoreVerdict;
         }
         if ($this->_session->get('score') > 15) 
         {
-            $this->_verdicttext= Config::$greatScoreVerdict;
+            $rtn .= Config::$greatScoreVerdict;
         }
         
-        $this->_verdict .= $this->_verdicttext;
-        
-        $this->_verdict .= '<p id="compare"><a href="results.php">See how you compare! <img src="images/arrow.png" /></a></p>';
-        
-        return $this->_verdict;
+        return $rtn;
     }
 
     public function showLeaders($limit, $group = null) 
     {
-
+        $leaders = array();
+        $numquestions = count($this->_questions);
         // Place all users and associated 
         // scores into the 'leaders' array.
         foreach ($this->_xml->user as $user) 
         {
             $name = (string) $user->name;
             $score = (string) $user->score;
-            $this->_leaders[$name] = $score;
+            $leaders[$name] = $score;
         }
 
         // Sort the leaders array numerically, highest scorers first.	
-        arsort($this->_leaders, SORT_NUMERIC);
+        arsort($leaders, SORT_NUMERIC);
 
         // Initialise our $counter variable to '1'.
         $counter = 1;
 
         // Start a html ordered list to hold the leaders.
-        $this->_leaderboard = "<ul class=\"leaders\">\n";
+        $rtn = '<ul class="leaders">' . PHP_EOL;
 
         // Loop through the 'leaders' array and wrap each username and score
         // in <li> tags. If the user is the current $_SESSION['user'], wrap
         // the name/score in <strong> tags too.
-        foreach ($this->_leaders as $key => $value) 
+        foreach ($leaders as $key => $value) 
         {
             // Check that $counter is less than $limit.
             if ($counter <= $limit) 
             {
                 if ( ( $this->_session->get('user') ) && ($key == $this->_session->get('user') ) ) 
                 {
-                    $this->_leaderboard .= "<li><strong>$key:</strong> $value/". count($this->_questions) ."</li>\n";
+                    $key = '<strong>' . $key . '</strong>';
                 } 
-                else 
-                {
-                    $this->_leaderboard .= "<li>$key: $value/". count($this->_questions) ."</li>\n";
-                }
+                $rtn .= '<li>' . $key. ':' .  $value . '/' . $numquestions . '</li>';
+                
                 // Check to see if $group parameter has been passed.
                 // If it has, create separate lists according to the $group variable.
                 if ($group) 
@@ -184,7 +180,7 @@ class Quiz {
                     // Use the modulus operator(%) to create new sub-list if required.
                     if ( ($counter % $group == 0) && ($counter != $limit ) ) 
                     {
-                        $this->_leaderboard .= "</ul>\n<ul class=\"leaders\">\n";
+                        $rtn .= '</ul>' . PHP_EOL . '<ul class="leaders">' . PHP_EOL;
                     }
                 }
             }
@@ -192,10 +188,10 @@ class Quiz {
             $counter++;
         }
         // End the ordered list.
-        $this->_leaderboard .= "</ul>\n";
+        $rtn .= '</ul>' . PHP_EOL;
 
         // return the ordered list.
-        return $this->_leaderboard;
+        return $rtn;
     }
 }
 ?>
