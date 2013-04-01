@@ -20,6 +20,9 @@ class Quiz {
             $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
             $this->_session = $session;
             $this->_xml = simplexml_load_file($leaderboardfile);
+            
+            //load users from factory
+            //$this->_users = new LeaderBoardFactory->getLeaderBoard();
         }
         catch (PDOException $e)
         {
@@ -53,16 +56,8 @@ class Quiz {
     
     public  function getUsers()
     {
-        if ( ! Config::$dbusers)
-        {
-            //load users from xml file
-        }
-        else
-        {
-            //load users from db
-        }
+        return $this->_users;
     }
-
 
     public function registerUser() 
     {
