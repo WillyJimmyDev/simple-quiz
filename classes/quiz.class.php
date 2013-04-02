@@ -9,17 +9,22 @@ class Quiz {
     private $_db;
     private $_answers;
     private $_questions;
-    private $_xml;
+    private $_xml = false;
     private $_users;
     private $_session;
 
-    public function __construct($session,$leaderboardfile) 
+    public function __construct($session) 
     {
         try
         {
             $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
             $this->_session = $session;
-            $this->_xml = simplexml_load_file($leaderboardfile);
+            //following only if users/score stored as xml
+            if (!Config::$dbusers) 
+            {
+               $this->_xml = simplexml_load_file(Config::$leaderboardfile);
+                $this->_users =  $this->_xml->xpath("//user"); 
+            }
             
             //load users from factory
             //$this->_users = new LeaderBoardFactory->getLeaderBoard();
@@ -64,7 +69,7 @@ class Quiz {
         $username = trim(strip_tags(stripslashes($_POST['username'])));
         
         //replace this with a simple db lookup
-        foreach ($this->_xml->user as $user) 
+        foreach ($this->_users as $user) 
         {
             if ($user->name == $username) 
             {
@@ -138,7 +143,7 @@ class Quiz {
         $numquestions = count($this->_questions);
         // Place all users and associated 
         // scores into the 'leaders' array.
-        foreach ($this->_xml->user as $user) 
+        foreach ($this->_users as $user) 
         {
             $name = (string) $user->name;
             $score = (string) $user->score;

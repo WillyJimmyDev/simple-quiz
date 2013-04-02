@@ -9,13 +9,13 @@ function classloader($classname)
 
 spl_autoload_register('classloader');
 
-function baseclassloader($classname)
-{
-    $path = CLASS_DIR . 'base/' .strtolower($classname) . '.class.php';
-    require($path);
-}
+//function baseclassloader($classname)
+//{
+ //   $path = CLASS_DIR . 'base/' .strtolower($classname) . '.class.php';
+  //  require($path);
+//}
 
-spl_autoload_register('baseclassloader');
+//spl_autoload_register('baseclassloader');
 
 function shuffle_assoc($array) 
 {

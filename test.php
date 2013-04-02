@@ -6,7 +6,7 @@ $session->start();
 
 $num = $session->get('num') ? $session->get('num') : 0;
 
-$quiz = new Quiz($session, Config::$leaderboardfile);
+$quiz = new Quiz($session);
 ?>
 <!DOCTYPE html>
 <head>

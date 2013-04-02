@@ -12,11 +12,11 @@ if( $session->get('finished') != 'yes' )
     exit();
 }
 
-$quiz = new Quiz($session, Config::$leaderboardfile);
+$quiz = new Quiz($session);
 $formatter = new Formatter($quiz);
 
 //destroy the session before returning to the start page
-$session->destroy();
+$session->destroy(session_id());
 ?>
 <!DOCTYPE html>
 <html>

@@ -10,7 +10,7 @@ $session->set('wrong', array());
 $session->set('finished','no');
 $session->set('num',0);
 
-$quiz = new Quiz($session, Config::$leaderboardfile);// need to allow for specific quiz name as param and pull questions/answers from db allowing for multiple quizzes
+$quiz = new Quiz($session);// need to allow for specific quizid name as param and pull questions/answers from db allowing for multiple quizzes
 ?>
 <!DOCTYPE html>
 <head>

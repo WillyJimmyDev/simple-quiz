@@ -7,6 +7,7 @@ class XmlLeaderBoard implements LeaderBoard {
     public function __construct($leaderboardfile) 
     {
         $this->_leaderboard = simplexml_load_file($leaderboardfile);
+        $this->_members =  $this->_leaderboard->xpath("//user");
     }
     
     public function getMembers() 
