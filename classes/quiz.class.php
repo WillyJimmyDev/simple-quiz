@@ -12,9 +12,12 @@ class Quiz {
     private $_users;
     private $_session;
     private $_leaderboard;
+    private $_currentuser;
 
-    public function __construct($session) 
+    public function __construct(Session $session, LeaderBoard $leaderboard) 
     {
+        $this->_currentuser = new User($session, $leaderboard);
+        
         try
         {
             $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
@@ -25,7 +28,7 @@ class Quiz {
         }
         
         $this->_session = $session;
-        $this->_leaderboard = LeaderBoardFactory::getLeaderBoard();
+        $this->_leaderboard = $leaderboard;
         $this->_users = $this->_leaderboard->getMembers();
         
         if ( ! Config::$dbquestions)
@@ -56,42 +59,19 @@ class Quiz {
     {
         return $this->_users;
     }
-
-    public function registerUser($username) 
-    {   
-        if ($this->_leaderboard->hasMember($username)) 
-        {
-            $this->_session->set('error', 'That name is already registered, please choose another.');
-            header('Location: index.php');
-            exit();
-        }
-        
-        
-        $this->_session->set('user',$username);
-        $this->_session->set('score', 0);
-        $this->_session->set('correct', array());
-        $this->_session->set('wrong', array());
-        $this->_session->set('finished','no');
-        $this->_session->set('num',0);
-        
-        $this->_session->remove('error');
-        
-        header('Location: test.php');
-    }
     
-    public function createRandomUser() 
+    public function registerUser($username)
     {
-        $random = rand(1,1000);
-        $this->_session->set('user', 'Anon' . $random);
-        $this->_session->set('score', 0);
-        $this->_session->set('correct', array()); 
-        $this->_session->set('wrong', array());
-        $this->_session->set('finished','no');
-        $this->_session->set('num',0);
-        
-        header('Location: test.php');
+        $this->_currentuser->register($username);
+        return true;
     }
     
+    public function createRandomUser ()
+    {
+        $this->_currentuser->createRandom();
+        return true;
+    }
+
     public function giveVerdict() 
     {
         $rtn = '';

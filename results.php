@@ -12,10 +12,12 @@ if( $session->get('finished') != 'yes' )
     exit();
 }
 
-$quiz = new Quiz($session);
+$leaderboard = LeaderBoardFactory::getLeaderBoard();
+
+$quiz = new Quiz($session, $leaderboard);
 $formatter = new Formatter($quiz);
 
-//destroy the session before returning to the start page
+//destroy the session
 $session->end();
 ?>
 <!DOCTYPE html>

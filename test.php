@@ -6,7 +6,9 @@ $session->start();
 
 $num = $session->get('num') ? $session->get('num') : 0;
 
-$quiz = new Quiz($session);
+$leaderboard = LeaderBoardFactory::getLeaderBoard();
+
+$quiz = new Quiz($session, $leaderboard);
 ?>
 <!DOCTYPE html>
 <head>

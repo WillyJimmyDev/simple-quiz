@@ -5,6 +5,7 @@ Store sessions in db or file system (DONE)
 Store scores/users in db or xml
 Store questions/answers in db or xml
 
+Use static Session class instead of passing in to every class constructor!!
 Use XPath for xml manipulation
 Use PDO for db 
 Add admin backend for creation of questions/answers and/or quizzes?

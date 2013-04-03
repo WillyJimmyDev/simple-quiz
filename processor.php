@@ -6,7 +6,9 @@ include 'functions.php';
 $session = SessionFactory::getsession();
 $session->start();
 
-$quiz = new Quiz($session);
+$leaderboard = LeaderBoardFactory::getLeaderBoard();
+
+$quiz = new Quiz($session, $leaderboard);
 
 if ( ! isset($_POST['submitter']) ) 
 {
