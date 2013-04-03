@@ -9,35 +9,28 @@ class Quiz {
     private $_db;
     private $_answers;
     private $_questions;
-    private $_xml = false;
     private $_users;
     private $_session;
+    private $_leaderboard;
 
     public function __construct($session) 
     {
         try
         {
             $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
-            $this->_session = $session;
-            //following only if users/score stored as xml
-            if (!Config::$dbusers) 
-            {
-               $this->_xml = simplexml_load_file(Config::$leaderboardfile);
-                $this->_users =  $this->_xml->xpath("//user"); 
-            }
-            
-            //load users from factory
-            //$this->_users = new LeaderBoardFactory->getLeaderBoard();
         }
         catch (PDOException $e)
         {
             return $e;
         }
         
-        //need to delegate this shite
+        $this->_session = $session;
+        $this->_leaderboard = LeaderBoardFactory::getLeaderBoard();
+        $this->_users = $this->_leaderboard->getMembers();
+        
         if ( ! Config::$dbquestions)
         {
-            require Config::$questionsandanswersfile;//contains $answers and $questions arrays
+            require Config::$questionsandanswersfile;
             $this->_answers = $answers;
             $this->_questions = $questions;
         }
@@ -64,20 +57,15 @@ class Quiz {
         return $this->_users;
     }
 
-    public function registerUser() 
-    {
-        $username = trim(strip_tags(stripslashes($_POST['username'])));
-        
-        //replace this with a simple db lookup
-        foreach ($this->_users as $user) 
+    public function registerUser($username) 
+    {   
+        if ($this->_leaderboard->hasMember($username)) 
         {
-            if ($user->name == $username) 
-            {
-                $this->_session->set('error', 'That name is already registered, please choose another.');
-                header('Location: index.php');
-                exit();
-            }
+            $this->_session->set('error', 'That name is already registered, please choose another.');
+            header('Location: index.php');
+            exit();
         }
+        
         
         $this->_session->set('user',$username);
         $this->_session->set('score', 0);
@@ -108,10 +96,7 @@ class Quiz {
     {
         $rtn = '';
         
-        $user = $this->_xml->addChild('user');
-        $user->addChild('name', $this->_session->get('user') );
-        $user->addChild('score', $this->_session->get('score') );
-        $this->_xml->asXML('leaders.xml');
+        $this->_leaderboard->addMember($this->_session->get('user'),$this->_session->get('score'));
 
         $rtn .= '<h2 id="score">' . $this->_session->get('user') . ', your final score is:</h2>' . PHP_EOL;
         $rtn .= '<h3>' . $this->_session->get('score') . '/20</h3>' . PHP_EOL;
@@ -139,58 +124,39 @@ class Quiz {
 
     public function showLeaders($limit, $group = null) 
     {
-        $leaders = array();
+        $leaders = $this->_leaderboard->getLeaders($limit);
         $numquestions = count($this->_questions);
-        // Place all users and associated 
-        // scores into the 'leaders' array.
-        foreach ($this->_users as $user) 
-        {
-            $name = (string) $user->name;
-            $score = (string) $user->score;
-            $leaders[$name] = $score;
-        }
 
-        // Sort the leaders array numerically, highest scorers first.	
-        arsort($leaders, SORT_NUMERIC);
-
-        // Initialise our $counter variable to '1'.
         $counter = 1;
 
-        // Start a html ordered list to hold the leaders.
+        // Start a html ordered list
         $rtn = '<ul class="leaders">' . PHP_EOL;
 
-        // Loop through the 'leaders' array and wrap each username and score
-        // in <li> tags. If the user is the current $_SESSION['user'], wrap
-        // the name/score in <strong> tags too.
+        // wrap each username and score in <li> tags. 
+        // If the user->name == current user,wrap the name/score in <strong> tags too.
         foreach ($leaders as $key => $value) 
         {
-            // Check that $counter is less than $limit.
-            if ($counter <= $limit) 
+            if ( ( $this->_session->get('user') ) && ($key == $this->_session->get('user') ) ) 
             {
-                if ( ( $this->_session->get('user') ) && ($key == $this->_session->get('user') ) ) 
-                {
-                    $key = '<strong>' . $key . '</strong>';
-                } 
-                $rtn .= '<li>' . $key. ':' .  $value . '/' . $numquestions . '</li>';
+                $key = '<strong>' . $key . '</strong>';
+            } 
+            $rtn .= '<li>' . $key. ':' .  $value . '/' . $numquestions . '</li>';
                 
-                // Check to see if $group parameter has been passed.
-                // If it has, create separate lists according to the $group variable.
-                if ($group) 
+            // If $group, create separate lists according to the $group variable.
+            if ($group) 
+            {
+                // Use the modulus operator(%) to create new sub-list if required.
+                if ($counter % $group == 0)  
                 {
-                    // Use the modulus operator(%) to create new sub-list if required.
-                    if ( ($counter % $group == 0) && ($counter != $limit ) ) 
-                    {
-                        $rtn .= '</ul>' . PHP_EOL . '<ul class="leaders">' . PHP_EOL;
-                    }
+                    $rtn .= '</ul>' . PHP_EOL . '<ul class="leaders">' . PHP_EOL;
                 }
             }
-            // Increment the $counter.	
+            
             $counter++;
         }
-        // End the ordered list.
+       
         $rtn .= '</ul>' . PHP_EOL;
 
-        // return the ordered list.
         return $rtn;
     }
 }

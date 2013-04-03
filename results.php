@@ -16,7 +16,7 @@ $quiz = new Quiz($session);
 $formatter = new Formatter($quiz);
 
 //destroy the session before returning to the start page
-$session->destroy(session_id());
+$session->end();
 ?>
 <!DOCTYPE html>
 <html>

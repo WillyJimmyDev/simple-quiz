@@ -12,7 +12,8 @@ if ( ! isset($_POST['submitter']) )
 {
     if ( isset($_POST['register']) ) 
     {
-        $quiz->registerUser();
+        $username = trim(strip_tags(stripslashes($_POST['username'])));
+        $quiz->registerUser($username);
     } 
     else 
     {
