@@ -12,6 +12,7 @@ class XmlLeaderBoard implements LeaderBoard {
         $this->_members =  $this->_leaderboard->xpath("//user");
     }
     
+    //should combine getMembers with getLeaders(default number param)
     public function getMembers() 
     {
         return $this->_members;

@@ -55,7 +55,7 @@ class Quiz {
         return $this->_questions;
     }
     
-    public  function getUsers()
+    public function getUsers()
     {
         return $this->_users;
     }
