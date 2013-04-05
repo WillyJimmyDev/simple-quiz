@@ -104,7 +104,7 @@ class Quiz {
 
     public function showLeaders($limit, $group = null) 
     {
-        $leaders = $this->_leaderboard->getLeaders($limit);
+        $leaders = $this->_leaderboard->getMembers($limit);
         $numquestions = count($this->_questions);
 
         $counter = 1;

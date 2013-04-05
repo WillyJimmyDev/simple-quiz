@@ -12,16 +12,15 @@ class XmlLeaderBoard implements LeaderBoard {
         $this->_members =  $this->_leaderboard->xpath("//user");
     }
     
-    //should combine getMembers with getLeaders(default number param)
-    public function getMembers() 
+    public function getMembers($number = false) 
     {
+        if ($number)
+        {
+            arsort($this->_members,SORT_NUMERIC);
+            return array_slice($this->_members, 0, $number, true);
+        }
+        
         return $this->_members;
-    }
-
-    public function getLeaders($number) 
-    {
-        arsort($this->_members,SORT_NUMERIC);
-        return array_slice($this->_members, 0, $number, true);
     }
     
     public function addMember($user,$score)
