@@ -1,6 +1,6 @@
 <?php
 
-class DBLeaderBoard implements LeaderBoard
+class DBLeaderBoard extends LeaderBoard
 {
     private $_db;
     private $_members = array();
@@ -24,19 +24,14 @@ class DBLeaderBoard implements LeaderBoard
         }
     }
     
-    //should combine getMembers with getLeaders(default number param)
-    public function getMembers($number = false)
-    {  
-        if ($number)
-        {
-            arsort($this->_members,SORT_NUMERIC);
-            return array_slice($this->_members, 0, $number, true);
-        }
-        
-        return $this->_members;
+    public function addMember($user,$score)
+    {
+        $sql = "insert into users (name,score,date_submitted) values (:user,:score, now())";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':user',$user,PDO::PARAM_STR);
+        $stmt->bindParam(':score',$score,PDO::PARAM_STR);
+        $stmt->execute();
+        return true;
     }
-    
-    public function addMember($user,$score);
-    public function hasMember();
 }
 ?>

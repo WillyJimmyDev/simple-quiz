@@ -1,5 +1,5 @@
 <?php
-class XmlLeaderBoard implements LeaderBoard {
+class XmlLeaderBoard extends LeaderBoard {
     
     private $_leaderboardfile;
     private $_leaderboard;
@@ -12,36 +12,13 @@ class XmlLeaderBoard implements LeaderBoard {
         $this->_members =  $this->_leaderboard->xpath("//user");
     }
     
-    public function getMembers($number = false) 
-    {
-        if ($number)
-        {
-            arsort($this->_members,SORT_NUMERIC);
-            return array_slice($this->_members, 0, $number, true);
-        }
-        
-        return $this->_members;
-    }
-    
     public function addMember($user,$score)
     {
         $user = $this->_leaderboard->addChild('user');
         $user->addChild('name', $user );
         $user->addChild('score', $score );
         $this->_leaderboard->asXML($this->_leaderboardfile);
-    }
-    
-    public function hasMember($username) 
-    {
-        //replace this with a simple xpath query
-        foreach ($this->_members as $member) 
-        {
-            if ($member->name == $username) 
-            {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 }
 ?>
