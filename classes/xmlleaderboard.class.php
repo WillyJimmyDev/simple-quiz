@@ -3,12 +3,11 @@ class XmlLeaderBoard extends LeaderBoard {
     
     private $_leaderboardfile;
     private $_leaderboard;
-    private $_members;
     
     public function __construct($leaderboardfile) 
     {
         $this->_leaderboardfile = $leaderboardfile;
-        $this->_leaderboard = simplexml_load_file($leaderboardfile);
+        $this->_leaderboard = simplexml_load_file($this->_leaderboardfile);
         $this->_members =  $this->_leaderboard->xpath("//user");
     }
     

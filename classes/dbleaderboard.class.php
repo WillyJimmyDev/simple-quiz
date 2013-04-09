@@ -3,7 +3,6 @@
 class DBLeaderBoard extends LeaderBoard
 {
     private $_db;
-    private $_members = array();
     
     public function __construct() 
     {
@@ -29,7 +28,7 @@ class DBLeaderBoard extends LeaderBoard
         $sql = "insert into users (name,score,date_submitted) values (:user,:score, now())";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':user',$user,PDO::PARAM_STR);
-        $stmt->bindParam(':score',$score,PDO::PARAM_STR);
+        $stmt->bindParam(':score',$score,PDO::PARAM_INT);
         $stmt->execute();
         return true;
     }

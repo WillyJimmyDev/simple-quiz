@@ -33,6 +33,7 @@ class Quiz {
         
         if ( ! Config::$dbquestions)
         {
+            //load $questions and $answers arrays from include file
             require Config::$questionsandanswersfile;
             $this->_answers = $answers;
             $this->_questions = $questions;

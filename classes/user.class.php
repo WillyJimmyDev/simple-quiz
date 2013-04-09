@@ -4,7 +4,7 @@ class User
     private $_session;
     private $_leaderboard;
     
-    public function __construct($session, LeaderBoard $leaderboard) 
+    public function __construct(Session $session, LeaderBoard $leaderboard) 
     {
         $this->_session = $session; 
         $this->_leaderboard = $leaderboard;
@@ -18,7 +18,6 @@ class User
             header('Location: index.php');
             exit();
         }
-        
         
         $this->_session->set('user',$username);
         $this->_session->set('score', 0);

@@ -1,6 +1,8 @@
 <?php
 abstract class LeaderBoard {
     
+    protected $_members = array();
+    
     public function getMembers($number = false)
     {  
         if ($number)
