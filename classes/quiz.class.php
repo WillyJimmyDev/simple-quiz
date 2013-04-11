@@ -6,43 +6,45 @@
 
 class Quiz {
     
-    private $_db;
-    private $_answers;
-    private $_questions;
-    private $_users;
-    private $_session;
-    private $_leaderboard;
-    private $_currentuser;
-
-    public function __construct(Session $session, LeaderBoard $leaderboard) 
+    protected $_db;
+    protected $_answers;
+    protected $_questions;
+    protected $_users;
+    protected $_leaderboard;
+    protected $_currentuser;
+    
+    public $session;
+    
+    public function __construct(Session $session, LeaderBoard $leaderboard)
     {
         $this->_currentuser = new User($session, $leaderboard);
         
-        try
-        {
-            $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
-        }
-        catch (PDOException $e)
-        {
-            return $e;
-        }
-        
-        $this->_session = $session;
+        $this->session = $session;
         $this->_leaderboard = $leaderboard;
         $this->_users = $this->_leaderboard->getMembers();
         
-        if ( ! Config::$dbquestions)
+        //below is only dependenacy on db config preference
+        if (Config::$dbquestions)
+        {
+            try
+            {
+                $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+            }
+            catch (PDOException $e)
+            {
+                return $e;
+            }
+            //db query to pull questions and answers
+            //$this->_answers = $answers;
+            //$this->_questions = $questions;
+        }
+        
+        else 
         {
             //load $questions and $answers arrays from include file
             require Config::$questionsandanswersfile;
             $this->_answers = $answers;
             $this->_questions = $questions;
-        }
-        else
-        {
-            //db query to pull questions and answers
-            //$this->_answers = $answers;
-            //$this->_questions = $questions;
         }
     }
     
@@ -77,25 +79,25 @@ class Quiz {
     {
         $rtn = '';
         
-        $this->_leaderboard->addMember($this->_session->get('user'),$this->_session->get('score'));
+        $this->_leaderboard->addMember($this->session->get('user'),$this->session->get('score'));
 
         $rtn .= '<h2 id="score">' . $this->_session->get('user') . ', your final score is:</h2>' . PHP_EOL;
-        $rtn .= '<h3>' . $this->_session->get('score') . '/20</h3>' . PHP_EOL;
+        $rtn .= '<h3>' . $this->session->get('score') . '/20</h3>' . PHP_EOL;
         $rtn .= '<h4>Verdict:</h4>' . PHP_EOL;
                                          
-        if ( $this->_session->get('score')  <= 5) 
+        if ( $this->session->get('score')  <= 5) 
         {
             $rtn .= Config::$poorScoreVerdict;
         }
-        if ($this->_session->get('score') > 5) 
+        if ($this->session->get('score') > 5) 
         {
             $rtn .= Config::$averageScoreVerdict;
         }
-        if ($this->_session->get('score') > 10) 
+        if ($this->session->get('score') > 10) 
         {
             $rtn .= Config::$goodScoreVerdict;
         }
-        if ($this->_session->get('score') > 15) 
+        if ($this->session->get('score') > 15) 
         {
             $rtn .= Config::$greatScoreVerdict;
         }
@@ -117,7 +119,7 @@ class Quiz {
         // If the user->name == current user,wrap the name/score in <strong> tags too.
         foreach ($leaders as $key => $value) 
         {
-            if ( ( $this->_session->get('user') ) && ($key == $this->_session->get('user') ) ) 
+            if ( ( $this->session->get('user') ) && ($key == $this->session->get('user') ) ) 
             {
                 $key = '<strong>' . $key . '</strong>';
             } 
