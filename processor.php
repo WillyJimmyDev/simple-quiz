@@ -3,12 +3,9 @@
 
 include 'functions.php';
 
-$session = SessionFactory::getsession();
-$session->start();
+$quiz = QuizFactory::getQuiz();
 
-$leaderboard = LeaderBoardFactory::getLeaderBoard();
-
-$quiz = new Quiz($session, $leaderboard);
+$quiz->session->start();
 
 if ( ! isset($_POST['submitter']) ) 
 {
@@ -27,15 +24,15 @@ else
     $questions = $quiz->getQuestions();
     $answers = $quiz->getAnswers();
     
-    $session->set('num',(int) $_POST['num']);
-    $num = $session->get('num');
+    $quiz->session->set('num',(int) $_POST['num']);
+    $num = $quiz->session->get('num');
     $postedanswers = $_POST['answers'];
     
     if ($postedanswers == $answers[$num]['0']) 
     {
-        $score = $session->get('score');
+        $score = $quiz->session->get('score');
         $score++;
-        $session->set('score', $score);
+        $quiz->session->set('score', $score);
         $_SESSION['correct'][] = $postedanswers;
     } 
     else 

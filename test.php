@@ -1,14 +1,12 @@
 <?php //test.php
 
 include 'functions.php';
-$session = SessionFactory::getsession();
-$session->start();
+$quiz = QuizFactory::getQuiz();
 
-$num = $session->get('num') ? $session->get('num') : 0;
+$quiz->session->start();
 
-$leaderboard = LeaderBoardFactory::getLeaderBoard();
+$num = $quiz->session->get('num') ? $quiz->session->get('num') : 0;
 
-$quiz = new Quiz($session, $leaderboard);
 ?>
 <!DOCTYPE html>
 <head>
@@ -16,7 +14,7 @@ $quiz = new Quiz($session, $leaderboard);
     <link rel="stylesheet" href="res/css/style.css" type="text/css" />
     <title>The Web Acronym Test</title>
     <?php 
-    if (! $session->get('last')) 
+    if (! $quiz->session->get('last')) 
     {
         echo '<script type="text/javascript" src="res/js/form.js"></script>';
     }
@@ -28,11 +26,11 @@ $quiz = new Quiz($session, $leaderboard);
 <h1>Take the test and see how well you know your web acronyms</h1>
 <p>Each acronym has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
 <p>There are 20 acronyms, so let's get cracking! You'll get your score at the end of the test. It's just like facebook (honest!).</p>
-<?php if( $session->get('user') ) echo '<h4>Current tester: ' . $session->get('user') . '</h4>'; ?>
+<?php if( $quiz->session->get('user') ) echo '<h4>Current tester: ' . $quiz->session->get('user') . '</h4>'; ?>
 </div><!--intro-->
 <div id="quiz">
 <?php 
-if (! $session->get('last') ) 
+if (! $quiz->session->get('last') ) 
 { 
     $questions = $quiz->getQuestions();
     $answers = $quiz->getAnswers();

@@ -1,18 +1,15 @@
 <?php //index.php
 
 include 'functions.php';
-$session = SessionFactory::getsession();
-$session->start();
 
-$session->set('score', 0);
-$session->set('correct', array()); 
-$session->set('wrong', array());
-$session->set('finished','no');
-$session->set('num',0);
+$quiz = QuizFactory::getQuiz();
+$quiz->session->start();
 
-$leaderboard = LeaderBoardFactory::getLeaderBoard();
-
-$quiz = new Quiz($session, $leaderboard);// need to allow for specific quizid name as param and pull questions/answers from db allowing for multiple quizzes
+$quiz->session->set('score', 0);
+$quiz->session->set('correct', array()); 
+$quiz->session->set('wrong', array());
+$quiz->session->set('finished','no');
+$quiz->session->set('num',0);
 ?>
 <!DOCTYPE html>
 <head>
@@ -50,7 +47,7 @@ $quiz = new Quiz($session, $leaderboard);// need to allow for specific quizid na
                 <p><input type="hidden" name="register" value="TRUE" />
                     <input type="submit" id="submit" value="Register And Take The Test" /></p>
             </form> 
-            <p id="helper"><?php if ( $session->get('error') ) echo $session->get('error'); ?></p>
+            <p id="helper"><?php if ( $quiz->session->get('error') ) echo $quiz->session->get('error'); ?></p>
         </div><!--quiz-->
     </div><!--wrapper-->
 </body>

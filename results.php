@@ -1,24 +1,23 @@
 <?php //results.php
 
 include 'functions.php';
-$session = SessionFactory::getsession();
-$session->start();
 
-$session->set('last', null);
+$quiz = QuizFactory::getQuiz();
 
-if( $session->get('finished') != 'yes' ) 
+$quiz->session->start();
+
+$quiz->session->set('last', null);
+
+if( $quiz->session->get('finished') != 'yes' ) 
 {
     header('Location: index.php');
     exit();
 }
 
-$leaderboard = LeaderBoardFactory::getLeaderBoard();
-
-$quiz = new Quiz($session, $leaderboard);
 $formatter = new Formatter($quiz);
 
 //destroy the session
-$session->end();
+$quiz->session->end();
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,7 +28,7 @@ $session->end();
     </head>
     <body id="resultpage">
         <div id="wrapresult">
-            <h1>The Results Page For <span><?php echo $session->get('user');  ?></span></h1>    
+            <h1>The Results Page For <span><?php echo $quiz->session->get('user');  ?></span></h1>    
             <div id="intro">
                 <h2>Top Scorers</h2>
                 <?php echo $quiz->showLeaders(Config::$leaderstoshow); //the top scorers. ?>
