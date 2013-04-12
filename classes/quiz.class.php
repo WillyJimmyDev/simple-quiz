@@ -7,8 +7,9 @@
 class Quiz {
     
     protected $_db;
-    protected $_answers;
-    protected $_questions;
+    protected $_answers = array();
+    protected $_questions = array();
+    protected $_question;
     protected $_users;
     protected $_leaderboard;
     protected $_currentuser;
@@ -23,38 +24,63 @@ class Quiz {
         $this->_leaderboard = $leaderboard;
         $this->_users = $this->_leaderboard->getMembers();
         
-        //below is only dependenacy on db config preference
-        if (Config::$dbquestions)
+        try
         {
-            try
-            {
-                $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
-            }
-            catch (PDOException $e)
-            {
-                return $e;
-            }
-            //db query to pull questions and answers
-            //$this->_answers = $answers;
-            //$this->_questions = $questions;
+            $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
         }
-        
-        else 
+        catch (PDOException $e)
         {
-            //load $questions and $answers arrays from include file
-            require Config::$questionsandanswersfile;
-            $this->_answers = $answers;
-            $this->_questions = $questions;
+            return $e;
         }
+      
     }
     
-    public function getAnswers()
+    public function getAnswers($questionid = false)
     {
+        if ($questionid)
+        {
+            $answersql = "select text from answers where answers.question_id = :id order by id asc";
+            $stmt = $this->_db->prepare($answersql);
+            $stmt->bindParam(':id', $questionid, PDO::PARAM_INT);
+        }
+        else
+        {
+            $answersql = "select text from answers order by id asc";
+            $stmt = $this->_db->query($answersql);
+        }
+        
+        $stmt->execute();
+        
+        while ($row = $stmt->fetchObject())
+        {
+            $this->_answers[] .= $row->text;
+        }
+        
         return $this->_answers;
+    }
+    
+    
+    public function getQuestion($questionid) 
+    {
+        $questionsql = "select text from questions where id = :id";
+        $stmt = $this->_db->prepare($questionsql);
+        $stmt->bindParam(':id', $questionid, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetchObject();
+        $this->_question = $row->text;
+        
+        return $this->_question;
     }
     
     public function getQuestions() 
     {
+        $questionsql = "select text from questions order by id asc";
+        $stmt = $this->_db->query($questionsql);
+        $stmt->execute();
+        while ($row = $stmt->fetchObject())
+        {
+            $this->_questions[] .= $row->text;
+        }
         return $this->_questions;
     }
     

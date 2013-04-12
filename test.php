@@ -32,15 +32,15 @@ $num = $quiz->session->get('num') ? $quiz->session->get('num') : 0;
 <?php 
 if (! $quiz->session->get('last') ) 
 { 
-    $questions = $quiz->getQuestions();
-    $answers = $quiz->getAnswers();
+    $question = $quiz->getQuestion($num);
+    $answers = $quiz->getAnswers($num);
 ?>
     <h2>Acronym <?php echo $num+1; ?>:</h2>
-    <p>What does <strong><?php echo $questions[$num]; ?></strong> stand for?</p>
+    <p>What does <strong><?php echo $question; ?></strong> stand for?</p>
     <form id="questionBox" method="post" action="processor.php">
         <ul>
         <?php 
-        $shuffledAnswers = shuffle_assoc($answers[$num]);
+        $shuffledAnswers = shuffle_assoc($answers);
 
         $acount = 0;
         foreach ($shuffledAnswers as $answer) 
