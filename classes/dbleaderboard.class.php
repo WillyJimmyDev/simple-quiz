@@ -14,7 +14,7 @@ class DBLeaderBoard extends LeaderBoard
             $stmt->execute();
             while ($row = $stmt->fetchObject())
             {
-                $this->_members[] .= array($row->name, $row->score);
+                $this->_members[$row->name]= $row->score;
             }
         }
         catch (PDOException $e)

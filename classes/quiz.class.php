@@ -36,24 +36,32 @@ class Quiz {
     }
     
     public function getAnswers($questionid = false)
-    {
+    {   
         if ($questionid)
         {
-            $answersql = "select text from answers where answers.question_id = :id order by id asc";
+            //pull answers from db for just this question
+            $answersql = "SELECT text FROM answers where question_id = :id ORDER BY correct DESC";
             $stmt = $this->_db->prepare($answersql);
             $stmt->bindParam(':id', $questionid, PDO::PARAM_INT);
+            $stmt->execute();
+            while ($result = $stmt->fetchObject())
+            {
+               array_push($this->_answers,$result->text);
+            }
         }
         else
         {
-            $answersql = "select text from answers order by id asc";
+            //pull all answers from db grouped by question
+            $answersql = "SELECT group_concat( a.text ORDER BY a.correct DESC ) FROM answers a GROUP BY a.question_id";
             $stmt = $this->_db->query($answersql);
-        }
+            $stmt->execute();
+            $resultset = $stmt->fetchAll(PDO::FETCH_NUM);
         
-        $stmt->execute();
-        
-        while ($row = $stmt->fetchObject())
-        {
-            $this->_answers[] .= $row->text;
+            foreach ($resultset as $csv)
+            {   
+                $tmparray = explode(',', $csv[0]);
+                array_push($this->_answers,$tmparray);
+            }
         }
         
         return $this->_answers;
@@ -107,7 +115,7 @@ class Quiz {
         
         $this->_leaderboard->addMember($this->session->get('user'),$this->session->get('score'));
 
-        $rtn .= '<h2 id="score">' . $this->_session->get('user') . ', your final score is:</h2>' . PHP_EOL;
+        $rtn .= '<h2 id="score">' . $this->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
         $rtn .= '<h3>' . $this->session->get('score') . '/20</h3>' . PHP_EOL;
         $rtn .= '<h4>Verdict:</h4>' . PHP_EOL;
                                          
@@ -131,7 +139,7 @@ class Quiz {
         return $rtn;
     }
 
-    public function showLeaders($limit, $group = null) 
+    public function showLeaders($limit, $group = false) 
     {
         $leaders = $this->_leaderboard->getMembers($limit);
         $numquestions = count($this->_questions);

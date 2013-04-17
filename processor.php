@@ -21,14 +21,18 @@ if ( ! isset($_POST['submitter']) )
 } 
 else 
 {
-    $questions = $quiz->getQuestions();
-    $answers = $quiz->getAnswers();
     
     $quiz->session->set('num',(int) $_POST['num']);
     $num = $quiz->session->get('num');
+    
+    $numquestions = count($quiz->getQuestions());
+    $answers = $quiz->getAnswers($num);
+    //sort the array of answers so correct answer is first
+    usort($answers, 'answerSort');
+    
     $postedanswers = $_POST['answers'];
     
-    if ($postedanswers == $answers[$num]['0']) 
+    if ($postedanswers == $answers[0]) //first answer in array is correct one
     {
         $score = $quiz->session->get('score');
         $score++;
@@ -39,7 +43,7 @@ else
     {
         $_SESSION['wrong'][] = $postedanswers;
     }
-    if ($_SESSION['num'] < count($questions) - 1) 
+    if ($_SESSION['num'] < $numquestions - 1) 
     {
         $_SESSION['num']++;
     } 

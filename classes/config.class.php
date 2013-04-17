@@ -7,19 +7,10 @@
 
 class Config 
 {
-    static $usedb = false;
-    
-    //$db params only needed if $usedb = true 
     static $dbhost = 'localhost';
     static $dbname = 'simple-quiz';
     static $dbuser = 'quizmaster';
     static $dbpassword = '3G8bVeH4dS5euTcF';
-    
-    //following needs to be included with $usedb
-    static $dbquestions = false;
-    
-    static $questionsandanswersfile = 'questionsandanswers.php';
-    static $leaderboardfile = 'leaders.xml';
     
     static $leaderstoshow = 30;
     static $leadersToShowOnFrontPage = 10;

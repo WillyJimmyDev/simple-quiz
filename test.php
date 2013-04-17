@@ -5,7 +5,7 @@ $quiz = QuizFactory::getQuiz();
 
 $quiz->session->start();
 
-$num = $quiz->session->get('num') ? $quiz->session->get('num') : 0;
+$num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
 
 ?>
 <!DOCTYPE html>
@@ -35,7 +35,7 @@ if (! $quiz->session->get('last') )
     $question = $quiz->getQuestion($num);
     $answers = $quiz->getAnswers($num);
 ?>
-    <h2>Acronym <?php echo $num+1; ?>:</h2>
+    <h2>Acronym <?php echo $num; ?>:</h2>
     <p>What does <strong><?php echo $question; ?></strong> stand for?</p>
     <form id="questionBox" method="post" action="processor.php">
         <ul>

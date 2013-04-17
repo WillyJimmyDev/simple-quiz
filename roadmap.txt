@@ -1,13 +1,13 @@
 ROADMAP
 
 #Config Options At Runtime
-Store sessions in db or file system (DONE)
-Store scores/users in db or xml
-Store questions/answers in db or xml
+DB used for everything, no more xml
 
-Use static Session class instead of passing in to every class constructor!!
+Need to fix major bug when using group_concat parsing commas
+
+Use static Session class instead of passing in to every class constructor
 Use XPath for xml manipulation
-Use PDO for db 
+Use PDO for db (DONE)
 Add admin backend for creation of questions/answers and/or quizzes?
 
 js slides between questions
