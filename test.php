@@ -65,19 +65,19 @@ else :
                                          
     if ( $quiz->session->get('score')  <= 5) 
     {
-        $verdict = Config::$poorScoreVerdict;
+        $verdict = '<span>S</span>everely <span>H</span>indered <span>I</span>n the <span>T</span>est!';
     }
     if ($quiz->session->get('score') > 5) 
     {
-        $verdict = Config::$averageScoreVerdict;
+        $verdict = '<span>C</span>ould <span>R</span>ead <span>A</span>nd <span>P</span>ractice more.';
     }
     if ($quiz->session->get('score') > 10) 
     {
-        $verdict = Config::$goodScoreVerdict;
+        $verdict = '<span>A</span>cronyms a<span>R</span>e <span>S</span>o <span>E</span>asy!';
     }
     if ($quiz->session->get('score') > 15) 
     {
-        $verdict = Config::$greatScoreVerdict;
+        $verdict = '<span>S</span>uper <span>A</span>cronym <span>S</span>pecialist';
     }
     
     echo '<p id="verdict">' . $verdict . '</p>';
