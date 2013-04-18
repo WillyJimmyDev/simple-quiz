@@ -24,8 +24,9 @@ $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
 <div id="wrapper">
 <div id="intro">
 <h1>Take the test and see how well you know your web acronyms</h1>
-<p>Each acronym has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
-<p>There are 20 acronyms, so let's get cracking! You'll get your score at the end of the test. It's just like facebook (honest!).</p>
+<p>Each question has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
+<p>There are <?php echo count($quiz->getQuestions()); ?> questions, so let's get cracking!</p>
+<p>You'll get your score at the end of the test..</p>
 <?php if( $quiz->session->get('user') ) echo '<h4>Current tester: ' . $quiz->session->get('user') . '</h4>'; ?>
 </div><!--intro-->
 <div id="quiz">
@@ -35,7 +36,7 @@ if (! $quiz->session->get('last') )
     $question = $quiz->getQuestion($num);
     $answers = $quiz->getAnswers($num);
 ?>
-    <h2>Acronym <?php echo $num; ?>:</h2>
+    <h2>Question <?php echo $num; ?>:</h2>
     <p>What does <strong><?php echo $question; ?></strong> stand for?</p>
     <form id="questionBox" method="post" action="processor.php">
         <ul>

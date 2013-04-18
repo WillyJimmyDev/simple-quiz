@@ -97,6 +97,11 @@ class Quiz {
         return $this->_users;
     }
     
+    public function getLeaders($num)
+    {
+        return $this->_leaderboard->getMembers($num);
+    }
+    
     public function registerUser($username)
     {
         $this->_currentuser->register($username);
@@ -141,8 +146,10 @@ class Quiz {
 
     public function showLeaders($limit, $group = false) 
     {
-        $leaders = $this->_leaderboard->getMembers($limit);
-        $numquestions = count($this->_questions);
+        //need to remove this from quiz class
+        //unnecessary, should be in client code
+        $leaders = $this->getLeaders($limit);
+        $numquestions = count($this->getQuestions());
 
         $counter = 1;
 
@@ -157,7 +164,7 @@ class Quiz {
             {
                 $key = '<strong>' . $key . '</strong>';
             } 
-            $rtn .= '<li>' . $key. ':' .  $value . '/' . $numquestions . '</li>';
+            $rtn .= '<li>' . $key. ': ' .  $value . '/' . $numquestions . '</li>';
                 
             // If $group, create separate lists according to the $group variable.
             if ($group) 

@@ -22,10 +22,11 @@ $quiz->session->set('num',0);
     <div id="wrapper">
         <div id="intro">
             <h1>Take the test and see how well you know your web acronyms</h1>
-            <p>Each acronym has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
-            <p>There are 20 acronyms, so let's get cracking! You'll get your score at the end of the test. It's just like facebook (honest!).</p>
+            <p>Each question has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
+            <p>There are <?php echo count($quiz->getQuestions()); ?> questions, so let's get cracking!</p>
+            <p>You'll get your score at the end of the test.</p>
             <div id="leaders-score">
-                <h2>Top 10 Scorers</h2>
+                <h2>Top <?php echo Config::$leadersToShowOnFrontPage; ?> Scorers</h2>
                 <?php
                 echo $quiz->showLeaders(Config::$leadersToShowOnFrontPage, 5);
                 ?>
@@ -33,7 +34,7 @@ $quiz->session->set('num',0);
         </div><!--intro-->
         <div id="quiz">
             <h2>Start The Test</h2>
-            <p>If featuring on the Score Board is of absolutely no interest to you,</p>
+            <p>If featuring on the Score Board doesn't interest you,</p>
             <form id="jttt" method="post" action="processor.php">
                 <p><input type="submit" value="Just Take The Test" /></p>
             </form>
