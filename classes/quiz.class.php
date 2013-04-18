@@ -52,14 +52,14 @@ class Quiz {
         else
         {
             //pull all answers from db grouped by question
-            $answersql = "SELECT group_concat( a.text ORDER BY a.correct DESC ) FROM answers a GROUP BY a.question_id";
+            $answersql = "SELECT group_concat( a.text ORDER BY a.correct DESC SEPARATOR '~' ) FROM answers a GROUP BY a.question_id";
             $stmt = $this->_db->query($answersql);
             $stmt->execute();
             $resultset = $stmt->fetchAll(PDO::FETCH_NUM);
         
             foreach ($resultset as $csv)
             {   
-                $tmparray = explode(',', $csv[0]);
+                $tmparray = explode('~', $csv[0]);
                 array_push($this->_answers,$tmparray);
             }
         }
@@ -105,83 +105,19 @@ class Quiz {
     public function registerUser($username)
     {
         $this->_currentuser->register($username);
-        return true;
+        //return true;
     }
     
     public function createRandomUser ()
     {
         $this->_currentuser->createRandom();
-        return true;
+        //return true;
     }
-
-    public function giveVerdict() 
+    
+    public function addScore()
     {
-        $rtn = '';
-        
         $this->_leaderboard->addMember($this->session->get('user'),$this->session->get('score'));
-
-        $rtn .= '<h2 id="score">' . $this->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
-        $rtn .= '<h3>' . $this->session->get('score') . '/20</h3>' . PHP_EOL;
-        $rtn .= '<h4>Verdict:</h4>' . PHP_EOL;
-                                         
-        if ( $this->session->get('score')  <= 5) 
-        {
-            $rtn .= Config::$poorScoreVerdict;
-        }
-        if ($this->session->get('score') > 5) 
-        {
-            $rtn .= Config::$averageScoreVerdict;
-        }
-        if ($this->session->get('score') > 10) 
-        {
-            $rtn .= Config::$goodScoreVerdict;
-        }
-        if ($this->session->get('score') > 15) 
-        {
-            $rtn .= Config::$greatScoreVerdict;
-        }
-        
-        return $rtn;
-    }
-
-    public function showLeaders($limit, $group = false) 
-    {
-        //need to remove this from quiz class
-        //unnecessary, should be in client code
-        $leaders = $this->getLeaders($limit);
-        $numquestions = count($this->getQuestions());
-
-        $counter = 1;
-
-        // Start a html ordered list
-        $rtn = '<ul class="leaders">' . PHP_EOL;
-
-        // wrap each username and score in <li> tags. 
-        // If the user->name == current user,wrap the name/score in <strong> tags too.
-        foreach ($leaders as $key => $value) 
-        {
-            if ( ( $this->session->get('user') ) && ($key == $this->session->get('user') ) ) 
-            {
-                $key = '<strong>' . $key . '</strong>';
-            } 
-            $rtn .= '<li>' . $key. ': ' .  $value . '/' . $numquestions . '</li>';
-                
-            // If $group, create separate lists according to the $group variable.
-            if ($group) 
-            {
-                // Use the modulus operator(%) to create new sub-list if required.
-                if ($counter % $group == 0)  
-                {
-                    $rtn .= '</ul>' . PHP_EOL . '<ul class="leaders">' . PHP_EOL;
-                }
-            }
-            
-            $counter++;
-        }
-       
-        $rtn .= '</ul>' . PHP_EOL;
-
-        return $rtn;
+        return true;
     }
 }
 ?>

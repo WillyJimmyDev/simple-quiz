@@ -16,12 +16,9 @@ abstract class LeaderBoard {
     
     public function hasMember($username)
     {
-        foreach ($this->_members as $member) 
+        if (array_key_exists($username,$this->_members) )
         {
-            if ($member->name == $username) 
-            {
-                return true;
-            }
+           return true;
         }
         return false;
     }

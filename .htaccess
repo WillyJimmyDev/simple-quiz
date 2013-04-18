@@ -1,8 +1,0 @@
-<Files leaders.xml>
-  order allow,deny
-  deny from all
-</Files>
-<Files questionsandanswers.php>
-  order allow,deny
-  deny from all
-</Files>

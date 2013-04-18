@@ -27,8 +27,6 @@ else
     
     $numquestions = count($quiz->getQuestions());
     $answers = $quiz->getAnswers($num);
-    //sort the array of answers so correct answer is first
-    usort($answers, 'answerSort');
     
     $postedanswers = $_POST['answers'];
     

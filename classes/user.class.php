@@ -16,7 +16,7 @@ class User
         {
             $this->_session->set('error', 'That name is already registered, please choose another.');
             header('Location: index.php');
-            exit();
+            exit;
         }
         
         $this->_session->set('user',$username);
@@ -29,6 +29,7 @@ class User
         $this->_session->remove('error');
         
         header('Location: test.php');
+        exit;
     }
     
     public function createRandom()
@@ -42,6 +43,7 @@ class User
         $this->_session->set('num',0);
         
         header('Location: test.php');
+        exit();
     }
 }
 ?>

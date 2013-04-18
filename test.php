@@ -1,5 +1,4 @@
 <?php //test.php
-
 include 'functions.php';
 $quiz = QuizFactory::getQuiz();
 
@@ -31,8 +30,7 @@ $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
 </div><!--intro-->
 <div id="quiz">
 <?php 
-if (! $quiz->session->get('last') ) 
-{ 
+if (! $quiz->session->get('last') ) : 
     $question = $quiz->getQuestion($num);
     $answers = $quiz->getAnswers($num);
 ?>
@@ -58,12 +56,34 @@ if (! $quiz->session->get('last') )
         </p>
     </form>
 <?php 
-} 
-else 
-{ 
-    echo $quiz->giveVerdict();
+else :
+    $quiz->addScore();
+
+    echo '<h2 id="score">' . $quiz->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
+    echo '<h3>' . $quiz->session->get('score') . '/'. count($quiz->getQuestions()) .'</h3>' . PHP_EOL;
+    echo '<h4>Verdict:</h4>' . PHP_EOL;
+                                         
+    if ( $quiz->session->get('score')  <= 5) 
+    {
+        $verdict = Config::$poorScoreVerdict;
+    }
+    if ($quiz->session->get('score') > 5) 
+    {
+        $verdict = Config::$averageScoreVerdict;
+    }
+    if ($quiz->session->get('score') > 10) 
+    {
+        $verdict = Config::$goodScoreVerdict;
+    }
+    if ($quiz->session->get('score') > 15) 
+    {
+        $verdict = Config::$greatScoreVerdict;
+    }
+    
+    echo '<p id="verdict">' . $verdict . '</p>';
+    
     echo '<p id="compare"><a href="results.php">See how you compare! <img src="images/arrow.png" /></a></p>';
-}
+endif;
 ?>
 </div><!--quiz-->
 </div><!--wrapper-->
