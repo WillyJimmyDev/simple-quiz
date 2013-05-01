@@ -15,7 +15,7 @@ class User
         if ($this->_leaderboard->hasMember($username)) 
         {
             $this->_session->set('error', 'That name is already registered, please choose another.');
-            header('Location: index.php');
+            header('Location: /');
             exit;
         }
         
