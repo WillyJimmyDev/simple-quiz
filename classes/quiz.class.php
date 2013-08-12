@@ -40,7 +40,7 @@ class Quiz {
     {   
         if ($questionid)
         {
-            //pull answers from db for just this question
+            //pull answers from db for only this question
             $answersql = "SELECT text FROM answers where question_id = :id ORDER BY correct DESC";
             $stmt = $this->_db->prepare($answersql);
             $stmt->bindParam(':id', $questionid, PDO::PARAM_INT);

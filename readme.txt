@@ -1,4 +1,6 @@
 Unpack the zip archive into any web accessible folder on your server.
-You will need to have read/write access to leaders.xml (chmod 775).
-Navigate to that folder in your browser and it should just work.
-To create your own questions and answers, edit questionsandanswers.php as desired.
+Import res/simple-quiz.sql into MySQL.
+Create a database called 'simple-quiz'
+Change credentials in /classes/config.class.php to suit
+To create your own questions and answers, phpmyadmin is probably the easiest solution for now until an Admin backend exists.
+Navigate to the web accessible folder in your browser and it should just work.
