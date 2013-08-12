@@ -27,6 +27,7 @@ class Quiz {
         try
         {
             $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+            $this->_populateQuestions();
         }
         catch (PDOException $e)
         {
@@ -80,7 +81,12 @@ class Quiz {
         return $this->_question;
     }
     
-    public function getQuestions() 
+    public function getQuestions()
+    {
+        return $this->_questions;
+    }
+    
+    private function _populateQuestions() 
     {
         $questionsql = "select text from questions order by id asc";
         $stmt = $this->_db->query($questionsql);
@@ -89,7 +95,6 @@ class Quiz {
         {
             $this->_questions[] .= $row->text;
         }
-        return $this->_questions;
     }
     
     public function getUsers()

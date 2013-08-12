@@ -85,7 +85,7 @@ $quiz->session->end();
             endforeach; ?>
             </div><!--quiz-->
             <ul id="footer" class="clear">
-                <li><a href="/" title="Start The Quiz Again">Start Again</a></li>
+                <li><a href="index.php" title="Start The Quiz Again">Start Again</a></li>
                 <li><a href="http://blog.elanman.com/2009/03/make-your-own-php-quiz-part-1/" title="Return To ElanMan's Drawers">ElanMan</a></li>
             </ul>
         </div><!--wrapper-->
