@@ -1,13 +1,7 @@
 ROADMAP
 
-#Config Options At Runtime
-DB used for everything, no more xml (DONE)
-
-Need to fix major bug when using group_concat parsing commas (DONE)
-
 Use static Session class instead of passing in to every class constructor
 Use XPath for xml manipulation
-Use PDO for db (DONE)
 Add admin backend for creation of questions/answers and/or quizzes?
 
 js slides between questions

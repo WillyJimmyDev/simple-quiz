@@ -1,0 +1,9 @@
+{
+    "require": {
+        "pimple/pimple": "1.1.*@dev"
+    },
+    "autoload": {
+        "classmap": ["classes/"],
+        "files" : ["functions.php"]
+    }
+}

@@ -1,23 +1,9 @@
 <?php
 class QuizFactory {
     
-    public static function getQuiz()
+    public static function getQuiz(Pimple $container)
     {
-//        if (Config::$usedb)
-//        {
-//            $leaderboard = new DBLeaderBoard();
-//            $session = new SessionDB();
-//        }
-//        else 
-//        {
-//            $leaderboard = new XmlLeaderBoard();
-//            $session = new Session(); 
-//        }
-        
-        $leaderboard = new DBLeaderBoard();
-        $session = new SessionDB();
-    
-        return new Quiz($session, $leaderboard);
+        return new Quiz($container);
     }
 }
 ?>

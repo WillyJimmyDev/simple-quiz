@@ -1,13 +1,13 @@
 <?php
-define('CLASS_DIR','classes/');
+//define('CLASS_DIR','classes/');
 
-function classloader($classname)
-{
-    $path = CLASS_DIR . strtolower($classname) . '.class.php';
-    require($path);
-}
-
-spl_autoload_register('classloader');
+//function classloader($classname)
+//{
+//    $path = CLASS_DIR . strtolower($classname) . '.class.php';
+//    require($path);
+//}
+//
+//spl_autoload_register('classloader');
 
 //function baseclassloader($classname)
 //{

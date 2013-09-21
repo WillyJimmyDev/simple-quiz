@@ -4,10 +4,10 @@ class User
     private $_session;
     private $_leaderboard;
     
-    public function __construct(Session $session, LeaderBoard $leaderboard) 
+    public function __construct(Pimple $container) 
     {
-        $this->_session = $session; 
-        $this->_leaderboard = $leaderboard;
+        $this->_session = $container['session']; 
+        $this->_leaderboard = $container['leaderboard'];
     }
 
     public function register($username)

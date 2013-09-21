@@ -1,6 +1,14 @@
 <?php //test.php
-include 'functions.php';
-$quiz = QuizFactory::getQuiz();
+require 'vendor/autoload.php';
+
+$container = new Pimple();
+
+$container['session'] = new SessionDB();
+$container['leaderboard'] = new DBLeaderBoard();
+
+$container['Quiz'] = function ($c) {return QuizFactory::getQuiz($c);};
+
+$quiz = $container['Quiz'];
 
 $quiz->session->start();
 
