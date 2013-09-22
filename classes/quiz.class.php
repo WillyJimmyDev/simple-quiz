@@ -18,7 +18,7 @@ class Quiz {
     
     public function __construct(Pimple $container)
     {
-        $this->_currentuser = new User($container);
+        $this->_currentuser = $container['user'];
         
         $this->session = $container['session'];
         $this->_leaderboard = $container['leaderboard'];

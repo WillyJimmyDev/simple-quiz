@@ -7,6 +7,8 @@ $container = new Pimple();
 $container['session'] = new SessionDB();
 $container['leaderboard'] = new DBLeaderBoard();
 
+$container['user'] = function($c) { return new User($c);};
+
 $container['Quiz'] = function ($c) {return QuizFactory::getQuiz($c);};
 
 $quiz = $container['Quiz'];
