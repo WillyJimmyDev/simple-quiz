@@ -26,7 +26,8 @@ class Quiz {
         
         try
         {
-            $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+            //$this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+            $this->_db = $container['db'];
             $this->_populateQuestions();
         }
         catch (PDOException $e)

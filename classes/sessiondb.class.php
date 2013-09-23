@@ -6,17 +6,33 @@
 
 class SessionDB extends Session {
 
-    public function open()
-    {
+    private  $db;
+    
+    public function __construct(Pimple $container) {
+        
         try
         {
-           $this->db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
-           return true;
+            $this->db = $container['db'];
         }
         catch (PDOException $e)
         {
             return $e;
         }
+        
+        session_set_save_handler(array($this,'open'),
+                                 array($this,'close'),
+                                 array($this,'read'),
+                                 array($this,'write'),
+                                 array($this,'destroy'),
+                                 array($this,'clean')
+                                );
+        parent::__construct();
+    }
+
+
+    public function open()
+    {
+        return true;
     }
 
     public function close()
@@ -74,16 +90,16 @@ class SessionDB extends Session {
     }
 
 
-    public function start()
-    {
-        session_set_save_handler(array($this,'open'),
-                                 array($this,'close'),
-                                 array($this,'read'),
-                                 array($this,'write'),
-                                 array($this,'destroy'),
-                                 array($this,'clean')
-                                );
-        parent::start();
-    }
+//    public function start()
+//    {
+//        session_set_save_handler(array($this,'open'),
+//                                 array($this,'close'),
+//                                 array($this,'read'),
+//                                 array($this,'write'),
+//                                 array($this,'destroy'),
+//                                 array($this,'clean')
+//                                );
+//        parent::start();
+//    }
 }
 ?>

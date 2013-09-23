@@ -4,11 +4,11 @@ class DBLeaderBoard extends LeaderBoard
 {
     private $_db;
     
-    public function __construct() 
+    public function __construct(Pimple $container) 
     {
         try
         {
-            $this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+            $this->_db = $container['db'];//new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
             $sql = "select name, score from users order by score desc";
             $stmt = $this->_db->query($sql);
             $stmt->execute();

@@ -3,16 +3,23 @@ require 'vendor/autoload.php';
 
 $container = new Pimple();
 
-$container['session'] = new SessionDB();
-$container['leaderboard'] = new DBLeaderBoard();
+$container['db'] = $container->share(function() {
+    return new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+});
+
+$container['session'] = $container->share(function($c) {
+    return new SessionDB($c);
+});
+
+$container['leaderboard'] = function($c) {
+    return new DBLeaderBoard($c);
+};
 
 $container['user'] = function($c) { return new User($c);};
 
 $container['Quiz'] = function ($c) {return QuizFactory::getQuiz($c);};
 
 $quiz = $container['Quiz'];
-
-$quiz->session->start();
 
 $quiz->session->set('last', null);
 
@@ -93,7 +100,7 @@ $quiz->session->end();
             endforeach; ?>
             </div><!--quiz-->
             <ul id="footer" class="clear">
-                <li><a href="index.php" title="Start The Quiz Again">Start Again</a></li>
+                <li><a href="/simple-quiz/" title="Start The Quiz Again">Start Again</a></li>
                 <li><a href="http://blog.elanman.com/2009/03/make-your-own-php-quiz-part-1/" title="Return To ElanMan's Drawers">ElanMan</a></li>
             </ul>
         </div><!--wrapper-->

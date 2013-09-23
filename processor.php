@@ -4,16 +4,23 @@ require 'vendor/autoload.php';
 
 $container = new Pimple();
 
-$container['session'] = new SessionDB();
-$container['leaderboard'] = new DBLeaderBoard();
+$container['db'] = $container->share(function() {
+    return new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+});
+
+$container['session'] = $container->share(function($c) {
+    return new SessionDB($c);
+});
+
+$container['leaderboard'] = function($c) {
+    return new DBLeaderBoard($c);
+};
 
 $container['user'] = function($c) { return new User($c);};
 
 $container['Quiz'] = function ($c) {return QuizFactory::getQuiz($c);};
 
 $quiz = $container['Quiz'];
-
-$quiz->session->start();
 
 if ( ! isset($_POST['submitter']) ) 
 {

@@ -4,6 +4,6 @@
     },
     "autoload": {
         "classmap": ["classes/"],
-        "files" : ["functions.php"]
+        "files" : ["functions.php","pimple.php"]
     }
 }
