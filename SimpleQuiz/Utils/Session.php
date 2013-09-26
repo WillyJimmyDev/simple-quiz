@@ -1,4 +1,5 @@
 <?php
+namespace SimpleQuiz\Utils;
 
 /*
  *
@@ -12,10 +13,10 @@ class Session {
     public function __construct() 
     {
         
-        session_name("Simple-Quiz");
-        session_start();
+        \session_name("Simple-Quiz");
+        \session_start();
         //the following is needed to a bug with php 5.2 and apc 3.1.6
-        register_shutdown_function('session_write_close');
+        \register_shutdown_function('session_write_close');
     }
 
 
@@ -53,7 +54,7 @@ class Session {
     
     public function end() 
     {
-        session_destroy();
+        \session_destroy();
         return true;
     }
     

@@ -1,4 +1,6 @@
 <?php
+namespace SimpleQuiz\Utils;
+
 abstract class LeaderBoard {
     
     protected $_members = array();

@@ -1,10 +1,12 @@
 <?php
+namespace SimpleQuiz\Utils;
+
 class User 
 {
     private $_session;
     private $_leaderboard;
     
-    public function __construct(Pimple $container) 
+    public function __construct(\Pimple $container) 
     {
         $this->_session = $container['session']; 
         $this->_leaderboard = $container['leaderboard'];

@@ -3,7 +3,9 @@
         "pimple/pimple": "1.1.*@dev"
     },
     "autoload": {
-        "classmap": ["classes/"],
-        "files" : ["functions.php","pimple.php"]
+        "files" : ["functions.php"],
+        "psr-0": {
+            "SimpleQuiz": ""
+        }
     }
 }

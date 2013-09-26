@@ -1,4 +1,6 @@
 <?php
+namespace SimpleQuiz\Utils;
+
 /*
  *
  * @author ElanMan
@@ -16,7 +18,7 @@ class Quiz {
     
     public $session;
     
-    public function __construct(Pimple $container)
+    public function __construct(\Pimple $container)
     {
         $this->_currentuser = $container['user'];
         
@@ -30,7 +32,7 @@ class Quiz {
             $this->_db = $container['db'];
             $this->_populateQuestions();
         }
-        catch (PDOException $e)
+        catch (\PDOException $e)
         {
             return $e;
         }
@@ -44,7 +46,7 @@ class Quiz {
             //pull answers from db for only this question
             $answersql = "SELECT text FROM answers where question_id = :id ORDER BY correct DESC";
             $stmt = $this->_db->prepare($answersql);
-            $stmt->bindParam(':id', $questionid, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $questionid, \PDO::PARAM_INT);
             $stmt->execute();
             while ($result = $stmt->fetchObject())
             {
@@ -57,7 +59,7 @@ class Quiz {
             $answersql = "SELECT group_concat( a.text ORDER BY a.correct DESC SEPARATOR '~' ) FROM answers a GROUP BY a.question_id";
             $stmt = $this->_db->query($answersql);
             $stmt->execute();
-            $resultset = $stmt->fetchAll(PDO::FETCH_NUM);
+            $resultset = $stmt->fetchAll(\PDO::FETCH_NUM);
         
             foreach ($resultset as $csv)
             {   
@@ -74,7 +76,7 @@ class Quiz {
     {
         $questionsql = "select text from questions where id = :id";
         $stmt = $this->_db->prepare($questionsql);
-        $stmt->bindParam(':id', $questionid, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $questionid, \PDO::PARAM_INT);
         $stmt->execute();
         $row = $stmt->fetchObject();
         $this->_question = $row->text;

@@ -1,25 +1,29 @@
 <?php //test.php
+namespace SimpleQuiz;
+
+ ini_set('display_errors', 1);
+ ini_set('error_reporting', E_ALL);
 require 'vendor/autoload.php';
 
-$container = new Pimple();
+$container = new \Pimple();
 
 $container['db'] = $container->share(function() {
-    return new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
+    return new \SimpleQuiz\Utils\DB();
 });
 
 $container['session'] = $container->share(function($c) {
-    return new SessionDB($c);
+    return new \SimpleQuiz\Utils\SessionDB($c);
 });
 
 $container['leaderboard'] = function($c) {
-    return new DBLeaderBoard($c);
+    return new \SimpleQuiz\Utils\DBLeaderBoard($c);
 };
 
-$container['user'] = function($c) { return new User($c);};
+$container['user'] = function($c) { return new \SimpleQuiz\Utils\User($c);};
 
-$container['Quiz'] = function ($c) {return QuizFactory::getQuiz($c);};
+$container['quiz'] = function ($c) {return \SimpleQuiz\Utils\QuizFactory::getQuiz($c);};
 
-$quiz = $container['Quiz'];
+$quiz = $container['quiz'];
 
 $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
 

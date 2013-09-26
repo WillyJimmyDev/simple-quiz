@@ -1,4 +1,5 @@
 <?php
+namespace SimpleQuiz\Utils;
 
 /*
  * Basic session class to store sessions in db
@@ -8,18 +9,18 @@ class SessionDB extends Session {
 
     private  $db;
     
-    public function __construct(Pimple $container) {
+    public function __construct(\Pimple $container) {
         
         try
         {
             $this->db = $container['db'];
         }
-        catch (PDOException $e)
+        catch (\PDOException $e)
         {
             return $e;
         }
         
-        session_set_save_handler(array($this,'open'),
+        \session_set_save_handler(array($this,'open'),
                                  array($this,'close'),
                                  array($this,'read'),
                                  array($this,'write'),
@@ -44,9 +45,9 @@ class SessionDB extends Session {
     {
         $sql = "SELECT * FROM sessions WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
+        $stmt->bindParam(':id',$id,\PDO::PARAM_STR);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result['data'];
     }
 
@@ -55,9 +56,9 @@ class SessionDB extends Session {
         $access = time();
         $sql = "REPLACE INTO sessions VALUES  (:id, :access, :data)";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
-        $stmt->bindParam(':access',$access,PDO::PARAM_STR);
-        $stmt->bindParam(':data',$data,PDO::PARAM_STR);
+        $stmt->bindParam(':id',$id,\PDO::PARAM_STR);
+        $stmt->bindParam(':access',$access,\PDO::PARAM_STR);
+        $stmt->bindParam(':data',$data,\PDO::PARAM_STR);
         $stmt->execute();
         return true;
     }
@@ -73,7 +74,7 @@ class SessionDB extends Session {
         
         $sql = 'DELETE FROM sessions WHERE id = :id';
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
+        $stmt->bindParam(':id',$id,\PDO::PARAM_STR);
         $stmt->execute();
         return true;
     }
@@ -84,7 +85,7 @@ class SessionDB extends Session {
         $old = time() - $max;
         $sql = 'DELETE FROM sessions WHERE  access < :old';
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':old',$old,PDO::PARAM_STR);
+        $stmt->bindParam(':old',$old,\PDO::PARAM_STR);
         $stmt->execute();
         return true;
     }

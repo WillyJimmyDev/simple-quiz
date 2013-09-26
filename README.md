@@ -1,8 +1,7 @@
 * Things are changing...
- You will need to have composer installed to add the project dependencies.
- Composer has many advantages for any PHP project; it makes installation of required external packages simple.
+ You don't need to have composer installed to add the project dependencies as they are bundled with the project.
+ However, Composer has many advantages for any PHP project; it makes installation of required external packages simple.
 * Unpack the zip archive into any web accessible folder on your server.
- Run 'composer install' to get the required dependencies (currently only Pimple for DIC).
 * Import res/simple-quiz.sql into MySQL.
 * Create a database called 'simple-quiz'
 * Change credentials in /classes/config.class.php to suit
