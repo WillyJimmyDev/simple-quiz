@@ -30,7 +30,7 @@ class User
         
         $this->_session->remove('error');
         
-        header('Location: test.php');
+        header('Location: test');
         exit;
     }
     
@@ -44,7 +44,7 @@ class User
         $this->_session->set('finished','no');
         $this->_session->set('num',0);
         
-        header('Location: test.php');
+        header('Location: test');
         exit();
     }
 }

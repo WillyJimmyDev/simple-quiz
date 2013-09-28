@@ -1,9 +1,10 @@
 {
     "require": {
-        "pimple/pimple": "1.1.*@dev"
+        "pimple/pimple": "1.1.*@dev",
+        "slim/slim": "2.*"
     },
     "autoload": {
-        "files" : ["functions.php"],
+        "files" : ["SimpleQuiz/Utils/functions.php"],
         "psr-0": {
             "SimpleQuiz": ""
         }

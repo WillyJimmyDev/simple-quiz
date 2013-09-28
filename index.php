@@ -1,4 +1,6 @@
 <?php //index.php
+ ini_set('error-reporting', E_ALL);
+ ini_set('display_errors', 1);
 require 'vendor/autoload.php';
 
 $container = new \Pimple();
@@ -19,69 +21,102 @@ $container['user'] = function($c) { return new \SimpleQuiz\Utils\User($c);};
 
 $container['quiz'] = function ($c) {return \SimpleQuiz\Utils\QuizFactory::getQuiz($c);};
 
-$quiz = $container['quiz'];
+$app = new \Slim\Slim(array(
+    'debug' => true,
+    'log.enabled' => true
+));
 
-$quiz->session->set('score', 0);
-$quiz->session->set('correct', array()); 
-$quiz->session->set('wrong', array());
-$quiz->session->set('finished','no');
-$quiz->session->set('num',0);
-?>
-<!DOCTYPE html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="res/css/style.css" type="text/css" />
-    <title>The Web Acronym Test</title>
-    <script type="text/javascript" src="res/js/start.js"></script>
-</head>
-<body id="splash">
-    <div id="wrapper">
-        <div id="intro">
-            <h1>Take the test and see how well you know your web acronyms</h1>
-            <p>Each question has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
-            <p>There are <?php echo count($quiz->getQuestions()); ?> questions, so let's get cracking!</p>
-            <p>You'll get your score at the end of the test.</p>
-            <div id="leaders-score">
-                <h2>Top 10 Scorers</h2>
-                <ul class="leaders">
-                    <?php
-                    $leaders = $quiz->getLeaders(10);
-                    $numquestions = count($quiz->getQuestions());
-                    $counter = 1;
-                    foreach ($leaders as $key => $value) :
-                        
-                        echo '<li>' . $key. ': ' .  $value . '/' . $numquestions . '</li>';
-                        
-                        //Use modulus to create new sub-list if required.
-                        if ($counter % 5 == 0) :  
-                            echo '</ul>' . PHP_EOL . '<ul class="leaders">' . PHP_EOL;
-                        endif;
-                        
-                        $counter++;
-                        
-                    endforeach;
-                    ?>
-                </ul>
-            </div><!-- leaders-score-->
-        </div><!--intro-->
-        <div id="quiz">
-            <h2>Start The Test</h2>
-            <p>If featuring on the Score Board doesn't interest you,</p>
-            <form id="jttt" method="post" action="processor.php">
-                <p><input type="submit" value="Just Take The Test" /></p>
-            </form>
-            <form id="questionBox" method="post" action="processor.php">
-                <p>If you want to be placed on the 'Top Scorers' list, please enter a username below.</p> 
-                <ul>
-                    <li><label for="username">Create A Username:</label><br />
-                        <input type="text" id="username" name="username" value="Username" />
-                        <p id="exp">Username must be between 3 and 10 characters in length</p></li>
-                </ul>
-                <p><input type="hidden" name="register" value="TRUE" />
-                    <input type="submit" id="submit" value="Register And Take The Test" /></p>
-            </form> 
-            <p id="helper"><?php if ( $quiz->session->get('error') ) echo $quiz->session->get('error'); ?></p>
-        </div><!--quiz-->
-    </div><!--wrapper-->
-</body>
-</html>
+$app->get('/', function () use ($app, $container) {
+    
+    $quiz = $container['quiz'];
+    
+    $quiz->session->set('score', 0);
+    $quiz->session->set('correct', array()); 
+    $quiz->session->set('wrong', array());
+    $quiz->session->set('finished','no');
+    $quiz->session->set('num',0);
+    
+    $app->render('index.php',array('quiz' => $quiz));
+});
+
+$app->post('/process', function () use ($app, $container) {
+    
+    $quiz = $container['quiz'];
+    
+    $submitter = $app->request()->post('submitter');
+    $register = $app->request()->post('register');
+    $username = $app->request()->post('username');
+    $num = $app->request()->post('num');
+    $answers = $app->request()->post('answers');
+    
+    if ( ! isset($submitter) ) 
+    {
+        if ( isset($register) ) 
+        {
+            $username = trim(strip_tags(stripslashes($username)));
+            $quiz->registerUser($username);
+        } 
+        else 
+        {
+            $quiz->createRandomUser();
+        }
+    } 
+    else 
+    {
+        $quiz->session->set('num',(int) $num);
+        $num = $quiz->session->get('num');
+    
+        $numquestions = count($quiz->getQuestions());
+        $quizanswers = $quiz->getAnswers($num);
+    
+        if ($answers == $quizanswers[0]) //first answer in array is correct one
+        {
+            $score = $quiz->session->get('score');
+            $score++;
+            $quiz->session->set('score', $score);
+            $_SESSION['correct'][] = $answers;
+        } 
+        else 
+        {
+            $_SESSION['wrong'][] = $answers;
+        }
+        if ($_SESSION['num'] < $numquestions - 1) 
+        {
+            $_SESSION['num']++;
+        } 
+        else 
+        {
+            $_SESSION['last'] = true;
+            $_SESSION['finished'] = 'yes';
+        }
+        $app->redirect('test');
+    }
+});
+
+$app->get('/test', function () use ($app, $container) {
+    
+    $quiz = $container['quiz'];
+    $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
+    
+    $app->render('test.php',array('quiz' => $quiz,'num' => $num));
+});
+
+$app->get('/results', function () use ($app, $container) {
+    
+    $quiz = $container['quiz'];
+    $quiz->session->set('last', null);
+
+    if( $quiz->session->get('finished') != 'yes' ) 
+    {
+        $root = $app->request->getRootUri();
+        $app->redirect($root);
+    }
+
+    //destroy the session
+    $quiz->session->end();
+    
+    $app->render('results.php',array('quiz' => $quiz));
+});
+
+
+$app->run();

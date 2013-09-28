@@ -113,13 +113,11 @@ class Quiz {
     public function registerUser($username)
     {
         $this->_currentuser->register($username);
-        //return true;
     }
     
     public function createRandomUser ()
     {
         $this->_currentuser->createRandom();
-        //return true;
     }
     
     public function addScore()

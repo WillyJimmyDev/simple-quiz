@@ -1,5 +1,4 @@
 <?php
-
 function shuffle_assoc($array) 
 {
     $keys = array_keys($array);
@@ -11,4 +10,3 @@ function shuffle_assoc($array)
     }
      return $shuffled;
 }
-?>

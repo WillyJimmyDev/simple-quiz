@@ -1,7 +1,4 @@
 ROADMAP
-
-Use static Session class instead of passing in to every class constructor
-Use XPath for xml manipulation
 Add admin backend for creation of questions/answers and/or quizzes?
 
 js slides between questions

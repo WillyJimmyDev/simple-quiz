@@ -1,33 +1,3 @@
-<?php //test.php
-namespace SimpleQuiz;
-
- ini_set('display_errors', 1);
- ini_set('error_reporting', E_ALL);
-require 'vendor/autoload.php';
-
-$container = new \Pimple();
-
-$container['db'] = $container->share(function() {
-    return new \SimpleQuiz\Utils\DB();
-});
-
-$container['session'] = $container->share(function($c) {
-    return new \SimpleQuiz\Utils\SessionDB($c);
-});
-
-$container['leaderboard'] = function($c) {
-    return new \SimpleQuiz\Utils\DBLeaderBoard($c);
-};
-
-$container['user'] = function($c) { return new \SimpleQuiz\Utils\User($c);};
-
-$container['quiz'] = function ($c) {return \SimpleQuiz\Utils\QuizFactory::getQuiz($c);};
-
-$quiz = $container['quiz'];
-
-$num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
-
-?>
 <!DOCTYPE html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -57,7 +27,7 @@ if (! $quiz->session->get('last') ) :
 ?>
     <h2>Question <?php echo $num; ?>:</h2>
     <p>What does <strong><?php echo $question; ?></strong> stand for?</p>
-    <form id="questionBox" method="post" action="processor.php">
+    <form id="questionBox" method="post" action="process">
         <ul>
         <?php 
         $shuffledAnswers = shuffle_assoc($answers);
@@ -103,7 +73,7 @@ else :
     
     echo '<p id="verdict">' . $verdict . '</p>';
     
-    echo '<p id="compare"><a href="results.php">See how you compare! <img src="images/arrow.png" /></a></p>';
+    echo '<p id="compare"><a href="results">See how you compare! <img src="images/arrow.png" /></a></p>';
 endif;
 ?>
 </div><!--quiz-->

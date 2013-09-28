@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "45fa7907493d32d71d47a1b9e8819210",
+    "hash": "ff6d3daa2c8e3fd02d9ad5fe4c877f05",
     "packages": [
         {
             "name": "pimple/pimple",
@@ -50,6 +50,50 @@
                 "dependency injection"
             ],
             "time": "2013-09-19 04:53:08"
+        },
+        {
+            "name": "slim/slim",
+            "version": "2.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeguy/Slim.git",
+                "reference": "5932fcb53e727f7fd3bd8411b3ad1d54217b4a48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeguy/Slim/zipball/5932fcb53e727f7fd3bd8411b3ad1d54217b4a48",
+                "reference": "5932fcb53e727f7fd3bd8411b3ad1d54217b4a48",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mcrypt": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Slim": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Lockhart",
+                    "email": "info@joshlockhart.com",
+                    "homepage": "http://www.joshlockhart.com/"
+                }
+            ],
+            "description": "Slim Framework, a PHP micro framework",
+            "homepage": "http://github.com/codeguy/Slim",
+            "keywords": [
+                "microframework",
+                "rest",
+                "router"
+            ],
+            "time": "2013-09-27 01:48:57"
         }
     ],
     "packages-dev": [
