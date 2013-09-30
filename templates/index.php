@@ -1,58 +1,63 @@
-<!DOCTYPE html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="res/css/style.css" type="text/css" />
-    <title>The Web Acronym Test</title>
-    <script type="text/javascript" src="res/js/start.js"></script>
-</head>
-<body id="splash">
-    <div id="wrapper">
-        <div id="intro">
-            <h1>Take the test and see how well you know your web acronyms</h1>
-            <p>Each question has 4 possible answers. Choose the answer you think is correct and click <strong>'Submit Answer'</strong>. You'll then be given the next acronym.</p>
-            <p>There are <?php echo count($quiz->getQuestions()); ?> questions, so let's get cracking!</p>
-            <p>You'll get your score at the end of the test.</p>
-            <div id="leaders-score">
-                <h2>Top 10 Scorers</h2>
-                <ul class="leaders">
-                    <?php
-                    $leaders = $quiz->getLeaders(10);
-                    $numquestions = count($quiz->getQuestions());
-                    $counter = 1;
-                    foreach ($leaders as $key => $value) :
-                        
-                        echo '<li>' . $key. ': ' .  $value . '/' . $numquestions . '</li>';
-                        
-                        //Use modulus to create new sub-list if required.
-                        if ($counter % 5 == 0) :  
-                            echo '</ul>' . PHP_EOL . '<ul class="leaders">' . PHP_EOL;
-                        endif;
-                        
-                        $counter++;
-                        
-                    endforeach;
-                    ?>
-                </ul>
+<!--
+
+* Simple-Quiz by @elanman
+* Copyright 2013 Ben Hall.
+* Licensed under http://www.apache.org/licenses/LICENSE-2.0
+
+-->
+<?php include'header.php'; ?>
+    <div id="container" class="quiz">
+      <div class="row">
+          <div id="intro" class="col-md-5 col-md-push-5">
+          <h2>Quiz :: Web Acronyms</h2>
+          <p>Take the test and see how well you know your web acronyms.</p>
+          <p>Each question has 4 possible answers.</p>
+          <p>Choose an answer and click <strong>'Submit Answer'</strong>. You'll then be given the next question.</p>
+          <p>There are <?php echo count($quiz->getQuestions()); ?> questions, so let's get cracking!</p>
+          <p>You'll get your score at the end of the test.</p>
+          <div id="leaders-score">
+              <?php $leadersToShow = 10; ?>
+                <h4>Top <?php echo $leadersToShow; ?> Scorers</h4>
+                <div class="row">
+                    <ul class="leaders col-md-6">
+                        <?php
+                        $leaders = $quiz->getLeaders($leadersToShow);
+                        $numquestions = count($quiz->getQuestions());
+                        $counter = 1;
+                        foreach ($leaders as $key => $value) :
+
+                            echo '<li><strong>' . $key. '</strong>: ' .  $value . '/' . $numquestions . '</li>';
+
+                            //Use modulus to create new sub-list if required.
+                            if ($counter % (round($leadersToShow/2)) == 0) :  
+                                echo '</ul>' . PHP_EOL . '<ul class="leaders col-md-6">' . PHP_EOL;
+                            endif;
+
+                            $counter++;
+
+                        endforeach;
+                        ?>
+                    </ul>
+                </div>
             </div><!-- leaders-score-->
-        </div><!--intro-->
-        <div id="quiz">
-            <h2>Start The Test</h2>
-            <p>If featuring on the Score Board doesn't interest you,</p>
+        </div>
+        <div class="col-md-3 col-md-offset-2 col-md-pull-5">
+          <h2>Start The Quiz</h2>
+          <p>Don't want to appear on the Score Board?</p>
             <form id="jttt" method="post" action="process">
-                <p><input type="submit" value="Just Take The Test" /></p>
+                <p><button type="submit" class="btn btn-primary"><!--<span class="glyphicon glyphicon-chevron-right"></span>--> Just Take The Test</button></p>
             </form>
             <form id="questionBox" method="post" action="process">
-                <p>If you want to be placed on the 'Top Scorers' list, please enter a username below.</p> 
-                <ul>
-                    <li><label for="username">Create A Username:</label><br />
-                        <input type="text" id="username" name="username" value="Username" />
-                        <p id="exp">Username must be between 3 and 10 characters in length</p></li>
-                </ul>
+                <p>If you want worldwide glory and fame, register a username below.</p> 
+                <p>
+                    <label for="username">Create A Username:</label><br />
+                        <input type="text" id="username" name="username" placeholder="Username" />
                 <p><input type="hidden" name="register" value="TRUE" />
-                    <input type="submit" id="submit" value="Register And Take The Test" /></p>
+                    <input type="submit" id="submit" class="btn btn-primary" value="Register And Take The Test" /></p>
             </form> 
             <p id="helper"><?php if ( $quiz->session->get('error') ) echo $quiz->session->get('error'); ?></p>
-        </div><!--quiz-->
-    </div><!--wrapper-->
-</body>
-</html>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+        
+    </div><!--container-->
+<?php include 'footer.php'; ?>

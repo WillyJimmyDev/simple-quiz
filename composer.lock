@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ff6d3daa2c8e3fd02d9ad5fe4c877f05",
+    "hash": "8c77686773db5bbafdd81cbfe5798d53",
     "packages": [
         {
             "name": "pimple/pimple",
@@ -94,6 +94,43 @@
                 "router"
             ],
             "time": "2013-09-27 01:48:57"
+        },
+        {
+            "name": "twitter/bootstrap",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "fc2cde0230802055da2c3854573d03502fa3f3cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/fc2cde0230802055da2c3854573d03502fa3f3cc",
+                "reference": "fc2cde0230802055da2c3854573d03502fa3f3cc",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jacob Thornton",
+                    "email": "jacobthornton@gmail.com"
+                },
+                {
+                    "name": "Mark Otto",
+                    "email": "markdotto@gmail.com"
+                }
+            ],
+            "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
+            "homepage": "http://getbootstrap.com",
+            "keywords": [
+                "bootstrap",
+                "css"
+            ],
+            "time": "2013-09-27 17:23:28"
         }
     ],
     "packages-dev": [
@@ -104,7 +141,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "pimple/pimple": 20
+        "pimple/pimple": 20,
+        "twitter/bootstrap": 20
     },
     "platform": [
 

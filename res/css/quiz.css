@@ -1,0 +1,45 @@
+/*
+
+* Simple-Quiz by @elanman
+* Copyright 2013 Ben Hall.
+* Licensed under http://www.apache.org/licenses/LICENSE-2.0
+
+*/
+
+/*.navbar-static-top {
+  margin-bottom: 19px;
+}*/
+
+/* Pad the edges of the mobile views a bit */
+.quiz {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#intro {
+    border-left:1px #ccc dashed;
+}
+#leaders-score {
+    padding:10px;
+    background: #f8f8f8;
+}
+ul {
+    list-style: none;
+}
+#finalscore {
+    text-align:center;
+}
+#finalscore h2.userscore {
+    font-size: 4em;
+}
+#finalscore p#verdict {
+    font-size: 2em;
+}
+li.correct,li.correctuser {
+    color: green;
+}
+li.wrong {
+    color: red;
+}
+strong.currentuser {
+    color:green;
+}
