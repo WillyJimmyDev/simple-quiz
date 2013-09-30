@@ -35,7 +35,7 @@
             <p>
                 <input type="hidden" name="num" value="<?php echo $num; ?>" />
                 <input type="hidden" name="submitter" value="TRUE" />
-                <input type="submit" id="submit" name="submit" value="Submit Answer" />
+                <input type="submit" id="submit" class="btn btn-primary" name="submit" value="Submit Answer" />
             </p>
         </form>
 <?php 

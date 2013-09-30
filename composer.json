@@ -1,8 +1,7 @@
 {
     "require": {
         "pimple/pimple": "1.1.*@dev",
-        "slim/slim": "2.*",
-        "twitter/bootstrap": "dev-master"
+        "slim/slim": "2.*"
     },
     "autoload": {
         "files" : ["SimpleQuiz/Utils/functions.php"],

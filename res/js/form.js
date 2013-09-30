@@ -3,10 +3,10 @@ window.onload = function () {
 	var qform = document.getElementById('questionBox');
 	var inputs = qform.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length;i++) {
-		inputs[i].onclick = function(evt) { checkForm();};
+		inputs[i].onclick = function(evt) { checkForm2();};
 	}
 }
 
-function checkForm() {
+function checkForm2() {
 	document.getElementById('submit').disabled = false;
 }

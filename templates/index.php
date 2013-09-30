@@ -51,9 +51,9 @@
                 <p>If you want worldwide glory and fame, register a username below.</p> 
                 <p>
                     <label for="username">Create A Username:</label><br />
-                        <input type="text" id="username" name="username" placeholder="Username" />
+                        <input type="text" id="username" class="form-control" name="username" placeholder="Username" />
                 <p><input type="hidden" name="register" value="TRUE" />
-                    <input type="submit" id="submit" class="btn btn-primary" value="Register And Take The Test" /></p>
+                    <input type="submit" id="submitstart" class="btn btn-primary" value="Register And Take The Test" /></p>
             </form> 
             <p id="helper"><?php if ( $quiz->session->get('error') ) echo $quiz->session->get('error'); ?></p>
         </div><!-- /.col-lg-4 -->
