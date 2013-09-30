@@ -65,7 +65,7 @@ $app->post('/process', function () use ($app, $container) {
     else 
     {
         $quiz->session->set('num',(int) $num);
-        $num = $quiz->session->get('num');
+        //$num = $quiz->session->get('num');
     
         $numquestions = count($quiz->getQuestions());
         $quizanswers = $quiz->getAnswers($num);
@@ -81,7 +81,7 @@ $app->post('/process', function () use ($app, $container) {
         {
             $_SESSION['wrong'][] = $answers;
         }
-        if ($_SESSION['num'] < $numquestions - 1) 
+        if ($_SESSION['num'] < $numquestions) 
         {
             $_SESSION['num']++;
         } 
