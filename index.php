@@ -29,7 +29,6 @@ $app = new \Slim\Slim(array(
 $app->get('/', function () use ($app, $container) {
     
     $quiz = $container['quiz'];
-    $root = $app->request->getRootUri();
     
     $quiz->session->set('score', 0);
     $quiz->session->set('correct', array()); 
@@ -37,7 +36,7 @@ $app->get('/', function () use ($app, $container) {
     $quiz->session->set('finished','no');
     $quiz->session->set('num',0);
     
-    $app->render('index.php',array('quiz' => $quiz,'root' => $root));
+    $app->render('index.php',array('quiz' => $quiz));
 });
 
 $app->post('/process', function () use ($app, $container) {
@@ -95,28 +94,27 @@ $app->post('/process', function () use ($app, $container) {
 });
 
 $app->get('/test', function () use ($app, $container) {
-    $root = $app->request->getRootUri();
+    
     $quiz = $container['quiz'];
     $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
     
-    $app->render('test.php',array('quiz' => $quiz,'num' => $num, 'root' => $root));
+    $app->render('test.php',array('quiz' => $quiz,'num' => $num));
 });
 
 $app->get('/results', function () use ($app, $container) {
     
-    $root = $app->request->getRootUri();
     $quiz = $container['quiz'];
     $quiz->session->set('last', null);
 
     if( $quiz->session->get('finished') != 'yes' ) 
     {
-        $app->redirect($root);
+        $app->redirect($app->request->getRootUri());
     }
 
     //destroy the session
     $quiz->session->end();
     
-    $app->render('results.php',array('quiz' => $quiz,'root' => $root));
+    $app->render('results.php',array('quiz' => $quiz));
 });
 
 

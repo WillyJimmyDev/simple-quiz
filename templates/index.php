@@ -5,7 +5,11 @@
 * Licensed under http://www.apache.org/licenses/LICENSE-2.0
 
 -->
-<?php include'header.php'; ?>
+<?php 
+    include'header.php'; 
+    $numquestions = count($quiz->getQuestions());
+    $leadersToShow = 10;
+?>
     <div id="container" class="quiz">
       <div class="row">
           <div id="intro" class="col-md-5 col-md-push-5">
@@ -13,16 +17,14 @@
           <p>Take the test and see how well you know your web acronyms.</p>
           <p>Each question has 4 possible answers.</p>
           <p>Choose an answer and click <strong>'Submit Answer'</strong>. You'll then be given the next question.</p>
-          <p>There are <?php echo count($quiz->getQuestions()); ?> questions, so let's get cracking!</p>
+          <p>There are <?php echo $numquestions; ?> questions, so let's get cracking!</p>
           <p>You'll get your score at the end of the test.</p>
           <div id="leaders-score">
-              <?php $leadersToShow = 10; ?>
                 <h4>Top <?php echo $leadersToShow; ?> Scorers</h4>
                 <div class="row">
                     <ul class="leaders col-md-6">
                         <?php
                         $leaders = $quiz->getLeaders($leadersToShow);
-                        $numquestions = count($quiz->getQuestions());
                         $counter = 1;
                         foreach ($leaders as $key => $value) :
 
