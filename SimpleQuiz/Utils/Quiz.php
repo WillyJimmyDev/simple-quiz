@@ -3,10 +3,10 @@ namespace SimpleQuiz\Utils;
 
 /*
  *
- * @author ElanMan
+ * @author Ben Hall
  */
 
-class Quiz {
+class Quiz implements Base\QuizInterface {
     
     protected $_db;
     protected $_answers = array();
@@ -28,7 +28,6 @@ class Quiz {
         
         try
         {
-            //$this->_db = new PDO('mysql:host='.Config::$dbhost.';dbname='.Config::$dbname,  Config::$dbuser,  Config::$dbpassword);
             $this->_db = $container['db'];
             $this->_populateQuestions();
         }
@@ -89,7 +88,7 @@ class Quiz {
         return $this->_questions;
     }
     
-    private function _populateQuestions() 
+    public function _populateQuestions() 
     {
         $questionsql = "select text from questions order by id asc";
         $stmt = $this->_db->query($questionsql);
@@ -98,6 +97,11 @@ class Quiz {
         {
             $this->_questions[] .= $row->text;
         }
+    }
+    
+    public function getUser($username)
+    {
+        
     }
     
     public function getUsers()
@@ -120,9 +124,9 @@ class Quiz {
         $this->_currentuser->createRandom();
     }
     
-    public function addScore()
+    public function addQuizTaker($user,$score,$start,$end,$timetaken)
     {
-        $this->_leaderboard->addMember($this->session->get('user'),$this->session->get('score'));
+        $this->_leaderboard->addMember($user,$score,$start,$end,$timetaken);
         return true;
     }
 }

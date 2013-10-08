@@ -1,8 +1,8 @@
 <?php
 namespace SimpleQuiz\Utils;
 
-class User 
-{
+class User implements Base\UserInterface {
+    
     private $_session;
     private $_leaderboard;
     
@@ -27,6 +27,7 @@ class User
         $this->_session->set('wrong', array());
         $this->_session->set('finished','no');
         $this->_session->set('num',0);
+        $this->_session->set('starttime',date('Y-m-d H:i:s'));
         
         $this->_session->remove('error');
         
@@ -43,6 +44,7 @@ class User
         $this->_session->set('wrong', array());
         $this->_session->set('finished','no');
         $this->_session->set('num',0);
+        $this->_session->set('starttime',date('Y-m-d H:i:s'));
         
         header('Location: test');
         exit();

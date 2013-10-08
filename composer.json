@@ -3,8 +3,9 @@
         "pimple/pimple": "1.1.*@dev",
         "slim/slim": "2.*"
     },
+    "minimum-stability": "dev",
     "autoload": {
-        "files" : ["SimpleQuiz/Utils/functions.php"],
+        "files" : ["SimpleQuiz/Utils/Base/functions.php"],
         "psr-0": {
             "SimpleQuiz": ""
         }

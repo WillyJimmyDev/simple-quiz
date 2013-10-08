@@ -5,7 +5,7 @@ namespace SimpleQuiz\Utils;
  * Basic session class to store sessions in db
  */
 
-class SessionDB extends Session {
+class SessionDB implements Base\SessionInterface {
 
     private  $db;
     
@@ -27,10 +27,42 @@ class SessionDB extends Session {
                                  array($this,'destroy'),
                                  array($this,'clean')
                                 );
-        parent::__construct();
+        
+        \session_name("Simple-Quiz");
+        \session_start();
+        //the following is needed to a bug with php 5.2 and apc 3.1.6
+        \register_shutdown_function('session_write_close');
     }
 
-
+    public function set($key, $value)
+    {
+        $_SESSION[$key] = $value;
+    }
+    
+    public function get($key)
+    {
+        if (isset($_SESSION[$key]))
+        {
+            return $_SESSION[$key]; 
+        }
+        return false;
+     }
+    
+     public function remove($key)
+    {
+        if (isset($_SESSION[$key]))
+        {
+            unset($_SESSION[$key]); 
+        }
+        return true;
+    }
+    
+    public function end() 
+    {
+        \session_destroy();
+        return true;
+    }
+    
     public function open()
     {
         return true;
@@ -90,17 +122,5 @@ class SessionDB extends Session {
         return true;
     }
 
-
-//    public function start()
-//    {
-//        session_set_save_handler(array($this,'open'),
-//                                 array($this,'close'),
-//                                 array($this,'read'),
-//                                 array($this,'write'),
-//                                 array($this,'destroy'),
-//                                 array($this,'clean')
-//                                );
-//        parent::start();
-//    }
 }
 ?>

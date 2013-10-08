@@ -1,15 +1,20 @@
 <?php
 namespace SimpleQuiz\Utils;
 
-class DBLeaderBoard extends LeaderBoard
-{
+class DBLeaderBoard implements Base\LeaderBoardInterface {
+    
     private $_db;
+    protected $_members = array();
     
     public function __construct(\Pimple $container) 
     {
+        $this->_db = $container['db'];
+    }
+    
+    public function getMembers($number = false)
+    {  
         try
         {
-            $this->_db = $container['db'];
             $sql = "select name, score from users order by score desc";
             $stmt = $this->_db->query($sql);
             $stmt->execute();
@@ -22,14 +27,34 @@ class DBLeaderBoard extends LeaderBoard
         {
             return $e;
         }
+        
+        if ($number)
+        {
+            arsort($this->_members,SORT_NUMERIC);
+            return array_slice($this->_members, 0, $number, true);
+        }
+        
+        return $this->_members;
     }
     
-    public function addMember($user,$score)
+    public function hasMember($username)
     {
-        $sql = "insert into users (name,score,date_submitted) values (:user,:score, now())";
+        if (array_key_exists($username,$this->_members) )
+        {
+           return true;
+        }
+        return false;
+    }
+    
+    public function addMember($user,$score,$start,$end,$timetaken)
+    {
+        $sql = "insert into users (name,score,start_time,date_submitted,time_taken) values (:user,:score,:start, :end,:timetaken)";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':user',$user,\PDO::PARAM_STR);
         $stmt->bindParam(':score',$score,\PDO::PARAM_INT);
+        $stmt->bindParam(':start',$start,\PDO::PARAM_STR);
+        $stmt->bindParam(':end',$end,\PDO::PARAM_STR);
+        $stmt->bindParam(':timetaken',$timetaken,\PDO::PARAM_STR);
         $stmt->execute();
         return true;
     }

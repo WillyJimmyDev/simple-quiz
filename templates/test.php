@@ -40,10 +40,13 @@
         </form>
 <?php 
 else :
-    $quiz->addScore();
+    $timeportions = explode(':', $timetaken);
+    $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
+    $secs = $timeportions[1] . ' secs' ;
     echo '<div id="finalscore">';
     echo '<h2 id="score">' . $quiz->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
     echo '<h2 class="userscore">' . $quiz->session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
+    echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
     echo '<h4>Verdict:</h4>' . PHP_EOL;
                                          
     if ( $quiz->session->get('score')  <= 5) 

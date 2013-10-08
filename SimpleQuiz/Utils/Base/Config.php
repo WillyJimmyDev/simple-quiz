@@ -1,5 +1,5 @@
 <?php
-namespace SimpleQuiz\Utils;
+namespace SimpleQuiz\Utils\Base;
 
 class Config 
 {
