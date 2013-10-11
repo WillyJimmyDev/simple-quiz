@@ -53,16 +53,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "2.3.2",
+            "version": "2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeguy/Slim.git",
-                "reference": "5932fcb53e727f7fd3bd8411b3ad1d54217b4a48"
+                "reference": "bc5f5a80d9f89620ad1a15db57f6a6bc88c2d3a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeguy/Slim/zipball/5932fcb53e727f7fd3bd8411b3ad1d54217b4a48",
-                "reference": "5932fcb53e727f7fd3bd8411b3ad1d54217b4a48",
+                "url": "https://api.github.com/repos/codeguy/Slim/zipball/bc5f5a80d9f89620ad1a15db57f6a6bc88c2d3a6",
+                "reference": "bc5f5a80d9f89620ad1a15db57f6a6bc88c2d3a6",
                 "shasum": ""
             },
             "require": {
@@ -93,7 +93,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2013-09-27 01:48:57"
+            "time": "2013-10-08 18:00:27"
         }
     ],
     "packages-dev": [

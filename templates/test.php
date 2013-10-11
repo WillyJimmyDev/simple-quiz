@@ -38,41 +38,41 @@
                 <input type="submit" id="submit" class="btn btn-primary" name="submit" value="Submit Answer" />
             </p>
         </form>
-<?php 
-else :
-    $timeportions = explode(':', $timetaken);
-    $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
-    $secs = $timeportions[1] . ' secs' ;
-    echo '<div id="finalscore">';
-    echo '<h2 id="score">' . $quiz->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
-    echo '<h2 class="userscore">' . $quiz->session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
-    echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
-    echo '<h4>Verdict:</h4>' . PHP_EOL;
-                                         
-    if ( $quiz->session->get('score')  <= 5) 
-    {
-        $verdict = "Don't Give Up Your Day Job.";
-    }
-    if ($quiz->session->get('score') > 5) 
-    {
-        $verdict = 'Pretty Poor.';
-    }
-    if ($quiz->session->get('score') > 10) 
-    {
-        $verdict = 'Not Bad.';
-    }
-    if ($quiz->session->get('score') > 15) 
-    {
-        $verdict = 'You Are A Legend!';
-    }
-    
-    echo '<p id="verdict">' . $verdict . '</p>';
-    
-    echo '<p id="compare"><a href="results">See how you compare! <img src="images/arrow.png" /></a></p>';
-    echo '</div>';
-endif;
-    ?>
-    </div>
+        <?php 
+        else :
+            $timeportions = explode(':', $timetaken);
+            $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
+            $secs = $timeportions[1] . ' secs' ;
+            echo '<div id="finalscore">';
+            echo '<h2 id="score">' . $quiz->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
+            echo '<h2 class="userscore">' . $quiz->session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
+            echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
+            echo '<h4>Verdict:</h4>' . PHP_EOL;
+
+            if ( $quiz->session->get('score')  <= 5) 
+            {
+                $verdict = "Don't Give Up Your Day Job.";
+            }
+            if ($quiz->session->get('score') > 5) 
+            {
+                $verdict = 'Pretty Poor.';
+            }
+            if ($quiz->session->get('score') > 10) 
+            {
+                $verdict = 'Not Bad.';
+            }
+            if ($quiz->session->get('score') > 15) 
+            {
+                $verdict = 'You Are A Legend!';
+            }
+
+            echo '<p id="verdict">' . $verdict . '</p>';
+
+            echo '<p id="compare"><a href="results">See how you compare! <img src="images/arrow.png" /></a></p>';
+            echo '</div>';
+        endif;
+        ?>
+        </div>
     </div>
 </div><!--container-->
 <?php include 'footer.php'; ?>
