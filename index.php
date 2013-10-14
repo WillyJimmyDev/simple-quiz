@@ -61,8 +61,16 @@ $app->post('/process', function () use ($app, $container) {
     {
         if ( isset($register) ) 
         {
-            $username = trim(strip_tags(stripslashes($username)));
-            $quiz->registerUser($username);
+            if (empty($username))
+            {
+                $quiz->createRandomUser();
+            }
+            else 
+            {
+                $username = trim(strip_tags(stripslashes($username)));
+                $quiz->registerUser($username);
+            }
+            
         } 
         else 
         {
