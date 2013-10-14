@@ -1,10 +1,19 @@
-window.onload = function () {
-	document.getElementById('questionBox').onsubmit = function() {return checkForm();};
-}
+$(document).ready(function () {
+    $('#questionBox').on('submit',function() {
+        return checkForm();
+    });
+    $('#username').on('focus', function() {
+        if ( $('#helper').text() !== '' ) {
+            $('#helper').text('');
+        }
+    });
+});
 
 function checkForm() {
-	if ((document.getElementById('username').value === '') || (document.getElementById('username').value === 'Username') || (document.getElementById('username').value.length < 3) || (document.getElementById('username').value.length > 10)) {
-	document.getElementById('helper').innerHTML = 'To register, please enter a username between 3 and 10 characters in length';
-		return false;
-	}
+    var username = $('#username').val();
+    if ((username === '') || (username === 'Username') || (username.length < 3) || (username.length > 10)) {
+        $('#helper').text('To register, please enter a username between 3 and 10 characters in length');
+        return false;
+    }
+    return true;
 }

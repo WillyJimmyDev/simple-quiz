@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb1
+-- version 4.0.7
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 18, 2013 at 08:05 PM
--- Server version: 5.5.29
--- PHP Version: 5.4.6-1ubuntu1.2
+-- Generation Time: Oct 14, 2013 at 08:24 PM
+-- Server version: 5.5.33a-MariaDB-log
+-- PHP Version: 5.5.4
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `questions` (
   `quiz_id` int(11) NOT NULL,
   `text` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
   KEY `quiz_id` (`quiz_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
@@ -165,6 +166,26 @@ INSERT INTO `questions` (`id`, `quiz_id`, `text`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `quizzes`
+--
+
+CREATE TABLE IF NOT EXISTS `quizzes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `quizzes`
+--
+
+INSERT INTO `quizzes` (`id`, `name`, `description`) VALUES
+(1, 'Web Acronyms', 'XML? HTTP? SOAP? How well do you know your web acronyms? Probably not as well as you think!');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sessions`
 --
 
@@ -180,8 +201,16 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `access`, `data`) VALUES
-('l7pgm0b647k0r03r53vsvcsn63', 1364934343, 'score|i:5;correct|a:5:{i:0;s:25:"Really Simple Syndication";i:1;s:25:"Hypertext Markup Language";i:2;s:27:"Hypertext Transfer Protocol";i:3;s:19:"Server-Side Include";i:4;s:26:"JavaScript Object Notation";}wrong|a:15:{i:0;s:21:"File Through Protocol";i:1;s:25:"Actual JavaScript and XML";i:2;s:25:"eXtremely Safe and Secure";i:3;s:24:"Post Hypertext Processor";i:4;s:24:"World Wide Web Creatives";i:5;s:26:"eXtendable Markup Language";i:6;s:19:"Yahoo''s Useful Idea";i:7;s:33:"Computer''s Graphical Intelligence";i:8;s:21:"Server Security Level";i:9;s:21:"Stupid Query Language";i:10;s:23:"Clientside Style Sheets";i:11;s:31:"Simply Obvious Access Principle";i:12;s:31:"Web Accessibility and Inclusion";i:13;s:45:"eXtendable Stylesheet Language Transformation";i:14;s:30:"World-wide Common Access Group";}finished|s:3:"yes";num|i:19;user|s:6:"Anon75";last|N;'),
-('ql9di4kp3knsgv9u4kjh54n686', 1364935412, 'score|i:2;correct|a:2:{i:0;s:25:"Hypertext Markup Language";i:1;s:20:"Secure Sockets Layer";}wrong|a:18:{i:0;s:18:"File Test Protocol";i:1;s:22:"All JavaScript and XML";i:2;s:23:"Really Simple Scripting";i:3;s:19:"Cross-site Security";i:4;s:21:"Process HTML Prettily";i:5;s:24:"World Wide Web Creatives";i:6;s:25:"Crossover Markup Language";i:7;s:19:"Yahoo''s Useful Idea";i:8;s:26:"Common Graphical Interface";i:9;s:21:"Secure Query Language";i:10;s:26:"Hypertext Traffic Protocol";i:11;s:23:"Calculated Style Sheets";i:12;s:33:"Structured Object Access Protocol";i:13;s:38:"World Wide Accessibility Incorporation";i:14;s:23:"Scripted Server Include";i:15;s:23:"JavaScript Over the Net";i:16;s:39:"eXpandable Stylesheet Language Transfer";i:17;s:30:"World-wide Common Access Group";}finished|s:3:"yes";num|i:19;user|s:7:"Anon224";last|N;');
+('2tp02bfiimm41qtvmu2rg7tn15', 1380053724, 'score|i:2;correct|a:2:{i:0;s:22:"File Transfer Protocol";i:1;s:31:"Asynchronous JavaScript and XML";}wrong|a:0:{}finished|s:2:"no";num|i:3;user|s:7:"Anon399";'),
+('58t2lcfn55ubikb0qqgfl420a1', 1381572322, 'last|N;slim.flash|a:0:{}score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;timetaken|N;starttime|N;'),
+('6mm9c32hd3s2ef5lt65lj8hnj5', 1370288764, 'score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;quizid|i:1;'),
+('8q1djleshtuhtaa7t6eom99n64', 1376341451, 'score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;'),
+('9eujq2tl6vajsupbtjsugnk9p6', 1369170017, 'score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;quizid|i:1;'),
+('cq364hu8khsvl6sbhrqjsl20g5', 1366314765, 'score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;user|s:6:"bjbtgy";'),
+('d8ldntaea4oa50a8jg93u4j4d5', 1368565252, ''),
+('dvjkbtdftk8tvt1e1j44v0ctf6', 1370980724, 'score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;quizid|i:1;'),
+('eoqq5cht4k0cchih5mikcrski5', 1368222213, 'last|N;'),
+('j7silp5aleo90s7mcbvvvdbj92', 1379786334, 'score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;');
 
 -- --------------------------------------------------------
 
@@ -191,26 +220,29 @@ INSERT INTO `sessions` (`id`, `access`, `data`) VALUES
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `quiz_id` int(11) NOT NULL,
   `name` varchar(60) NOT NULL,
   `score` int(11) NOT NULL,
+  `start_time` datetime NOT NULL,
   `date_submitted` datetime NOT NULL,
+  `time_taken` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`,`score`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=122 ;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `score`, `date_submitted`) VALUES
-(3, 'Anon134', 5, '2013-04-17 21:22:44'),
-(4, 'Anon287', 7, '2013-04-17 21:28:16'),
-(5, 'Anon285', 5, '2013-04-17 21:58:25'),
-(6, 'Anon203', 5, '2013-04-17 22:12:49'),
-(7, 'Anon949', 4, '2013-04-17 22:17:05'),
-(8, 'Anon771', 7, '2013-04-17 22:19:26'),
-(9, 'bbb', 9, '2013-04-17 22:35:51'),
-(10, 'Anon400', 4, '2013-04-18 19:12:13');
+INSERT INTO `users` (`id`, `quiz_id`, `name`, `score`, `start_time`, `date_submitted`, `time_taken`) VALUES
+(3, 1, 'Anon134', 5, '0000-00-00 00:00:00', '2013-04-17 21:22:44', ''),
+(4, 1, 'Anon287', 7, '0000-00-00 00:00:00', '2013-04-17 21:28:16', ''),
+(5, 1, 'Anon285', 5, '0000-00-00 00:00:00', '2013-04-17 21:58:25', ''),
+(6, 1, 'Anon203', 5, '0000-00-00 00:00:00', '2013-04-17 22:12:49', ''),
+(7, 1, 'Anon949', 4, '0000-00-00 00:00:00', '2013-04-17 22:17:05', ''),
+(8, 1, 'Anon771', 7, '0000-00-00 00:00:00', '2013-04-17 22:19:26', ''),
+(9, 1, 'bbb', 9, '0000-00-00 00:00:00', '2013-04-17 22:35:51', ''),
+(10, 1, 'Anon400', 4, '0000-00-00 00:00:00', '2013-04-18 19:12:13', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

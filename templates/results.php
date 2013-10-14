@@ -1,10 +1,3 @@
-<!--
-
-* Simple-Quiz by @elanman
-* Copyright 2013 Ben Hall.
-* Licensed under http://www.apache.org/licenses/LICENSE-2.0
-
--->
 <?php include 'header.php'; ?>
 <div id="container" class="quiz">
         <div class="row">

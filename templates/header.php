@@ -1,15 +1,10 @@
+<!DOCTYPE html>
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="res/bootstrap/dist/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="res/css/quiz.css" />
     <title>The Web Acronym Test</title>
-    <?php if ($quiz->session->get('num') === 0 ): ?>
-        <script type="text/javascript" src="res/js/start.js"></script>
-    <?php elseif (! $quiz->session->get('last')) : ?>
-        <script type="text/javascript" src="res/js/form.js"></script>
-    <?php endif; ?>
-    
-    
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="res/bootstrap/dist/assets/js/html5shiv.js"></script>
