@@ -11,7 +11,7 @@
             
             <h2>Question <?php echo $num; ?>:</h2>
             <p>What does <strong><?php echo $question; ?></strong> stand for?</p>
-            <form id="questionBox" method="post" action="process">
+            <form id="questionBox" method="post" action="<?php echo $root; ?>/quiz/process">
                 <ul>
                 <?php 
                 $shuffledAnswers = shuffle_assoc($answers);
@@ -27,6 +27,7 @@
                 </ul>
             <p>
                 <input type="hidden" name="num" value="<?php echo $num; ?>" />
+                <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
                 <input type="hidden" name="submitter" value="TRUE" />
                 <input type="submit" id="submit" class="btn btn-primary" name="submit" value="Submit Answer" />
             </p>
@@ -61,7 +62,7 @@
 
             echo '<p id="verdict">' . $verdict . '</p>';
 
-            echo '<p id="compare"><a href="results">See how you compare! <img src="images/arrow.png" /></a></p>';
+            echo '<p id="compare"><a href="'. $root . '/quiz/' . $quiz->getId() . '/results">See how you compare! <img src="images/arrow.png" /></a></p>';
             echo '</div>';
         endif;
         ?>

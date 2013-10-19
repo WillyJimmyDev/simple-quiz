@@ -3,13 +3,17 @@ namespace SimpleQuiz\Utils\Base;
 
 interface QuizInterface {
     
+    public function setId($id);
+    
+    public function getId();
+    
     public function getAnswers($questionid = false);
     
     public function getQuestion($questionid);
     
     public function getQuestions();
     
-    public function _populateQuestions();
+    public function populateQuestions();
     
     public function getUsers();
     

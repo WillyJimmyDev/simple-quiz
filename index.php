@@ -17,7 +17,7 @@ $container['leaderboard'] = function($c) {
     return new \SimpleQuiz\Utils\DBLeaderBoard($c);
 };
 
-$container['user'] = function($c) { return new \SimpleQuiz\Utils\User($c);};
+//$container['user'] = function($c) { return new \SimpleQuiz\Utils\User($c);};
 
 $container['quiz'] = function ($c) {return new \SimpleQuiz\Utils\Quiz($c);};
 
@@ -32,7 +32,7 @@ $app = new \Slim\Slim(array(
 ));
 
 $app->get('/', function () use ($app, $container) {
-    
+    //now used to show list of quizzes
     $quiz = $container['quiz'];
     
     $quiz->session->set('score', 0);
@@ -44,116 +44,211 @@ $app->get('/', function () use ($app, $container) {
     $quiz->session->set('timetaken', null);
     $quiz->session->set('starttime',null);
     
-    $app->render('index.php',array('quiz' => $quiz));
+    $app->render('index.php');
 });
 
-$app->post('/process', function () use ($app, $container) {
+$app->get('/quiz/:id', function ($id) use ($app, $container) {
+    
+    $root = $app->request->getRootUri();
+    
+    if (! ctype_digit($id))
+    {
+       $app->redirect($app->request->getRootUri()); 
+    }
+    $quiz = $container['quiz'];
+    
+    if ($quiz->setId($id))
+    {
+        $quiz->populateUsers();
+        $quiz->session->set('quizid', $id);
+        $quiz->session->set('score', 0);
+        $quiz->session->set('correct', array()); 
+        $quiz->session->set('wrong', array());
+        $quiz->session->set('finished','no');
+        $quiz->session->set('num',0);
+        $quiz->session->set('last', null);
+        $quiz->session->set('timetaken', null);
+        $quiz->session->set('starttime',null);
+
+        $app->render('quiz/quiz.php',array('quiz' => $quiz, 'root' => $root));
+    }
+    else
+    {
+        $error = 'The quiz you have selected does not exist. Return to the main menu to try again';
+        $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
+        
+    }
+});
+
+$app->post('/quiz/process', function () use ($app, $container) {
+    
+    $id = $app->request()->post('quizid');
+   
+    if (! ctype_digit($id))
+    {
+        $app->redirect($app->request->getRootUri()); 
+    }
     
     $quiz = $container['quiz'];
     
-    $submitter = $app->request()->post('submitter');
-    $register = $app->request()->post('register');
-    $username = $app->request()->post('username');
-    $num = $app->request()->post('num');
-    $answers = $app->request()->post('answers');
-    
-    if ( ! isset($submitter) ) 
+    if ($quiz->setId($id))
     {
-        if ( isset($register) ) 
+        $submitter = $app->request()->post('submitter');
+        $register = $app->request()->post('register');
+        $username = $app->request()->post('username');
+        $num = $app->request()->post('num');
+        $answers = $app->request()->post('answers');
+
+        if ( ! isset($submitter) ) 
         {
-            if (empty($username))
+            if ( isset($register) ) 
             {
-                $quiz->createRandomUser();
-            }
+                if (empty($username))
+                {
+                    if ($quiz->createRandomUser())
+                    {
+                        $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
+                    }
+
+                }
+                else 
+                {
+                    $username = trim(strip_tags(stripslashes($username)));
+                    if ( $quiz->registerUser($username))
+                    {
+                        $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
+                    }
+
+                }
+
+            } 
             else 
             {
-                $username = trim(strip_tags(stripslashes($username)));
-                $quiz->registerUser($username);
+                if ($quiz->createRandomUser())
+                {
+                    $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
+                }
             }
-            
         } 
         else 
         {
-            $quiz->createRandomUser();
+            $quiz->populateQuestions();
+            $quiz->populateUsers();
+            $quiz->session->set('num',(int) $num);
+
+            $numquestions = count($quiz->getQuestions());
+            $quizanswers = $quiz->getAnswers($num);
+
+            if ($answers == $quizanswers[0]) //first answer in array is correct one
+            {
+                $score = $quiz->session->get('score');
+                $score++;
+                $quiz->session->set('score', $score);
+                $_SESSION['correct'][] = $answers;
+            } 
+            else 
+            {
+                $_SESSION['wrong'][] = $answers;
+            }
+            if ($_SESSION['num'] < $numquestions) 
+            {
+                $_SESSION['num']++;
+            } 
+            else 
+            {
+                $_SESSION['last'] = true;
+                $_SESSION['finished'] = 'yes';
+            }
+            $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
         }
-    } 
-    else 
+    }
+    else
     {
-        $quiz->session->set('num',(int) $num);
-    
-        $numquestions = count($quiz->getQuestions());
-        $quizanswers = $quiz->getAnswers($num);
-    
-        if ($answers == $quizanswers[0]) //first answer in array is correct one
-        {
-            $score = $quiz->session->get('score');
-            $score++;
-            $quiz->session->set('score', $score);
-            $_SESSION['correct'][] = $answers;
-        } 
-        else 
-        {
-            $_SESSION['wrong'][] = $answers;
-        }
-        if ($_SESSION['num'] < $numquestions) 
-        {
-            $_SESSION['num']++;
-        } 
-        else 
-        {
-            $_SESSION['last'] = true;
-            $_SESSION['finished'] = 'yes';
-        }
-        $app->redirect('test');
+        $error = 'The quiz you have selected does not exist. Return to the main menu to try again';
+        $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
     }
 });
 
-$app->get('/test', function () use ($app, $container) {
+$app->get('/quiz/:id/test', function ($id) use ($app, $container) {
+   
+    $root = $app->request->getRootUri();
     
-    $timetaken = '';
-    $quiz = $container['quiz'];
-    $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
-    
-    if (isset($_SESSION['last']) &&  $_SESSION['last'] == true)
+    if (! ctype_digit($id))
     {
-        //first two vars formatted for insertion into database as datetime fields
-        $starttime = $quiz->session->get('starttime');
-        $endtime = date('Y-m-d H:i:s');
-        
-        //store $timetaken in session
-        if ( ! isset($_SESSION['timetaken']))
-        {
-            $end = time();
-            $start = strtotime($starttime);
-            $time = $end - $start;
-            $timetaken = date("i:s", $time);//formatted as minutes:seconds
-            $_SESSION['timetaken'] = $timetaken; 
-            
-            $quiz->addQuizTaker($quiz->session->get('user'),$quiz->session->get('score'),$starttime,$endtime,$timetaken);
-        }
-        else
-        {
-            $timetaken = $_SESSION['timetaken'];
-        }
+       $app->redirect($app->request->getRootUri()); 
     }
+    $quiz = $container['quiz'];
     
-    $app->render('test.php',array('quiz' => $quiz,'num' => $num,'timetaken' => $timetaken));
+    if ($quiz->setId($id))
+    {
+        $quiz->populateQuestions();
+        $quiz->populateUsers();
+        $timetaken = '';
+
+        $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
+
+        if (isset($_SESSION['last']) &&  $_SESSION['last'] == true)
+        {
+            //first two vars formatted for insertion into database as datetime fields
+            $starttime = $quiz->session->get('starttime');
+            $endtime = date('Y-m-d H:i:s');
+
+            //store $timetaken in session
+            if ( ! isset($_SESSION['timetaken']))
+            {
+                $end = time();
+                $start = strtotime($starttime);
+                $time = $end - $start;
+                $timetaken = date("i:s", $time);//formatted as minutes:seconds
+                $_SESSION['timetaken'] = $timetaken; 
+
+                $quiz->addQuizTaker($quiz->session->get('user'),$quiz->session->get('score'),$starttime,$endtime,$timetaken);
+            }
+            else
+            {
+                $timetaken = $_SESSION['timetaken'];
+            }
+        }
+
+        $app->render('quiz/test.php',array('quiz' => $quiz,'num' => $num,'timetaken' => $timetaken,'root' => $root));
+    }
+    else
+    {
+        $error = 'The quiz you have selected does not exist. Return to the main menu to try again';
+        $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
+    }
 });
 
-$app->get('/results', function () use ($app, $container) {
+$app->get('/quiz/:id/results', function ($id) use ($app, $container) {
     
-    $quiz = $container['quiz'];
-    $quiz->session->set('last', null);
-
-    if( $quiz->session->get('finished') != 'yes' ) 
+    $root = $app->request->getRootUri();
+    
+    if (! ctype_digit($id))
     {
-        $app->redirect($app->request->getRootUri());
+       $app->redirect($app->request->getRootUri()); 
     }
+    $quiz = $container['quiz'];
+    if($quiz->setId($id))
+    {
+        $quiz->populateQuestions();
+        $quiz->populateUsers();
+        $quiz->session->set('last', null);
 
-    //destroy the session
-    $quiz->session->end();
-    
-    $app->render('results.php',array('quiz' => $quiz));
+        if( $quiz->session->get('finished') != 'yes' ) 
+        {
+            $app->redirect($app->request->getRootUri());
+        }
+
+        //destroy the session
+        $quiz->session->end();
+
+        $app->render('quiz/results.php',array('quiz' => $quiz, 'root' => $root));
+    }
+    else
+    {
+        $error = 'The quiz you have selected does not exist. Return to the main menu to try again';
+        $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
+    }
 });
 
 $app->get('/admin', function () use ($app, $container) {

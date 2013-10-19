@@ -11,12 +11,13 @@ class DBLeaderBoard implements Base\LeaderBoardInterface {
         $this->_db = $container['db'];
     }
     
-    public function getMembers($number = false)
+    public function getMembers($quizid, $number = false)
     {  
         try
         {
-            $sql = "select name, score from users order by score desc";
-            $stmt = $this->_db->query($sql);
+            $sql = "select name, score from users where quiz_id = :quizid order by score desc";
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
             $stmt->execute();
             while ($row = $stmt->fetchObject())
             {
@@ -46,10 +47,11 @@ class DBLeaderBoard implements Base\LeaderBoardInterface {
         return false;
     }
     
-    public function addMember($user,$score,$start,$end,$timetaken)
+    public function addMember($quizid, $user,$score,$start,$end,$timetaken)
     {
-        $sql = "insert into users (name,score,start_time,date_submitted,time_taken) values (:user,:score,:start, :end,:timetaken)";
+        $sql = "insert into users (quiz_id,name,score,start_time,date_submitted,time_taken) values (:quizid,:user,:score,:start, :end,:timetaken)";
         $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
         $stmt->bindParam(':user',$user,\PDO::PARAM_STR);
         $stmt->bindParam(':score',$score,\PDO::PARAM_INT);
         $stmt->bindParam(':start',$start,\PDO::PARAM_STR);
