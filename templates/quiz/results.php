@@ -27,7 +27,7 @@
                             endif;
                            
                             //wrong AND chosen by user
-                        elseif (isset( $_SESSION['wrong'][$x])) :
+                        else :
                             if ( in_array( $answer, $_SESSION['wrong'][$x])) :
                                 echo '<li class="wrong">' . $answer . ' (Woops!)</li>' . PHP_EOL;
                             //correct but not chosen by user
