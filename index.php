@@ -1,6 +1,6 @@
 <?php //index.php
-ini_set('error-reporting', E_ALL);
-ini_set('display_errors', 1);
+//ini_set('error-reporting', E_ALL);
+//ini_set('display_errors', 1);
 require 'vendor/autoload.php';
 
 $container = new \Pimple();
@@ -16,8 +16,6 @@ $container['session'] = $container->share(function($c) {
 $container['leaderboard'] = function($c) {
     return new \SimpleQuiz\Utils\DBLeaderBoard($c);
 };
-
-//$container['user'] = function($c) { return new \SimpleQuiz\Utils\User($c);};
 
 $container['quiz'] = function ($c) {return new \SimpleQuiz\Utils\Quiz($c);};
 

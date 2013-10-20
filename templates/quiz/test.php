@@ -1,5 +1,5 @@
 <?php include 'header.php'; 
- print_r($_SESSION);?>
+ //print_r($_SESSION);?>
 <div id="container" class="quiz">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">

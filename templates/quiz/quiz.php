@@ -7,7 +7,7 @@
     }
     $numquestions = count($quiz->getQuestions());
     $leadersToShow = 10;
-    print_r($_SESSION);
+    //print_r($_SESSION);
 ?>
     <div id="container" class="quiz">
       <div class="row">
