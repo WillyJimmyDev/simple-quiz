@@ -14,25 +14,32 @@
                 echo '<ol>' . PHP_EOL;
                     $y = 0;
                     foreach( $answergroup as $answer) :
-            
-                        //first in array(correct by default) AND chosen by user
-                        if ( ($y === 0) && ( in_array( $answer, $_SESSION['correct']) ) ) :
-                            echo '<li class="correctuser">'. $answer. ' (Correct!)</li>' . PHP_EOL;
-                        
-                        //correct but not chosen by user
-                        elseif ($y === 0) :
-                            echo '<li class="correct">' . $answer . '</li>'  . PHP_EOL;
-                        
-                        //wrong AND chosen by user
-                        elseif ( in_array( $answer, $_SESSION['wrong'])) :
-                            echo '<li class="wrong">' . $answer . ' (Woops!)</li>' . PHP_EOL;
-                
-                        //wrong, not chosen by user
-                        else :
-                            echo "<li>$answer</li>\n";
+                        if (isset($_SESSION['correct'][$x])):
+                            //first in array(correct by default) AND chosen by user
+                            if ( ($y === 0) && ( in_array( $answer, $_SESSION['correct'][$x]) ) ) :
+                                echo '<li class="correctuser">'. $answer. ' (Correct!)</li>' . PHP_EOL;
+                            //correct but not chosen by user
+                            elseif ($y === 0) :
+                                echo '<li class="correct">' . $answer . '</li>'  . PHP_EOL;
+                            //wrong, not chosen by user
+                            else :
+                                echo "<li>$answer</li>\n";
+                            endif;
+                           
+                            //wrong AND chosen by user
+                        elseif (isset( $_SESSION['wrong'][$x])) :
+                            if ( in_array( $answer, $_SESSION['wrong'][$x])) :
+                                echo '<li class="wrong">' . $answer . ' (Woops!)</li>' . PHP_EOL;
+                            //correct but not chosen by user
+                            elseif ($y === 0) :
+                                echo '<li class="correct">' . $answer . '</li>'  . PHP_EOL;
+                            //wrong, not chosen by user
+                            else :
+                                echo "<li>$answer</li>\n";
+                            endif;
                         endif;
                         
-                        $y++;
+                         $y++;
                     endforeach;
                 echo '</ol>';
                 echo '</div>';

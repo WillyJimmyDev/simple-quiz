@@ -25,6 +25,7 @@ $container['admin'] = function ($c) {return new \SimpleQuiz\Utils\Admin($c);};
 
 $container['auth'] = function ($c) {return new \SimpleQuiz\Utils\Auth($c);};
 
+$container['simple'] = function ($c) {return new \SimpleQuiz\Utils\Simple($c);};
 
 $app = new \Slim\Slim(array(
     'debug' => true,
@@ -32,7 +33,13 @@ $app = new \Slim\Slim(array(
 ));
 
 $app->get('/', function () use ($app, $container) {
-    //now used to show list of quizzes
+    
+    $root = $app->request->getRootUri();
+    $simple = $container['simple'];
+    $simple->getQuizzes();
+    
+    $quizzes = $simple->_quizzes;
+    
     $quiz = $container['quiz'];
     
     $quiz->session->set('score', 0);
@@ -44,21 +51,17 @@ $app->get('/', function () use ($app, $container) {
     $quiz->session->set('timetaken', null);
     $quiz->session->set('starttime',null);
     
-    $app->render('index.php');
+    $app->render('index.php', array('root' => $root, 'quizzes' => $quizzes));
 });
 
-$app->get('/quiz/:id', function ($id) use ($app, $container) {
-    
+$app->get('/quiz/:id/', function ($id) use ($app, $container) {
     $root = $app->request->getRootUri();
     
-    if (! ctype_digit($id))
-    {
-       $app->redirect($app->request->getRootUri()); 
-    }
     $quiz = $container['quiz'];
     
     if ($quiz->setId($id))
     {
+        $quiz->populateQuestions();
         $quiz->populateUsers();
         $quiz->session->set('quizid', $id);
         $quiz->session->set('score', 0);
@@ -78,9 +81,9 @@ $app->get('/quiz/:id', function ($id) use ($app, $container) {
         $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
         
     }
-});
+})->conditions(array('id' => '[0-9]'));
 
-$app->post('/quiz/process', function () use ($app, $container) {
+$app->post('/quiz/process/', function () use ($app, $container) {
     
     $id = $app->request()->post('quizid');
    
@@ -144,11 +147,11 @@ $app->post('/quiz/process', function () use ($app, $container) {
                 $score = $quiz->session->get('score');
                 $score++;
                 $quiz->session->set('score', $score);
-                $_SESSION['correct'][] = $answers;
+                $_SESSION['correct'][$num] = array($answers);
             } 
             else 
             {
-                $_SESSION['wrong'][] = $answers;
+                $_SESSION['wrong'][$num] = array($answers);
             }
             if ($_SESSION['num'] < $numquestions) 
             {
@@ -169,15 +172,17 @@ $app->post('/quiz/process', function () use ($app, $container) {
     }
 });
 
-$app->get('/quiz/:id/test', function ($id) use ($app, $container) {
+$app->get('/quiz/:id/test/', function ($id) use ($app, $container) {
    
     $root = $app->request->getRootUri();
     
-    if (! ctype_digit($id))
-    {
-       $app->redirect($app->request->getRootUri()); 
-    }
     $quiz = $container['quiz'];
+    
+    if ($quiz->session->get('quizid') !== $id)
+    {
+        $error = 'There has been an error. Please return to the main quiz menu and try again';
+        $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
+    }
     
     if ($quiz->setId($id))
     {
@@ -217,17 +222,20 @@ $app->get('/quiz/:id/test', function ($id) use ($app, $container) {
         $error = 'The quiz you have selected does not exist. Return to the main menu to try again';
         $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
     }
-});
+})->conditions(array('id' => '[0-9]'));
 
-$app->get('/quiz/:id/results', function ($id) use ($app, $container) {
+$app->get('/quiz/:id/results/', function ($id) use ($app, $container) {
     
     $root = $app->request->getRootUri();
     
-    if (! ctype_digit($id))
-    {
-       $app->redirect($app->request->getRootUri()); 
-    }
     $quiz = $container['quiz'];
+    
+    if ($quiz->session->get('quizid') !== $id)
+    {
+        $error = 'There has been an error. Please return to the main quiz menu and try again';
+        $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
+    }
+    
     if($quiz->setId($id))
     {
         $quiz->populateQuestions();
@@ -249,9 +257,9 @@ $app->get('/quiz/:id/results', function ($id) use ($app, $container) {
         $error = 'The quiz you have selected does not exist. Return to the main menu to try again';
         $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
     }
-});
+})->conditions(array('id' => '[0-9]'));
 
-$app->get('/admin', function () use ($app, $container) {
+$app->get('/admin/', function () use ($app, $container) {
     
     $admin = $container['admin'];
 
@@ -263,11 +271,11 @@ $app->get('/admin', function () use ($app, $container) {
     $app->render('admin/index.php');
 });
 
-$app->get('/admin/login', function () use ($app) {
+$app->get('/admin/login/', function () use ($app) {
     
     $app->render('admin/login.php');
 });
-$app->post('/admin/login', function () use ($app, $container) {
+$app->post('/admin/login/', function () use ($app, $container) {
     //$auth = $container['auth'];
     return $app->render('admin/login.php');
 });

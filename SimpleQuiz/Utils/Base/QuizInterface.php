@@ -7,6 +7,10 @@ interface QuizInterface {
     
     public function getId();
     
+    public function getName();
+    
+    public function getDescription();
+    
     public function getAnswers($questionid = false);
     
     public function getQuestion($questionid);
@@ -16,8 +20,6 @@ interface QuizInterface {
     public function populateQuestions();
     
     public function getUsers();
-    
-    public function getUser($username);
     
     public function getLeaders($num);
     

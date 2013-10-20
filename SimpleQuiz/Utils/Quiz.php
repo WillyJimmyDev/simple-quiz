@@ -10,6 +10,8 @@ class Quiz implements Base\QuizInterface {
     
     protected $_id;
     protected $_db;
+    protected $_name;
+    protected $_description;
     protected $_answers = array();
     protected $_questions = array();
     protected $_question;
@@ -37,7 +39,7 @@ class Quiz implements Base\QuizInterface {
     
     public function setId($id)
     {
-        $quizsql = "SELECT count(id) as num from quizzes where id = :id";
+        $quizsql = "SELECT count(*) as num, name, description FROM quizzes where id = :id";
         $stmt = $this->_db->prepare($quizsql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         $stmt->execute();
@@ -46,8 +48,12 @@ class Quiz implements Base\QuizInterface {
             if ($result->num == 1)
             {
                 $this->_id = $id;
+                $this->_name = $result->name;
+                $this->_description = $result->description;
+                
                 return true;
             }
+            return false;
         }
         
         return false;
@@ -58,12 +64,22 @@ class Quiz implements Base\QuizInterface {
         return $this->_id;
     }
     
+    public function getName()
+    {
+        return ucwords($this->_name);
+    }
+    
+    public function getDescription()
+    {
+        return $this->_description;
+    }
+    
     public function getAnswers($questionid = false)
     {   
         if ($questionid)
         {
             //pull answers from db for only this question
-            $answersql = "SELECT text FROM answers where question_id = :id and quiz_id = :quizid ORDER BY correct DESC";
+            $answersql = "SELECT text FROM answers where question_num = :id and quiz_id = :quizid ORDER BY correct DESC";
             $stmt = $this->_db->prepare($answersql);
             $stmt->bindParam(':id', $questionid, \PDO::PARAM_INT);
             $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
@@ -95,7 +111,7 @@ class Quiz implements Base\QuizInterface {
     
     public function getQuestion($questionid) 
     {
-        $questionsql = "select text from questions where id = :id and quiz_id = :quizid";
+        $questionsql = "select text from questions where num = :id and quiz_id = :quizid";
         $stmt = $this->_db->prepare($questionsql);
         $stmt->bindParam(':id', $questionid, \PDO::PARAM_INT);
         $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
@@ -126,11 +142,6 @@ class Quiz implements Base\QuizInterface {
     public function populateUsers() 
     {
         $this->_users = $this->_leaderboard->getMembers($this->_id);
-    }
-    
-    public function getUser($username)
-    {
-        
     }
     
     public function getUsers()
@@ -175,8 +186,6 @@ class Quiz implements Base\QuizInterface {
         $this->session->set('num',0);
         $this->session->set('starttime',date('Y-m-d H:i:s'));
         
-//        header('Location: /quiz/'. $this->getId() . '/test');
-//        exit();
         return true;
     }
     
