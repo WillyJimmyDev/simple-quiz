@@ -1,6 +1,7 @@
 <?php
 $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -31,7 +32,7 @@ $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
             <li class="active"><a href="<?php echo $root; ?>">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Admin</a></li>
+            <li><a href="admin/login">Admin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

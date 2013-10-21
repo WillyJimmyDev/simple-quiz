@@ -25,6 +25,30 @@ $container['auth'] = function ($c) {return new \SimpleQuiz\Utils\Auth($c);};
 
 $container['simple'] = function ($c) {return new \SimpleQuiz\Utils\Simple($c);};
 
+// route middleware for simple authentication
+//function authenticate(\Slim\Route $route) 
+//{
+//    $app = \Slim\Slim::getInstance();
+//    $uid = $app->getEncryptedCookie('uid');
+//    $key = $app->getEncryptedCookie('key');
+//    if (validateAdminUser($uid, $key) === false) 
+//    {
+//      $app->halt(401);
+//    }
+//}
+//
+//function validateAdminUser($user, $pass) 
+//{
+//    if ($uid == 'demo' && $key == 'demo') 
+//    {
+//        return true;
+//    } 
+//    else 
+//    {
+//        return false;
+//    }
+//}
+
 $app = new \Slim\Slim(array(
     'debug' => true,
     'log.enabled' => true
@@ -38,16 +62,16 @@ $app->get('/', function () use ($app, $container) {
     
     $quizzes = $simple->_quizzes;
     
-    $quiz = $container['quiz'];
+    $session = $container['session'];
     
-    $quiz->session->set('score', 0);
-    $quiz->session->set('correct', array()); 
-    $quiz->session->set('wrong', array());
-    $quiz->session->set('finished','no');
-    $quiz->session->set('num',0);
-    $quiz->session->set('last', null);
-    $quiz->session->set('timetaken', null);
-    $quiz->session->set('starttime',null);
+    $session->set('score', 0);
+    $session->set('correct', array()); 
+    $session->set('wrong', array());
+    $session->set('finished','no');
+    $session->set('num',0);
+    $session->set('last', null);
+    $session->set('timetaken', null);
+    $session->set('starttime',null);
     
     $app->render('index.php', array('root' => $root, 'quizzes' => $quizzes));
 });
@@ -57,19 +81,21 @@ $app->get('/quiz/:id/', function ($id) use ($app, $container) {
     
     $quiz = $container['quiz'];
     
+    $session = $container['session'];
+    
     if ($quiz->setId($id))
     {
         $quiz->populateQuestions();
         $quiz->populateUsers();
-        $quiz->session->set('quizid', $id);
-        $quiz->session->set('score', 0);
-        $quiz->session->set('correct', array()); 
-        $quiz->session->set('wrong', array());
-        $quiz->session->set('finished','no');
-        $quiz->session->set('num',0);
-        $quiz->session->set('last', null);
-        $quiz->session->set('timetaken', null);
-        $quiz->session->set('starttime',null);
+        $session->set('quizid', $id);
+        $session->set('score', 0);
+        $session->set('correct', array()); 
+        $session->set('wrong', array());
+        $session->set('finished','no');
+        $session->set('num',0);
+        $session->set('last', null);
+        $session->set('timetaken', null);
+        $session->set('starttime',null);
 
         $app->render('quiz/quiz.php',array('quiz' => $quiz, 'root' => $root));
     }
@@ -92,6 +118,8 @@ $app->post('/quiz/process/', function () use ($app, $container) {
     
     $quiz = $container['quiz'];
     
+    $session = $container['session'];
+    
     if ($quiz->setId($id))
     {
         $submitter = $app->request()->post('submitter');
@@ -106,18 +134,39 @@ $app->post('/quiz/process/', function () use ($app, $container) {
             {
                 if (empty($username))
                 {
-                    if ($quiz->createRandomUser())
-                    {
-                        $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
-                    }
-
+                    $random = $quiz->createRandomUser();
+                    
+                    $session->set('user', 'Anon' . $random);
+                    $session->set('score', 0);
+                    $session->set('correct', array()); 
+                    $session->set('wrong', array());
+                    $session->set('finished','no');
+                    $session->set('num',0);
+                    $session->set('starttime',date('Y-m-d H:i:s'));
+                    
+                    $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
+                    
                 }
                 else 
                 {
                     $username = trim(strip_tags(stripslashes($username)));
                     if ( $quiz->registerUser($username))
                     {
+                        $session->set('user',$username);
+                        $session->set('score', 0);
+                        $session->set('correct', array());
+                        $session->set('wrong', array());
+                        $session->set('finished','no');
+                        $session->set('num',0);
+                        $session->set('starttime',date('Y-m-d H:i:s'));
+                        $session->remove('error');
+                        
                         $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
+                    }
+                    else
+                    {
+                        $session->set('error', 'That name is already registered, please choose another.');
+                        $app->redirect($app->request->getRootUri() . '/quiz/'. $id);
                     }
 
                 }
@@ -125,26 +174,33 @@ $app->post('/quiz/process/', function () use ($app, $container) {
             } 
             else 
             {
-                if ($quiz->createRandomUser())
-                {
-                    $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
-                }
+                $random = $quiz->createRandomUser();
+                
+                $session->set('user', 'Anon' . $random);
+                $session->set('score', 0);
+                $session->set('correct', array()); 
+                $session->set('wrong', array());
+                $session->set('finished','no');
+                $session->set('num',0);
+                $session->set('starttime',date('Y-m-d H:i:s'));
+                
+                $app->redirect($app->request->getRootUri() . '/quiz/'. $id . '/test');
             }
         } 
         else 
         {
             $quiz->populateQuestions();
             $quiz->populateUsers();
-            $quiz->session->set('num',(int) $num);
+            $session->set('num',(int) $num);
 
             $numquestions = count($quiz->getQuestions());
             $quizanswers = $quiz->getAnswers($num);
 
             if ($answers == $quizanswers[0]) //first answer in array is correct one
             {
-                $score = $quiz->session->get('score');
+                $score = $session->get('score');
                 $score++;
-                $quiz->session->set('score', $score);
+                $session->set('score', $score);
                 $_SESSION['correct'][$num] = array($answers);
             } 
             else 
@@ -176,7 +232,9 @@ $app->get('/quiz/:id/test/', function ($id) use ($app, $container) {
     
     $quiz = $container['quiz'];
     
-    if ($quiz->session->get('quizid') !== $id)
+    $session = $container['session'];
+    
+    if ($session->get('quizid') !== $id)
     {
         $error = 'There has been an error. Please return to the main quiz menu and try again';
         $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
@@ -188,12 +246,12 @@ $app->get('/quiz/:id/test/', function ($id) use ($app, $container) {
         $quiz->populateUsers();
         $timetaken = '';
 
-        $num = $quiz->session->get('num') ? $quiz->session->get('num') : 1;
+        $num = $session->get('num') ? $session->get('num') : 1;
 
         if (isset($_SESSION['last']) &&  $_SESSION['last'] == true)
         {
             //first two vars formatted for insertion into database as datetime fields
-            $starttime = $quiz->session->get('starttime');
+            $starttime = $session->get('starttime');
             $endtime = date('Y-m-d H:i:s');
 
             //store $timetaken in session
@@ -205,7 +263,7 @@ $app->get('/quiz/:id/test/', function ($id) use ($app, $container) {
                 $timetaken = date("i:s", $time);//formatted as minutes:seconds
                 $_SESSION['timetaken'] = $timetaken; 
 
-                $quiz->addQuizTaker($quiz->session->get('user'),$quiz->session->get('score'),$starttime,$endtime,$timetaken);
+                $quiz->addQuizTaker($session->get('user'),$session->get('score'),$starttime,$endtime,$timetaken);
             }
             else
             {
@@ -228,7 +286,9 @@ $app->get('/quiz/:id/results/', function ($id) use ($app, $container) {
     
     $quiz = $container['quiz'];
     
-    if ($quiz->session->get('quizid') !== $id)
+    $session = $container['session'];
+    
+    if ($session->get('quizid') !== $id)
     {
         $error = 'There has been an error. Please return to the main quiz menu and try again';
         $app->render('quiz/quiz.php',array('error' => $error, 'root' => $root));
@@ -238,15 +298,15 @@ $app->get('/quiz/:id/results/', function ($id) use ($app, $container) {
     {
         $quiz->populateQuestions();
         $quiz->populateUsers();
-        $quiz->session->set('last', null);
+        $session->set('last', null);
 
-        if( $quiz->session->get('finished') != 'yes' ) 
+        if( $session->get('finished') != 'yes' ) 
         {
             $app->redirect($app->request->getRootUri());
         }
 
         //destroy the session
-        $quiz->session->end();
+        $session->end();
 
         $app->render('quiz/results.php',array('quiz' => $quiz, 'root' => $root));
     }
@@ -257,25 +317,35 @@ $app->get('/quiz/:id/results/', function ($id) use ($app, $container) {
     }
 })->conditions(array('id' => '[0-9]'));
 
-$app->get('/admin/', function () use ($app, $container) {
-    
-    $admin = $container['admin'];
-
-    if(! $quiz->session->get('admin')) 
-    {
-        $app->redirect('admin/login');
-    }
-    
-    $app->render('admin/index.php');
-});
+//$app->get('/admin/', function () use ($app) {
+//
+//    //pseudocode ftw!
+//    if(! $validadmin) 
+//    {
+//        $app->redirect('admin/login');
+//    }
+//    
+//    $app->render('admin/index.php');
+//});
 
 $app->get('/admin/login/', function () use ($app) {
     
-    $app->render('admin/login.php');
+    $root = $app->request->getRootUri();
+    
+    $app->render('admin/login.php', array('root' => $root));
 });
-$app->post('/admin/login/', function () use ($app, $container) {
-    //$auth = $container['auth'];
-    return $app->render('admin/login.php');
+$app->post('/admin/login/', function () use ($app) {
+    
+    $root = $app->request->getRootUri();
+    
+    $app->render('admin/login.php', array('root' => $root));
 });
+//    
+//    //pseudocode ftw!
+//    if(! $validadmin) 
+//    {
+//        $app->redirect('admin/login');
+//    }
+//});
 
 $app->run();

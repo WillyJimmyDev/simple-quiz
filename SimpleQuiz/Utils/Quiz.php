@@ -18,12 +18,8 @@ class Quiz implements Base\QuizInterface {
     protected $_users;
     protected $_leaderboard;
     
-    public $session;
-    
     public function __construct(\Pimple $container)
     {
-        
-        $this->session = $container['session'];
         $this->_leaderboard = $container['leaderboard'];
         
         try
@@ -158,19 +154,8 @@ class Quiz implements Base\QuizInterface {
     {
         if ($this->_leaderboard->hasMember($this->_id, $username)) 
         {
-            $this->session->set('error', 'That name is already registered, please choose another.');
             return false;
         }
-        
-        $this->session->set('user',$username);
-        $this->session->set('score', 0);
-        $this->session->set('correct', array());
-        $this->session->set('wrong', array());
-        $this->session->set('finished','no');
-        $this->session->set('num',0);
-        $this->session->set('starttime',date('Y-m-d H:i:s'));
-        
-        $this->session->remove('error');
         
         return true;
     }
@@ -178,15 +163,8 @@ class Quiz implements Base\QuizInterface {
     public function createRandomUser()
     {
         $random = rand(1,1000);
-        $this->session->set('user', 'Anon' . $random);
-        $this->session->set('score', 0);
-        $this->session->set('correct', array()); 
-        $this->session->set('wrong', array());
-        $this->session->set('finished','no');
-        $this->session->set('num',0);
-        $this->session->set('starttime',date('Y-m-d H:i:s'));
         
-        return true;
+        return $random;
     }
     
     public function addQuizTaker($user,$score,$start,$end,$timetaken)
