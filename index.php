@@ -10,11 +10,11 @@ $container['db'] = $container->share(function() {
 });
 
 $container['session'] = $container->share(function($c) {
-    return new \SimpleQuiz\Utils\SessionDB($c);
+    return new \SimpleQuiz\Utils\Session($c);
 });
 
 $container['leaderboard'] = function($c) {
-    return new \SimpleQuiz\Utils\DBLeaderBoard($c);
+    return new \SimpleQuiz\Utils\LeaderBoard($c);
 };
 
 $container['quiz'] = function ($c) {return new \SimpleQuiz\Utils\Quiz($c);};

@@ -1,7 +1,7 @@
 <?php
 namespace SimpleQuiz\Utils;
 
-class DBLeaderBoard implements Base\LeaderBoardInterface {
+class LeaderBoard implements Base\LeaderBoardInterface {
     
     private $_db;
     protected $_members = array();

@@ -1,5 +1,0 @@
-ROADMAP
-Add admin backend for creation of questions/answers and/or quizzes?
-
-js slides between questions
-js auto refresh of scores/leaderboard from db

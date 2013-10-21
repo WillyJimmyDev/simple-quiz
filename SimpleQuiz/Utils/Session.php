@@ -5,7 +5,7 @@ namespace SimpleQuiz\Utils;
  * Basic session class to store sessions in db
  */
 
-class SessionDB implements Base\SessionInterface {
+class Session implements Base\SessionInterface {
 
     private  $db;
     
