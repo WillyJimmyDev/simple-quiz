@@ -5,7 +5,7 @@
     },
     "minimum-stability": "dev",
     "autoload": {
-        "files" : ["SimpleQuiz/Utils/Base/functions.php"],
+        "files" : ["SimpleQuiz/Utils/Base/setup.php"],
         "psr-0": {
             "SimpleQuiz": ""
         }

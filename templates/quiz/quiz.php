@@ -7,7 +7,6 @@
     }
     $numquestions = count($quiz->getQuestions());
     $leadersToShow = 10;
-    //print_r($_SESSION);
 ?>
     <div id="container" class="quiz">
       <div class="row">
@@ -60,7 +59,7 @@
                 <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
                     <input type="submit" id="submitstart" class="btn btn-primary" value="Register And Take The Test" /></p>
             </form> 
-            <p id="helper"><?php if ( $quiz->session->get('error') ) echo $quiz->session->get('error'); ?></p>
+            <p id="helper"><?php echo isset($flash['error']) ? $flash['error'] : '' ; ?></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
         

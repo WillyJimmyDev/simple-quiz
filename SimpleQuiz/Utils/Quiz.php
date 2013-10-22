@@ -160,13 +160,6 @@ class Quiz implements Base\QuizInterface {
         return true;
     }
     
-    public function createRandomUser()
-    {
-        $random = rand(1,1000);
-        
-        return $random;
-    }
-    
     public function addQuizTaker($user,$score,$start,$end,$timetaken)
     {
         $this->_leaderboard->addMember($this->_id, $user,$score,$start,$end,$timetaken);

@@ -25,8 +25,6 @@ interface QuizInterface {
     
     public function registerUser($username);
     
-    public function createRandomUser();
-    
     public function addQuizTaker($user,$score,$start,$end,$timetaken);
 }
 ?>
