@@ -1,13 +1,12 @@
-<?php include 'header.php'; 
- //print_r($_SESSION);?>
+<?php include 'header.php'; ?>
 <div id="container" class="quiz">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
         <?php 
-            if (! $quiz->session->get('last') ) : 
+            if (! $session->get('last') ) : 
                 $question = $quiz->getQuestion($num);
                 $answers = $quiz->getAnswers($num);
-            if( $quiz->session->get('user') ) echo '<h4>Current tester: <strong>' . $quiz->session->get('user') . '</strong></h4>'; 
+            if( $session->get('user') ) echo '<h4>Current tester: <strong>' . $session->get('user') . '</strong></h4>'; 
             ?>
             
             <h2>Question <?php echo $num; ?>:</h2>
@@ -39,8 +38,8 @@
             $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
             $secs = $timeportions[1] . ' secs' ;
             echo '<div id="finalscore">';
-            echo '<h2 id="score">' . $quiz->session->get('user') . ', your final score is:</h2>' . PHP_EOL;
-            echo '<h2 class="userscore">' . $quiz->session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
+            echo '<h2 id="score">' . $session->get('user') . ', your final score is:</h2>' . PHP_EOL;
+            echo '<h2 class="userscore">' . $session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
             echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
 //            echo '<h4>Verdict:</h4>' . PHP_EOL;
 //

@@ -7,5 +7,7 @@ interface SimpleInterface {
     
     public function getUsers();
     
+    public function authAdmin($email, $pass);
+    
 }
 ?>

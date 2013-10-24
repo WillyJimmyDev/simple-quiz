@@ -9,11 +9,11 @@ class Session implements Base\SessionInterface {
 
     private  $db;
     
-    public function __construct(\Pimple $container) {
+    public function __construct(\Slim\Helper\Set $container) {
         
         try
         {
-            $this->db = $container['db'];
+            $this->db = $container->db;
         }
         catch (\PDOException $e)
         {

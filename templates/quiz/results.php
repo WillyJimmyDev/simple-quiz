@@ -2,7 +2,7 @@
 <div id="container" class="quiz">
         <div class="row">
             <div class="col-md-5 col-md-offset-2">
-                <h2>The Results Page For <span><?php echo $quiz->session->get('user');  ?></span></h2> 
+                <h2>The Results Page For <span><?php echo $session->get('user');  ?></span></h2> 
             <?php
             $x = 1;
             $numquestions = count($quiz->getQuestions());
@@ -57,7 +57,7 @@
                     foreach ($leaders as $key => $value) :
                         
                         //if current user, bolden the username
-                        if ( ( $quiz->session->get('user') ) && ($key == $quiz->session->get('user') ) ) :
+                        if ( ( $session->get('user') ) && ($key == $session->get('user') ) ) :
                             $key = '<strong class="currentuser">' . $key . '</strong>';
                         endif;
                         

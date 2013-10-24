@@ -1,9 +1,9 @@
 <?php 
     include'header.php';
-    if (isset($error))
+    if (isset($flash['quizerror']))
     {
-        echo $error;
-        die();
+        echo $flash['quizerror'];
+        exit();
     }
     $numquestions = count($quiz->getQuestions());
     $leadersToShow = 10;
@@ -59,7 +59,7 @@
                 <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
                     <input type="submit" id="submitstart" class="btn btn-primary" value="Register And Take The Test" /></p>
             </form> 
-            <p id="helper"><?php echo isset($flash['error']) ? $flash['error'] : '' ; ?></p>
+            <p id="helper"><?php echo isset($flash['usererror']) ? $flash['usererror'] : '' ; ?></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
         

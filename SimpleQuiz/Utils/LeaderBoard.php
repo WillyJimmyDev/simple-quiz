@@ -6,9 +6,9 @@ class LeaderBoard implements Base\LeaderBoardInterface {
     private $_db;
     protected $_members = array();
     
-    public function __construct(\Pimple $container) 
+    public function __construct(\Slim\Helper\Set $container) 
     {
-        $this->_db = $container['db'];
+        $this->_db = $container->db;
     }
     
     public function getMembers($quizid, $number = false)

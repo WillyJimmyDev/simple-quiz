@@ -32,7 +32,7 @@ $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
             <li class="active"><a href="<?php echo $root; ?>">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="admin/login">Admin</a></li>
+            <li><a href="<?php echo $root; ?>/admin/login">Admin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

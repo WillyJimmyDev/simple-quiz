@@ -18,13 +18,13 @@ class Quiz implements Base\QuizInterface {
     protected $_users;
     protected $_leaderboard;
     
-    public function __construct(\Pimple $container)
+    public function __construct(\Slim\Helper\Set $container)
     {
-        $this->_leaderboard = $container['leaderboard'];
+        $this->_leaderboard = $container->leaderboard;
         
         try
         {
-            $this->_db = $container['db'];
+            $this->_db = $container->db;
         }
         catch (\PDOException $e)
         {
