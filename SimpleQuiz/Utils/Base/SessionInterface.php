@@ -17,5 +17,7 @@ interface SessionInterface {
     
     public function end();
     
+    public function regenerate();
+    
 }
 ?>

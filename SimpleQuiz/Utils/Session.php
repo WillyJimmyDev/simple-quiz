@@ -9,11 +9,11 @@ class Session implements Base\SessionInterface {
 
     private  $db;
     
-    public function __construct(\Slim\Helper\Set $container) {
+    public function __construct(\SimpleQuiz\Utils\Base\DB $db) {
         
         try
         {
-            $this->db = $container->db;
+            $this->db = $db;
         }
         catch (\PDOException $e)
         {
@@ -72,6 +72,11 @@ class Session implements Base\SessionInterface {
     public function close()
     {
         $this->db = null;
+    }
+    
+    public function regenerate() 
+    {
+        return session_regenerate_id();
     }
 
     public function read($id)

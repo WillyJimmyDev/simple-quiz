@@ -4,47 +4,55 @@ ini_set('error-reporting', E_ALL);
 ini_set('display_errors', 1);
 require 'vendor/autoload.php';
 
-// route middleware for simple authentication
-//function authenticateadmin(\Slim\Route $route) 
-//{
-//    $app = \Slim\Slim::getInstance();
-//    $uid = $app->getEncryptedCookie('uid');
-//    $key = $app->getEncryptedCookie('key');
-//    if (validateAdminUser($uid, $key) === false) 
-//    {
-//      $app->halt(401);
-//    }
-//}
-//
-//function validateAdminUser($email, $pass) 
-//{
-//    $simple = $container['simple'];
-//    
-//    return $simple->authAdmin($email,$pass);
-//}
+$db = new \SimpleQuiz\Utils\Base\DB();
+$session = new \SimpleQuiz\Utils\Session($db);
 
 $app = new \Slim\Slim(array(
     'debug' => true,
     'log.enabled' => true
         ));
 
-$app->container->singleton('db', function() {
-    return new \SimpleQuiz\Utils\Base\DB();
+$authenticate = function ($app) {
+    
+    return function () use ($app) {
+        
+        if (! $app->session->get('user')) {
+            $app->session->set('urlRedirect', $app->request()->getPathInfo());
+            $app->flash('loginerror', 'Login required');
+            $app->redirect($app->request->getRootUri() . '/admin/login/');
+        }
+    };
+};
+
+$app->hook('slim.before.dispatch', function() use ($app) { 
+   $user = null;
+   if ($app->session->get('user')) {
+      $user = $app->session->get('user');
+   }
+   $app->view()->setData('user', $user);
 });
 
-$app->container->singleton('session', function($app) {
-    return new \SimpleQuiz\Utils\Session($app);
+$app->session = $session;
+
+$app->container->singleton('db', function() {
+    return new \SimpleQuiz\Utils\Base\DB();
 });
 
 $app->leaderboard = function($app) {
     return new \SimpleQuiz\Utils\LeaderBoard($app);
 };
 
-$app->quiz = function ($app) {return new \SimpleQuiz\Utils\Quiz($app);};
+$app->quiz = function ($app) {
+    return new \SimpleQuiz\Utils\Quiz($app);
+};
 
-$app->admin = function ($app) {return new \SimpleQuiz\Utils\Admin($app);};
+$app->admin = function ($app) {
+    return new \SimpleQuiz\Utils\Admin($app);
+};
 
-$app->simple = function ($app) {return new \SimpleQuiz\Utils\Simple($app);};
+$app->simple = function ($app) {
+    return new \SimpleQuiz\Utils\Simple($app);
+};
 
 $app->get('/', function () use ($app) {
 
@@ -60,6 +68,13 @@ $app->get('/', function () use ($app) {
 });
 
 $app->get('/quiz/:id/', function ($id) use ($app) {
+    
+//    $flash = $app->view()->getData('flash');
+//
+//    $error = '';
+//    if (isset($flash['error'])) {
+//       $error = $flash['error'];
+//    }
     $root = $app->request->getRootUri();
 
     $quiz = $app->quiz;
@@ -189,7 +204,8 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
 
     if ($session->get('quizid') !== $id) {
         $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/quiz.php', array('root' => $root,'session' => $session));
+        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'root' => $root,'session' => $session));
+        $app->stop();
     }
 
     if ($quiz->setId($id)) {
@@ -257,38 +273,78 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
     }
 })->conditions(array('id' => '[0-9]'));
 
-$app->get('/admin/', function () use ($app) {
+$app->get('/admin/', $authenticate($app), function () use ($app) {
 
-    //pseudocode ftw!
-//    if(! $validadmin) 
-//    {
-//        $app->redirect('admin/login');
-//    }
-    //$app->redirect('admin/login');
-    //$app->render('admin/index.php');
+    $app->render('admin/index.php');
 });
 
 $app->get('/admin/login/', function () use ($app) {
-
+    
     $session = $app->session;
+    print_r($_SESSION);
     $root = $app->request->getRootUri();
+    
+    $flash = $app->view()->getData('flash');
+
+    $error = '';
+    if (isset($flash['loginerror'])) {
+       print $flash['loginerror'];
+    }
 
     $app->render('admin/login.php', array('root' => $root,'session' => $session));
 });
+
 $app->post('/admin/login/', function () use ($app) {
     
     $session = $app->session;
+    $errors = array();
+    
+    $email = $app->request()->post('email');
+    $password = $app->request()->post('password');
+    
+    //need to check for 'emptiness' of inputs and display message instead of querying db
+    if ( (empty($email)) || empty($password) )
+    {
+        //empty inputs
+    }
+    $authsql = "SELECT count(id) as num FROM administration where email = :email and pass = :pass";
+    $stmt = $app->db->prepare($authsql);
+    $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
+    $stmt->bindParam(':pass', sha1($password), \PDO::PARAM_STR);
+    $stmt->execute();
+    
+    if ($result = $stmt->fetchObject()) {
+        if ($result->num != 1) {
+            $errors['loginerror'] = "no user or many users in database.";
+        }
 
-    $root = $app->request->getRootUri();
+    } else {
+        $errors['loginerror'] = "A problem has occurred. Woops!.";
+    }
+    
+    if (count($errors) > 0) {
+        $app->flash('errors', $errors);
+        $session->remove('user');
+        $app->redirect($app->request->getRootUri() . '/admin/login/');
+    }
 
-    $app->render('admin/login.php', array('root' => $root,'session' => $session));
+    $session->set('user', $email);
+    $session->regenerate();
+
+    if ($session->get('urlRedirect')) {
+       $tmp = $session->get('urlRedirect');
+       $session->remove('urlRedirect');
+       $app->redirect($app->request->getRootUri() . $tmp);
+    }
+    
+    //logged in so send to admin index
+    $app->redirect($app->request->getRootUri() . '/admin/');
 });
-//    
-//    //pseudocode ftw!
-//    if(! $validadmin) 
-//    {
-//        $app->redirect('admin/login');
-//    }
-//});
+
+$app->get("/admin/logout/", function () use ($app) {
+   unset($_SESSION['user']);
+   $app->view()->setData('user', null);
+   $app->render('admin/logout.php');
+});
 
 $app->run();
