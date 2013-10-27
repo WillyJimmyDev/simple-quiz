@@ -29,8 +29,15 @@
             <li class="active"><a href="<?php echo $root; ?>">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="<?php echo $root; ?>/admin/">Admin</a></li>
-            <li><a href="<?php echo $root; ?>/logout/">Logout</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="<?php echo $root; ?>/admin/">All Quizzes</a></li>
+                    <li><a href="<?php echo $root; ?>/admin/quiz/new/">New Quiz</a></li>
+                    <li class="disabled"><a href="<?php echo $root; ?>/admin/config/">Settings</a></li>
+                    <li><a href="<?php echo $root; ?>/logout/">Logout</a></li>
+                </ul>
+            </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

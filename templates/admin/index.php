@@ -16,7 +16,7 @@ include'header.php';
                     <?php
                     foreach ($quizzes as $quiz) :
                         $activeSpan = $quiz->active == 1 ? 'glyphicon-ok-circle' : 'glyphicon-remove-circle';
-                        echo '<tr><td><strong><a href="'. $root .'/admin/edit-quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td></tr>';
+                        echo '<tr><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td></tr>';
                     endforeach;
                     ?>
                 </tbody>

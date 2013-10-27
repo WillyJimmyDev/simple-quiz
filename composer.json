@@ -1,4 +1,5 @@
 {
+    "name": "elanman/simple-quiz",
     "require": {
         "slim/slim": "2.*"
     },

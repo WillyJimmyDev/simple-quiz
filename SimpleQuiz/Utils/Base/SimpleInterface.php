@@ -5,7 +5,7 @@ interface SimpleInterface {
 
     public function getQuizzes($active = true);
     
-    public function getUsers();
+    public function getUsers($quizid = false);
     
 }
 ?>

@@ -27,7 +27,7 @@ class Simple implements Base\SimpleInterface {
         }
     }
     
-    public function getUsers()
+    public function getUsers($quizid = false)
     {
         
     }

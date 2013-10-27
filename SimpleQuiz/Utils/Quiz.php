@@ -12,6 +12,7 @@ class Quiz implements Base\QuizInterface {
     protected $_db;
     protected $_name;
     protected $_description;
+    protected $_active;
     protected $_answers = array();
     protected $_questions = array();
     protected $_question;
@@ -35,7 +36,7 @@ class Quiz implements Base\QuizInterface {
     
     public function setId($id)
     {
-        $quizsql = "SELECT count(*) as num, name, description FROM quizzes where id = :id";
+        $quizsql = "SELECT count(*) as num, name, description, active FROM quizzes where id = :id";
         $stmt = $this->_db->prepare($quizsql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         $stmt->execute();
@@ -46,12 +47,12 @@ class Quiz implements Base\QuizInterface {
                 $this->_id = $id;
                 $this->_name = $result->name;
                 $this->_description = $result->description;
+                $this->_active = $result->active;
                 
                 return true;
             }
             return false;
         }
-        
         return false;
     }
     
@@ -68,6 +69,11 @@ class Quiz implements Base\QuizInterface {
     public function getDescription()
     {
         return $this->_description;
+    }
+    
+    public function isActive()
+    {
+        return $this->_active == 1 ? true : false;
     }
     
     public function getAnswers($questionid = false)

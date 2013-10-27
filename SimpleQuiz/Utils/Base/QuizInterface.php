@@ -11,6 +11,8 @@ interface QuizInterface {
     
     public function getDescription();
     
+    public function isActive();
+    
     public function getAnswers($questionid = false);
     
     public function getQuestion($questionid);
