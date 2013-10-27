@@ -13,7 +13,7 @@ $authenticate = function ($app) {
 
 $app->get('/admin/', $authenticate($app), function () use ($app) {
     
-    $session = $app->session;
+    //$session = $app->session;
     $simple = $app->simple;
     $simple->getQuizzes(false);
 
@@ -90,7 +90,7 @@ $app->post('/admin/login/', function () use ($app) {
 
 $app->get("/admin/quiz/:id", $authenticate($app), function($id) use ($app) {
     
-    $session = $app->session;
+    //$session = $app->session;
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
@@ -102,8 +102,23 @@ $app->get("/admin/quiz/:id", $authenticate($app), function($id) use ($app) {
         
 })->conditions(array('id' => '[0-9]'));
 
+$app->get("/admin/quiz/:quizid/question/edit/:questionid/", $authenticate($app), function($quizid, $questionid) use ($app) {
+    
+    //$session = $app->session;
+    $quiz = $app->quiz;
+    
+    if ($quiz->setId($quizid)) {
+        $question = $quiz->getQuestion($questionid);
+        $answers = $quiz->getAnswers($questionid);
+        $app->render('admin/editquestion.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
+    } else {
+        echo 'oops';
+    }
+        
+})->conditions(array('quizid' => '\d+', 'questionid' => '\d+'));
+
 $app->get("/logout/", function () use ($app) {
     $session = $app->session;
     $session->end();
-    $app->render('admin/logout.php');
+    $app->redirect($app->request->getRootUri());
 });

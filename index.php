@@ -16,10 +16,7 @@ require 'routes/public.php';
 require 'routes/admin.php';
 
 $app->session = $session;
-
-$app->container->singleton('db', function() {
-    return new \SimpleQuiz\Utils\Base\DB();
-});
+$app->db = $db;
 
 $app->leaderboard = function($app) {
     return new \SimpleQuiz\Utils\LeaderBoard($app);

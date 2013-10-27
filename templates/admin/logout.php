@@ -1,3 +1,0 @@
-<?php
-echo 'logged out';
-?>

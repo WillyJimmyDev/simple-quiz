@@ -9,7 +9,7 @@ include'header.php';
           <ul>
               <li><strong>Name</strong>: <?php echo $quiz->getName(); ?></li>
               <li><strong>Description</strong>: <?php echo $quiz->getDescription(); ?></li>
-              <li><strong>Active? <?php echo $quiz->isActive() ? '<span class="glyphicon glyphicon-ok-circle">' : '<span class="glyphicon glyphicon-remove-circle">' ?></strong></li>
+              <li><strong>Active? <?php echo $quiz->isActive() ? '<span class="glyphicon glyphicon-ok">' : '<span class="glyphicon glyphicon-remove-circle">' ?></strong></li>
               <li><strong>Number Of Questions</strong>: <?php echo count($quiz->getQuestions()); ?></li>
               <li><strong>Times Taken</strong>: <?php echo count($quiz->getUsers()); ?></li>
           </ul>
@@ -18,8 +18,8 @@ include'header.php';
               <li><h5>Questions:</h5>
                   <ul>
                     <?php
-                    foreach ($quiz->getQuestions() as $question) :
-                        echo '<li>' .$question . '</li>';
+                    foreach ($quiz->getQuestions() as $id => $text) :
+                        echo '<li>' .$text . ' <a href="'.$root.'/admin/quiz/'.$quiz->getId().'/question/edit/'.$id.'/"><span class="glyphicon glyphicon-pencil"></a></li>';
                     endforeach;
                     ?> 
                   </ul>

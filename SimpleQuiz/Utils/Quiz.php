@@ -131,13 +131,13 @@ class Quiz implements Base\QuizInterface {
     
     public function populateQuestions() 
     {
-        $questionsql = "select text from questions where quiz_id = :quizid order by id asc";
+        $questionsql = "select num,text from questions where quiz_id = :quizid order by num asc";
         $stmt = $this->_db->prepare($questionsql);
         $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
         $stmt->execute();
         while ($row = $stmt->fetchObject())
         {
-            $this->_questions[] .= $row->text;
+            $this->_questions[$row->num] = $row->text;
         }
     }
     

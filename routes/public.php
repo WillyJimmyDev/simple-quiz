@@ -1,7 +1,6 @@
 <?php
 $app->get('/', function () use ($app) {
 
-    //$root = $app->request->getRootUri();
     $simple = $app->simple;
     $simple->getQuizzes(true);
 
