@@ -28,7 +28,7 @@
               <li>Quizzes</li>
               <?php foreach ($quizzes as $simplequiz)
               {
-                  echo '<li><a href="'.$root . '/quiz/' . $simplequiz['id'] .'">'. $simplequiz['name'] . '</a></li>';
+                  echo '<li><a href="'.$root . '/quiz/' . $simplequiz->id .'">'. $simplequiz->name . '</a></li>';
               }
               ?>
             </ul>

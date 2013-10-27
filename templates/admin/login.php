@@ -31,7 +31,7 @@
             <li><a href="<?php echo $root; ?>">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="#">Admin</a></li>
+            <li class="active"><a href="<?php echo $root; ?>/admin/">Admin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

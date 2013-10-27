@@ -1,13 +1,10 @@
-<?php
-$title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
-?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="<?php echo $root; ?>/res/bootstrap/dist/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="<?php echo $root; ?>/res/css/quiz.css" />
-    <title><?php echo $title; ?></title>
+    <title>Simple Quiz :: Admin</title>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="<?php echo $root; ?>/res/bootstrap/dist/assets/js/html5shiv.js"></script>
@@ -33,6 +30,7 @@ $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="<?php echo $root; ?>/admin/">Admin</a></li>
+            <li><a href="<?php echo $root; ?>/logout/">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

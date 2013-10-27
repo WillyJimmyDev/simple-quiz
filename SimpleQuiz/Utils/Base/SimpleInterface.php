@@ -3,11 +3,9 @@ namespace SimpleQuiz\Utils\Base;
 
 interface SimpleInterface {
 
-    public function getQuizzes();
+    public function getQuizzes($active = true);
     
     public function getUsers();
-    
-    public function authAdmin($email, $pass);
     
 }
 ?>

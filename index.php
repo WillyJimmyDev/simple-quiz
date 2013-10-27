@@ -16,7 +16,7 @@ $authenticate = function ($app) {
     
     return function () use ($app) {
         
-        if (! $app->session->get('user')) {
+        if (! $app->session->get('adminuser')) {
             $app->session->set('urlRedirect', $app->request()->getPathInfo());
             $app->flash('loginerror', 'Login required');
             $app->redirect($app->request->getRootUri() . '/admin/login/');
@@ -25,9 +25,13 @@ $authenticate = function ($app) {
 };
 
 $app->hook('slim.before.dispatch', function() use ($app) { 
+    
    $user = null;
    if ($app->session->get('user')) {
       $user = $app->session->get('user');
+   }
+   if ($app->session->get('adminuser')) {
+      $user = $app->session->get('adminuser');
    }
    $app->view()->setData('user', $user);
 });
@@ -58,23 +62,18 @@ $app->get('/', function () use ($app) {
 
     $root = $app->request->getRootUri();
     $simple = $app->simple;
-    $simple->getQuizzes();
+    $simple->getQuizzes(true);
 
-    $quizzes = $simple->_quizzes;
+    $quizzes = $simple->quizzes;
 
     $session = $app->session;
 
-    $app->render('index.php', array('root' => $root, 'quizzes' => $quizzes,'session' => $session));
+    $app->render('index.php', array('root' => $root, 'quizzes' => $quizzes, 'session' => $session));
 });
 
 $app->get('/quiz/:id/', function ($id) use ($app) {
     
-//    $flash = $app->view()->getData('flash');
-//
-//    $error = '';
-//    if (isset($flash['error'])) {
-//       $error = $flash['error'];
-//    }
+    $flash = $app->view()->getData('flash');
     $root = $app->request->getRootUri();
 
     $quiz = $app->quiz;
@@ -274,22 +273,28 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
 })->conditions(array('id' => '[0-9]'));
 
 $app->get('/admin/', $authenticate($app), function () use ($app) {
+    
+    $root = $app->request->getRootUri();
+    $session = $app->session;
+    $simple = $app->simple;
+    $simple->getQuizzes(false);
 
-    $app->render('admin/index.php');
+    $quizzes = $simple->quizzes;
+
+    $app->render('admin/index.php', array('root' => $root, 'quizzes' => $quizzes));
 });
 
 $app->get('/admin/login/', function () use ($app) {
     
     $session = $app->session;
-    print_r($_SESSION);
+    //print_r($_SESSION);
     $root = $app->request->getRootUri();
     
     $flash = $app->view()->getData('flash');
 
-    $error = '';
-    if (isset($flash['loginerror'])) {
-       print $flash['loginerror'];
-    }
+//    if (isset($flash['loginerror'])) {
+//       print $flash['loginerror'];
+//    }
 
     $app->render('admin/login.php', array('root' => $root,'session' => $session));
 });
@@ -303,23 +308,31 @@ $app->post('/admin/login/', function () use ($app) {
     $password = $app->request()->post('password');
     
     //need to check for 'emptiness' of inputs and display message instead of querying db
-    if ( (empty($email)) || empty($password) )
+    if ((! empty($email)) && (! empty($password) ) )
     {
-        //empty inputs
-    }
-    $authsql = "SELECT count(id) as num FROM administration where email = :email and pass = :pass";
-    $stmt = $app->db->prepare($authsql);
-    $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
-    $stmt->bindParam(':pass', sha1($password), \PDO::PARAM_STR);
-    $stmt->execute();
-    
-    if ($result = $stmt->fetchObject()) {
-        if ($result->num != 1) {
-            $errors['loginerror'] = "no user or many users in database.";
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['loginerror'] = "The email was invalid. Please try again.";
         }
+        else {
+            //process inputs
+            $authsql = "SELECT count(id) as num FROM administration where email = :email and pass = :pass";
+            $stmt = $app->db->prepare($authsql);
+            $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
+            $stmt->bindParam(':pass', sha1($password), \PDO::PARAM_STR);
+            $stmt->execute();
 
-    } else {
-        $errors['loginerror'] = "A problem has occurred. Woops!.";
+            if ($result = $stmt->fetchObject()) {
+                if ($result->num != 1) {
+                    $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
+                }
+
+            } else {
+                $errors['loginerror'] = "A problem has occurred. Woops!.";
+            }
+        }
+    }
+    else {
+        $errors['loginerror'] = "Please try again.";
     }
     
     if (count($errors) > 0) {
@@ -327,24 +340,26 @@ $app->post('/admin/login/', function () use ($app) {
         $session->remove('user');
         $app->redirect($app->request->getRootUri() . '/admin/login/');
     }
-
-    $session->set('user', $email);
+    
+    // We have a valid admin user
+    $session->set('adminuser', $email);
     $session->regenerate();
 
+    // redirect them to intended url if not index
     if ($session->get('urlRedirect')) {
        $tmp = $session->get('urlRedirect');
        $session->remove('urlRedirect');
        $app->redirect($app->request->getRootUri() . $tmp);
     }
     
-    //logged in so send to admin index
+    //logged in with no url 
     $app->redirect($app->request->getRootUri() . '/admin/');
 });
 
-$app->get("/admin/logout/", function () use ($app) {
-   unset($_SESSION['user']);
-   $app->view()->setData('user', null);
-   $app->render('admin/logout.php');
+$app->get("/logout/", function () use ($app) {
+    $session = $app->session;
+    $session->end();
+    $app->render('admin/logout.php');
 });
 
 $app->run();
