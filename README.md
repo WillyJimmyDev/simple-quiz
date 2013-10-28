@@ -16,35 +16,35 @@ Three quick start options are available:
 
 Within the download you'll find the following directories and files:
 
-```
-/
-├── SimpleQuiz/
-│   ├── Utils/
-│       ├── Base/
-│       │   ├── Config.php
-│       │   ├── DB.php
-│       │   ├── LeaderBoardInterface.php
-│       │   ├── QuizInterface.php
-│       │   ├── SessionInterface.php
-│       │   ├── SimpleInterface.php
-│       │   └── setup.php
-│       ├── LeaderBoard.php
-│       ├── Quiz.php
-│       ├── Session.php
-│       └── Simple.php
-├── public/ (**this is your document root**)
-│   ├── images/
-│   ├── res/
-│   │    ├── bootstrap/
-│   │    ├── css/
-│   │    ├── js/
-│   ├── .htaccess
-│   └── index.php
-├── routes/
-├── templates/
-└── vendor/
 
-```
+    /
+    ├── SimpleQuiz/
+    │   ├── Utils/
+    │       ├── Base/
+    │       │   ├── Config.php
+    │       │   ├── DB.php
+    │       │   ├── LeaderBoardInterface.php
+    │       │   ├── QuizInterface.php
+    │       │   ├── SessionInterface.php
+    │       │   ├── SimpleInterface.php
+    │       │   └── setup.php
+    │       ├── LeaderBoard.php
+    │       ├── Quiz.php
+    │       ├── Session.php
+    │       └── Simple.php
+    ├── public/ (**this is your document root**)
+    │   ├── images/
+    │   ├── res/
+    │   │    ├── bootstrap/
+    │   │    ├── css/
+    │   │    ├── js/
+    │   ├── .htaccess
+    │   └── index.php
+    ├── routes/
+    ├── templates/
+    └── vendor/
+
+
 
 ## Installation
 
