@@ -2,18 +2,19 @@
 //index.php
 ini_set('error-reporting', E_ALL);
 ini_set('display_errors', 1);
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 $db = new \SimpleQuiz\Utils\Base\DB();
 $session = new \SimpleQuiz\Utils\Session($db);
 
 $app = new \Slim\Slim(array(
     'debug' => true,
-    'log.enabled' => true
+    'log.enabled' => true,
+    'templates.path' => '../templates'
         ));
 
-require 'routes/public.php';
-require 'routes/admin.php';
+require '../routes/public.php';
+require '../routes/admin.php';
 
 $app->session = $session;
 $app->db = $db;

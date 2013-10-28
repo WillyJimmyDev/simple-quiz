@@ -25,11 +25,11 @@ $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo $root; ?>">Simple Quiz</a>
+          <a class="navbar-brand" href="<?php echo $root; ?>/">Simple Quiz</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="<?php echo $root; ?>">Quizzes</a></li>
+            <li class="active"><a href="<?php echo $root; ?>/">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="<?php echo $root; ?>/admin/">Admin</a></li>

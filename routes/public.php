@@ -1,6 +1,5 @@
 <?php
 $app->get('/', function () use ($app) {
-
     $simple = $app->simple;
     $simple->getQuizzes(true);
 
@@ -47,8 +46,8 @@ $app->post('/quiz/process/', function () use ($app) {
 
     $id = $app->request()->post('quizid');
 
-    if (!ctype_digit($id)) {
-        $app->redirect($app->request->getRootUri());
+    if (! ctype_digit($id)) {
+        $app->redirect($app->request->getRootUri().'/');
     }
 
     $quiz = $app->quiz;
@@ -121,7 +120,7 @@ $app->post('/quiz/process/', function () use ($app) {
             $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
         }
     } else {
-        $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
+        $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
         $app->render('quiz/error.php', array('session' => $session));
     }
 });
@@ -173,8 +172,9 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
 
         $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'timetaken' => $timetaken, 'session' => $session));
     } else {
-        $app->flash('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
+        $app->flashnow('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
         $app->render('quiz/error.php', array( 'session' => $session));
+        $app->stop();
     }
 })->conditions(array('id' => '\d+'));
 
@@ -183,9 +183,13 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
     $quiz = $app->quiz;
 
     $session = $app->session;
+    
+    if ($session->get('finished') != 'yes') {
+        $app->redirect($app->request->getRootUri().'/');
+    }
 
     if ($session->get('quizid') !== $id) {
-        $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
+        $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
         $app->render('quiz/error.php', array('quiz' => $quiz, 'session' => $session));
         $app->stop();
     }
@@ -195,16 +199,13 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
         $quiz->populateUsers();
         $session->set('last', null);
 
-        if ($session->get('finished') != 'yes') {
-            $app->redirect($app->request->getRootUri());
-        }
-
         //destroy the session
         $session->end();
 
         $app->render('quiz/results.php', array('quiz' => $quiz, 'session' => $session));
     } else {
-        $app->flash('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
+        $app->flashnow('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
         $app->render('quiz/error.php', array('quiz' => $quiz, 'session' => $session));
+        $app->stop();
     }
 })->conditions(array('id' => '\d+'));

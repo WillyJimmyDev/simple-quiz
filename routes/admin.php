@@ -118,5 +118,5 @@ $app->get("/admin/quiz/:quizid/question/edit/:questionid/", $authenticate($app),
 $app->get("/logout/", function () use ($app) {
     $session = $app->session;
     $session->end();
-    $app->redirect($app->request->getRootUri());
+    $app->redirect($app->request->getRootUri().'/');
 });

@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="<?php echo $root; ?>/res/bootstrap/dist/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="<?php echo $root; ?>/res/css/quiz.css" />
-    <title>Simple Quiz :: Admin</title>
+    <title>Simple Quiz :: Login</title>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="<?php echo $root; ?>/res/bootstrap/dist/assets/js/html5shiv.js"></script>
@@ -22,11 +22,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo $root; ?>">Simple Quiz</a>
+          <a class="navbar-brand" href="<?php echo $root; ?>/">Simple Quiz</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="<?php echo $root; ?>">Quizzes</a></li>
+            <li><a href="<?php echo $root; ?>/">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="<?php echo $root; ?>/admin/">Admin</a></li>
