@@ -1,6 +1,4 @@
-<?php
-//echo $flash['loginerror'];
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -37,6 +35,7 @@
       </div>
     </div>
     <div class="container">
+        <p><?php if (isset($flash['errors']['loginerror'])) { echo $flash['errors']['loginerror']; }?></p>
         <form class="form-signin" method="post" action="<?php echo $root; ?>/admin/login">
         <h2 class="form-signin-heading">Please log in</h2>
         <input type="email" name="email" class="form-control" placeholder="Email" autofocus>
@@ -47,13 +46,5 @@
     </div><!--container-->
     <script src="<?php echo $root; ?>/res/bootstrap/assets/js/jquery.js"></script>
     <script src="<?php echo $root; ?>/res/bootstrap/dist/js/bootstrap.min.js"></script>
-    <?php if (isset($quiz)): ?>
-        <?php if ($quiz->session->get('num') === 0 ): ?>
-        <script type="text/javascript" src="<?php echo $root; ?>/res/js/start.js"></script>
-        <?php endif; ?>
-        <?php if (! $quiz->session->get('last')) : ?>
-        <script type="text/javascript" src="<?php echo $root; ?>/res/js/form.js"></script>
-        <?php endif; ?>
-    <?php endif; ?>
 </body>
 </html>

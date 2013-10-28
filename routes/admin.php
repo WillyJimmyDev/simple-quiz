@@ -5,7 +5,7 @@ $authenticate = function ($app) {
         
         if (! $app->session->get('adminuser')) {
             $app->session->set('urlRedirect', $app->request()->getPathInfo());
-            $app->flash('loginerror', 'Login required');
+            $app->flash('error', 'Login required');
             $app->redirect($app->request->getRootUri() . '/admin/login/');
         }
     };
@@ -13,7 +13,6 @@ $authenticate = function ($app) {
 
 $app->get('/admin/', $authenticate($app), function () use ($app) {
     
-    //$session = $app->session;
     $simple = $app->simple;
     $simple->getQuizzes(false);
 
@@ -25,8 +24,6 @@ $app->get('/admin/', $authenticate($app), function () use ($app) {
 $app->get('/admin/login/', function () use ($app) {
     
     $session = $app->session;
-    
-    $flash = $app->view()->getData('flash');
 
     $app->render('admin/login.php', array('session' => $session));
 });
@@ -36,18 +33,18 @@ $app->post('/admin/login/', function () use ($app) {
     $session = $app->session;
     $errors = array();
     
-    $email = $app->request()->post('email');
-    $password = $app->request()->post('password');
+    $email = trim($app->request()->post('email'));
+    $password = trim($app->request()->post('password'));
     
     //need to check for 'emptiness' of inputs and display message instead of querying db
     if ((! empty($email)) && (! empty($password) ) )
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['loginerror'] = "The email was invalid. Please try again.";
         }
         else {
             //process inputs
-            $authsql = "SELECT count(id) as num FROM administration where email = :email and pass = :pass";
+            $authsql = "SELECT count(id) as num, name FROM users where email = :email and pass = :pass and level = 1";
             $stmt = $app->db->prepare($authsql);
             $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
             $stmt->bindParam(':pass', sha1($password), \PDO::PARAM_STR);
@@ -56,6 +53,8 @@ $app->post('/admin/login/', function () use ($app) {
             if ($result = $stmt->fetchObject()) {
                 if ($result->num != 1) {
                     $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
+                } else {
+                    $name = $result->name;
                 }
 
             } else {
@@ -74,7 +73,8 @@ $app->post('/admin/login/', function () use ($app) {
     }
     
     // We have a valid admin user
-    $session->set('adminuser', $email);
+    $session->set('adminuser', true);
+    $session->set('user', $name);
     $session->regenerate();
 
     // redirect them to intended url if not index
@@ -90,7 +90,6 @@ $app->post('/admin/login/', function () use ($app) {
 
 $app->get("/admin/quiz/:id", $authenticate($app), function($id) use ($app) {
     
-    //$session = $app->session;
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
@@ -103,8 +102,7 @@ $app->get("/admin/quiz/:id", $authenticate($app), function($id) use ($app) {
 })->conditions(array('id' => '[0-9]'));
 
 $app->get("/admin/quiz/:quizid/question/edit/:questionid/", $authenticate($app), function($quizid, $questionid) use ($app) {
-    
-    //$session = $app->session;
+   
     $quiz = $app->quiz;
     
     if ($quiz->setId($quizid)) {

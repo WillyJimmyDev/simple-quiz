@@ -9,7 +9,7 @@ class Session implements Base\SessionInterface {
 
     private  $db;
     
-    public function __construct(\SimpleQuiz\Utils\Base\DB $db) {
+    public function __construct(\PDO $db) {
         
         try
         {

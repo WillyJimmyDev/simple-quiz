@@ -37,11 +37,9 @@ $app->simple = function ($app) {
 $app->hook('slim.before.dispatch', function() use ($app) { 
 
     $user = null;
+    
     if ($app->session->get('user')) {
        $user = $app->session->get('user');
-    }
-    if ($app->session->get('adminuser')) {
-       $user = $app->session->get('adminuser');
     }
     
     $app->view()->setData('user', $user);

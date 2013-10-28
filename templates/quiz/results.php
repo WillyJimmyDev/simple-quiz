@@ -2,13 +2,13 @@
 <div id="container" class="quiz">
         <div class="row">
             <div class="col-md-5 col-md-offset-2">
-                <h2>The Results Page For <span><?php echo $session->get('user');  ?></span></h2> 
+                <h2>The Results Page For <span><?php echo $user;  ?></span></h2> 
             <?php
             $x = 1;
             $numquestions = count($quiz->getQuestions());
        
             foreach ($quiz->getAnswers() as $answergroup) :
-                if ($x % 2 !== 0) echo '<div style="clear:both"></div>';
+                if ($x % 2 !== 0) { echo '<div style="clear:both"></div>';}
                 echo '<div class="col-md-6 clearfix">';
                 echo '<h4>Question' . ($x) . ': ' . $quiz->getQuestion($x) . '</h4>';
                 echo '<ol>' . PHP_EOL;
@@ -57,7 +57,7 @@
                     foreach ($leaders as $key => $value) :
                         
                         //if current user, bolden the username
-                        if ( ( $session->get('user') ) && ($key == $session->get('user') ) ) :
+                        if ($key == $user) :
                             $key = '<strong class="currentuser">' . $key . '</strong>';
                         endif;
                         

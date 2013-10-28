@@ -13,7 +13,11 @@ $app->get('/', function () use ($app) {
 
 $app->get('/quiz/:id/', function ($id) use ($app) {
     
-    //$flash = $app->view()->getData('flash');
+    $flash = $app->view()->getData('flash'); 
+    $error = '';
+    if (isset($flash['usererror'])) {
+        $error = $flash['usererror'];
+    }
     
     $quiz = $app->quiz;
 
@@ -32,12 +36,12 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
         $session->set('timetaken', null);
         $session->set('starttime', null);
 
-        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'session' => $session));
+        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'session' => $session, 'error' => $error));
     } else {
-        $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/quiz.php', array('session' => $session));
+        $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
+        $app->render('quiz/error.php', array('session' => $session));
     }
-})->conditions(array('id' => '[0-9]'));
+})->conditions(array('id' => '\d+'));
 
 $app->post('/quiz/process/', function () use ($app) {
 
@@ -52,26 +56,25 @@ $app->post('/quiz/process/', function () use ($app) {
     $session = $app->session;
 
     if ($quiz->setId($id)) {
+        
+        $quiz->populateUsers();
+        
         $submitter = $app->request()->post('submitter');
         $register = $app->request()->post('register');
         $username = $app->request()->post('username');
         $num = $app->request()->post('num');
         $answers = $app->request()->post('answers');
 
-        if (!isset($submitter)) {
+        if (!isset($submitter)) { //register a user
             if (isset($register)) {
                 if (empty($username)) {
-                    $random = rand(1, 1000);
-
-                    $session->set('user', 'Anon' . $random);
-                    $session->set('score', 0);
-                    $session->set('correct', array());
-                    $session->set('wrong', array());
-                    $session->set('finished', 'no');
-                    $session->set('num', 0);
-                    $session->set('starttime', date('Y-m-d H:i:s'));
-
-                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+                    $app->flash('usererror', 'Please create a username.');
+                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
+                    
+                } else if ( (strlen($username) < 3) || (strlen($username) > 10)) {
+                    $app->flash('usererror', 'To register, please enter a username between 3 and 10 characters in length.');
+                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
+                    
                 } else {
                     $username = trim(strip_tags(stripslashes($username)));
                     if ($quiz->registerUser($username)) {
@@ -86,23 +89,14 @@ $app->post('/quiz/process/', function () use ($app) {
                         $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
                     } else {
                         $app->flash('usererror', 'That name is already registered, please choose another.');
-                        $app->redirect($app->request->getRootUri() . '/quiz/' . $id);
+                        $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
                     }
                 }
             } else {
-                $random = rand(1, 1000);
-
-                $session->set('user', 'Anon' . $random);
-                $session->set('score', 0);
-                $session->set('correct', array());
-                $session->set('wrong', array());
-                $session->set('finished', 'no');
-                $session->set('num', 0);
-                $session->set('starttime', date('Y-m-d H:i:s'));
-
-                $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+                $app->flash('usererror', 'Please create a username.');
+                $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
             }
-        } else {
+        } else { //quiz logic
             $quiz->populateQuestions();
             $quiz->populateUsers();
             $session->set('num', (int) $num);
@@ -128,25 +122,32 @@ $app->post('/quiz/process/', function () use ($app) {
         }
     } else {
         $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/quiz.php', array('session' => $session));
+        $app->render('quiz/error.php', array('session' => $session));
     }
 });
 
 $app->get('/quiz/:id/test/', function ($id) use ($app) {
 
-    $quiz = $app->quiz;
-
     $session = $app->session;
 
-    if ($session->get('quizid') !== $id) {
-        $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'session' => $session));
+    if ( $session->get('quizid') !== $id) {
+        $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
+        $app->render('quiz/error.php', array('session' => $session));
         $app->stop();
     }
+    
+    if (! $session->get('user')) {
+        $app->flashnow('quizerror','You need to register a username before taking a quiz');
+        $app->render('quiz/error.php', array('session' => $session));
+        $app->stop();
+    }
+    
+    $quiz = $app->quiz;
 
     if ($quiz->setId($id)) {
         $quiz->populateQuestions();
         $quiz->populateUsers();
+        
         $timetaken = '';
 
         $num = $session->get('num') ? $session->get('num') : 1;
@@ -173,9 +174,9 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
         $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'timetaken' => $timetaken, 'session' => $session));
     } else {
         $app->flash('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
-        $app->render('quiz/quiz.php', array( 'session' => $session));
+        $app->render('quiz/error.php', array( 'session' => $session));
     }
-})->conditions(array('id' => '[0-9]'));
+})->conditions(array('id' => '\d+'));
 
 $app->get('/quiz/:id/results/', function ($id) use ($app) {
 
@@ -185,7 +186,8 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
 
     if ($session->get('quizid') !== $id) {
         $app->flash('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'session' => $session));
+        $app->render('quiz/error.php', array('quiz' => $quiz, 'session' => $session));
+        $app->stop();
     }
 
     if ($quiz->setId($id)) {
@@ -203,6 +205,6 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
         $app->render('quiz/results.php', array('quiz' => $quiz, 'session' => $session));
     } else {
         $app->flash('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
-        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'session' => $session));
+        $app->render('quiz/error.php', array('quiz' => $quiz, 'session' => $session));
     }
-})->conditions(array('id' => '[0-9]'));
+})->conditions(array('id' => '\d+'));

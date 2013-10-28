@@ -6,9 +6,8 @@
             if (! $session->get('last') ) : 
                 $question = $quiz->getQuestion($num);
                 $answers = $quiz->getAnswers($num);
-            if( $session->get('user') ) echo '<h4>Current tester: <strong>' . $session->get('user') . '</strong></h4>'; 
             ?>
-            
+            <h4>Current tester: <strong><?php echo $user; ?></strong></h4>
             <h2>Question <?php echo $num; ?>:</h2>
             <p><?php echo $question; ?></p>
             <form id="questionBox" method="post" action="<?php echo $root; ?>/quiz/process">
@@ -38,29 +37,9 @@
             $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
             $secs = $timeportions[1] . ' secs' ;
             echo '<div id="finalscore">';
-            echo '<h2 id="score">' . $session->get('user') . ', your final score is:</h2>' . PHP_EOL;
+            echo '<h2 id="score">' . $user . ', your final score is:</h2>' . PHP_EOL;
             echo '<h2 class="userscore">' . $session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
             echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
-//            echo '<h4>Verdict:</h4>' . PHP_EOL;
-//
-//            if ( $quiz->session->get('score')  <= 5) 
-//            {
-//                $verdict = "Don't Give Up Your Day Job.";
-//            }
-//            if ($quiz->session->get('score') > 5) 
-//            {
-//                $verdict = 'Pretty Poor.';
-//            }
-//            if ($quiz->session->get('score') > 10) 
-//            {
-//                $verdict = 'Not Bad.';
-//            }
-//            if ($quiz->session->get('score') > 15) 
-//            {
-//                $verdict = 'You Are A Legend!';
-//            }
-//
-//            echo '<p id="verdict">' . $verdict . '</p>';
 
             echo '<p id="compare"><a href="'. $root . '/quiz/' . $quiz->getId() . '/results">See how you compare! <img src="images/arrow.png" /></a></p>';
             echo '</div>';

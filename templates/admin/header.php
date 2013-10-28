@@ -35,6 +35,7 @@
                     <li><a href="<?php echo $root; ?>/admin/">All Quizzes</a></li>
                     <li><a href="<?php echo $root; ?>/admin/quiz/new/">New Quiz</a></li>
                     <li class="disabled"><a href="<?php echo $root; ?>/admin/config/">Settings</a></li>
+                    <li class="disabled"><a href="<?php echo $root; ?>/admin/edit/">Change Password</a></li>
                     <li><a href="<?php echo $root; ?>/logout/">Logout</a></li>
                 </ul>
             </li>

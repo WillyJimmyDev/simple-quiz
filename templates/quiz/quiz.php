@@ -1,10 +1,5 @@
 <?php 
     include'header.php';
-    if (isset($flash['quizerror']))
-    {
-        echo $flash['quizerror'];
-        exit();
-    }
     $numquestions = count($quiz->getQuestions());
     $leadersToShow = 10;
 ?>
@@ -43,23 +38,18 @@
         </div>
         <div class="col-md-3 col-md-offset-2 col-md-pull-5">
           <h2>Start The Quiz</h2>
-          <p>Don't want to appear on the Score Board?</p>
-            <form id="jttt" method="post" action="<?php echo $root; ?>/quiz/process">
-                <p><button type="submit" class="btn btn-primary">Just Take The Test</button></p>
-                <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
-            </form>
             <form id="questionBox" method="post" action="<?php echo $root; ?>/quiz/process">
-                <p>If you want worldwide glory and fame, register a username below.</p> 
+                <!--<p>If you want worldwide glory and fame, register a username below.</p>--> 
                 <p>
                     <label for="username">Create A Username:</label><br />
-                        <input type="text" id="username" class="form-control" name="username" placeholder="Username" />
-                <input type="hidden" name="register" value="TRUE" />
+                    <input type="text" id="username" class="form-control" name="username" placeholder="Username" />
+                    <input type="hidden" name="register" value="TRUE" />
                 </p>
                 <p>
                 <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
-                    <input type="submit" id="submitstart" class="btn btn-primary" value="Register And Take The Test" /></p>
+                    <input type="submit" id="submitstart" class="btn btn-primary" value="Start Quiz" /></p>
             </form> 
-            <p id="helper"><?php echo isset($flash['usererror']) ? $flash['usererror'] : '' ; ?></p>
+            <p id="helper"><?php echo $error; ?></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
         

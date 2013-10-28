@@ -158,12 +158,7 @@ class Quiz implements Base\QuizInterface {
     
     public function registerUser($username)
     {
-        if ($this->_leaderboard->hasMember($this->_id, $username)) 
-        {
-            return false;
-        }
-        
-        return true;
+        return ! array_key_exists($username,$this->_users);
     }
     
     public function addQuizTaker($user,$score,$start,$end,$timetaken)
