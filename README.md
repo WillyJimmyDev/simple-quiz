@@ -7,5 +7,7 @@
 * Create a database called 'simple-quiz'
 * Import res/simple-quiz.sql into MySQL using a tool like phpmyadmin.
 * Change credentials in /SimpleQuiz/Utils/Base/Config.php to suit
+* Default admin user is example@gmail.com with password of 123456
+* Remember to change admin password with phpMyadmin. Make sure password is sha1 hashed.
 * To create your own questions and answers, phpmyadmin is probably the easiest solution for now until an Admin backend exists.
 * Navigate to the web accessible folder in your browser.
