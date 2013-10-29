@@ -15,6 +15,8 @@ interface QuizInterface {
     
     public function getAnswers($questionid = false);
     
+    public function updateAnswers(Array $answers, $quizid, $questionid);
+    
     public function getQuestion($questionid);
     
     public function getQuestions();

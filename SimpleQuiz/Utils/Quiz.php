@@ -94,7 +94,7 @@ class Quiz implements Base\QuizInterface {
         else
         {
             //pull all answers from db grouped by question
-            $answersql = "SELECT group_concat( a.text ORDER BY a.correct DESC SEPARATOR '~' ) FROM answers a where a.quiz_id = :quizid GROUP BY a.question_id";
+            $answersql = "SELECT group_concat( a.text ORDER BY a.correct DESC SEPARATOR '~' ) FROM answers a where a.quiz_id = :quizid GROUP BY a.question_num";
             $stmt = $this->_db->prepare($answersql);
             $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
             $stmt->execute();
@@ -110,6 +110,30 @@ class Quiz implements Base\QuizInterface {
         return $this->_answers;
     }
     
+    public function updateAnswers(Array $answers, $quizid, $questionid) 
+    {
+        //get rid of old answers
+        $sql = "delete from answers where quiz_id = :quizid and question_num = :questionid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        //insert new  answers
+        $sql2 = "insert into answers (question_num, quiz_id, text, correct) values(:questionid, :quizid, :answer, :correct)";
+        $stmt2 = $this->_db->prepare($sql2);
+        $stmt2->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
+        $stmt2->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt2->bindParam(':answer', $text, \PDO::PARAM_STR);
+        $stmt2->bindParam(':correct', $correct, \PDO::PARAM_INT);
+        
+        foreach ($answers as $answer) {
+            $text = $answer[0];
+            $correct = $answer[1];
+            $stmt2->execute();
+        }
+        return true;
+    }
     
     public function getQuestion($questionid) 
     {

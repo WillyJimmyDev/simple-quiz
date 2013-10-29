@@ -4,6 +4,7 @@ include'header.php';
 <div id="container" class="quiz">
         <div class="row">
           <div id="intro" class="col-md-8 col-md-offset-2">
+              <h1><?php if (isset($flash['success'])) { echo $flash['success']; }?></h1>
                 <h2>Simple Quiz :: Admin <small><?php echo $user; ?></small></h2>
                 <h3>Edit Question: </h3>
                 <div class="row">
@@ -21,11 +22,11 @@ include'header.php';
                                     foreach ($answers as $answer) : ?>
                                     <tr class="answer-row">
                                         <td style="text-align: center;">
-                                           <input class="correct" name="correct" type="radio" <?php echo $i == 1 ? 'checked' : ''; ?>> 
+                                           <input class="correct" name="correct" value="<?php echo $i - 1; ?>" type="radio" <?php echo $i == 1 ? 'checked' : ''; ?>> 
                                         </td>
                                         <td>
                                             <div class="input-group">
-                                                <input type="text" name="answer<?php echo $i; ?>" value="<?php echo $answer; ?>" class="form-control">
+                                                <input type="text" name="answer[]" value="<?php echo $answer; ?>" class="form-control">
                                                 <span class="input-group-btn">
                                                     <button class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
                                                 </span>

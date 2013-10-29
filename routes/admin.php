@@ -115,6 +115,48 @@ $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
         
 })->conditions(array('quizid' => '\d+', 'questionid' => '\d+'));
 
+$app->post("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
+   
+    if ( (! ctype_digit($quizid)) || (! ctype_digit($questionid))) {
+        $app->redirect($app->request->getRootUri().'/admin/');
+    }
+    
+    $quiz = $app->quiz;
+    
+    $correct = (int) trim($app->request()->post('correct'));
+    $answerarray = $app->request()->post('answer');
+    $i = 0;
+    foreach ($answerarray as $answer) {
+        if ($i == $correct) {
+            $correctAnswer = 1;
+        } else {
+           $correctAnswer = 0;
+        }
+        $answers[] = array($answer, $correctAnswer);
+
+        $i++;
+    }
+    
+    if ($quiz->setId($quizid)) {
+        try {
+            $quiz->updateAnswers($answers, $quizid, $questionid);
+            $question = $quiz->getQuestion($questionid);
+            $app->flashnow('success', 'question updated');
+        } catch (Exception $e ) {
+            echo $e->getMessage();
+        }
+        $answers = array();
+        $app->render('admin/editquestion.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
+    } else {
+        echo 'oops';
+    }
+//    echo '<pre>';
+//    
+//    print_r($answers);
+//
+//    echo '</pre>';  
+});
+
 $app->get("/logout/", function () use ($app) {
     $session = $app->session;
     $session->end();
