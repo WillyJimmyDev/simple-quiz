@@ -62,7 +62,8 @@ Within the download you'll find the following directories and files:
 * To create your own questions and answers, phpmyadmin is probably the easiest solution for now until an Admin backend exists.
 * Navigate to the web accessible folder in your browser.
 
-
+## Twitter Stuff
++ <http://twitter.com/QuizSimple>
 
 ## Authors
 
