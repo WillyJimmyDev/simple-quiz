@@ -101,7 +101,7 @@ $app->get("/admin/quiz/:id", $authenticate($app), function($id) use ($app) {
         
 })->conditions(array('id' => '[0-9]'));
 
-$app->get("/admin/quiz/:quizid/question/edit/:questionid/", $authenticate($app), function($quizid, $questionid) use ($app) {
+$app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
    
     $quiz = $app->quiz;
     

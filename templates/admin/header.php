@@ -26,7 +26,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="<?php echo $root; ?>/">Quizzes</a></li>
+            <li><a href="<?php echo $root; ?>/">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">

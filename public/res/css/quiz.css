@@ -77,3 +77,5 @@ strong.currentuser {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+#contextual, #contextual2 {display:none;}
+a#editor {cursor:pointer;}

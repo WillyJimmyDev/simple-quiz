@@ -19,7 +19,7 @@ include'header.php';
                   <ul>
                     <?php
                     foreach ($quiz->getQuestions() as $id => $text) :
-                        echo '<li>' .$text . ' <a href="'.$root.'/admin/quiz/'.$quiz->getId().'/question/edit/'.$id.'/"><span class="glyphicon glyphicon-pencil"></a></li>';
+                        echo '<li>' .$text . ' <a href="'.$root.'/admin/quiz/'.$quiz->getId().'/question/'.$id.'/edit/"><span class="glyphicon glyphicon-pencil"></a></li>';
                     endforeach;
                     ?> 
                   </ul>

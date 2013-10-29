@@ -80,7 +80,7 @@ class Quiz implements Base\QuizInterface {
     {   
         if ($questionid)
         {
-            //pull answers from db for only this question
+            //pull answers from db for only this question with correct answer first
             $answersql = "SELECT text FROM answers where question_num = :id and quiz_id = :quizid ORDER BY correct DESC";
             $stmt = $this->_db->prepare($answersql);
             $stmt->bindParam(':id', $questionid, \PDO::PARAM_INT);
