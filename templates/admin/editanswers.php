@@ -4,14 +4,17 @@ include'header.php';
 <div id="container" class="quiz">
         <div class="row">
           <div id="intro" class="col-md-8 col-md-offset-2">
-              <h1><?php if (isset($flash['success'])) { echo $flash['success']; }?></h1>
+              <div><a class="btn btn-primary" href="<?php echo $root; ?>/admin/quiz/<?php echo $quizid; ?>/"><span class="glyphicon glyphicon-arrow-left"></span> Back to  quiz details</a></div>
                 <h2>Simple Quiz :: Admin <small><?php echo $user; ?></small></h2>
-                <h3>Edit Question: </h3>
+                <h3>Edit Answers: </h3>
                 <div class="row">
                     <div class="col-md-7">
-                        <form action="" method="post">
-                            <h4><span id="questiontext"><?php echo $question; ?></span> <a id="editor" class="edit"><span class="glyphicon glyphicon-pencil"></span></a></h4>
+                        <?php if (isset($flash['success'])) { echo '<div id="updater" class="alert alert-success">'.$flash["success"].'</div>'; } ?>
+                        <?php if (isset($flash['error'])) { echo '<div id="updater" class="alert alert-danger">'.$flash["error"].'</div>'; } ?>
+                        <h4><?php echo $question; ?></h4>
+                        <!--<h4><span id="questiontext"><?php //echo $question; ?></span> <a id="editor" class="edit"><span class="glyphicon glyphicon-pencil"></span></a></h4>-->
 
+                            <form id="questionedit" action="" method="post">
                             <table class="table table-responsive table-hover table-bordered">
                                 <thead>
                                     <tr><th style="text-align: center;">Correct Answer</th><th>Text</th></tr>

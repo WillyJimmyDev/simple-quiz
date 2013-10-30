@@ -88,7 +88,7 @@ $app->post('/admin/login/', function () use ($app) {
     $app->redirect($app->request->getRootUri() . '/admin/');
 });
 
-$app->get("/admin/quiz/:id", $authenticate($app), function($id) use ($app) {
+$app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
     $quiz = $app->quiz;
     
@@ -108,7 +108,7 @@ $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
     if ($quiz->setId($quizid)) {
         $question = $quiz->getQuestion($questionid);
         $answers = $quiz->getAnswers($questionid);
-        $app->render('admin/editquestion.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
+        $app->render('admin/editanswers.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
     } else {
         echo 'oops';
     }
@@ -125,36 +125,37 @@ $app->post("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app)
     
     $correct = (int) trim($app->request()->post('correct'));
     $answerarray = $app->request()->post('answer');
-    $i = 0;
-    foreach ($answerarray as $answer) {
-        if ($i == $correct) {
-            $correctAnswer = 1;
-        } else {
-           $correctAnswer = 0;
-        }
-        $answers[] = array($answer, $correctAnswer);
-
-        $i++;
-    }
     
     if ($quiz->setId($quizid)) {
+        $question = $quiz->getQuestion($questionid);
+        $i = 0;
+        foreach ($answerarray as $answer) {
+            if (trim($answer) == '') {
+                $app->flashnow('error', 'Answers can\'t be empty');
+                $answers = $quiz->getAnswers($questionid);
+                $app->render('admin/editanswers.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
+                $app->stop();
+            }
+            if ($i == $correct) {
+                $correctAnswer = 1;
+            } else {
+               $correctAnswer = 0;
+            }
+            $answers[] = array($answer, $correctAnswer);
+
+            $i++;
+        }
         try {
             $quiz->updateAnswers($answers, $quizid, $questionid);
-            $question = $quiz->getQuestion($questionid);
-            $app->flashnow('success', 'question updated');
+            $app->flashnow('success', 'Question saved successfully');
         } catch (Exception $e ) {
-            echo $e->getMessage();
+            $app->flashnow('error', 'An error occurred');
         }
-        $answers = array();
-        $app->render('admin/editquestion.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
+        $answers = $quiz->getAnswers($questionid);
+        $app->render('admin/editanswers.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
     } else {
         echo 'oops';
     }
-//    echo '<pre>';
-//    
-//    print_r($answers);
-//
-//    echo '</pre>';  
 });
 
 $app->get("/logout/", function () use ($app) {

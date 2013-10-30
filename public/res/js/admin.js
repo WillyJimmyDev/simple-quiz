@@ -1,10 +1,12 @@
 $(function(){
-    
-    var editquestion = $('#editor');
-    var savetext = $('#savetext');
+    $('#updater').fadeIn('slow').delay(2000).fadeOut('slow');
+//    var editquestion = $('#editor');
+//    var savetext = $('#savetext');
     var context = $('#contextual');
     var context2 = $('#contextual2');
     var add = $('#addanswer');
+    var qform = $('form#questionedit');
+    var saveprompt = "<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>";
     
     $('table').on('click', '.remove', function() {
            var parenttr = $(this).parents('tr');
@@ -17,29 +19,32 @@ $(function(){
                     $(this).find('.correct').val(index);
                     console.log(index + 1);
                 });
-                context.html("<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>");
+                context.html(saveprompt);
                 context.fadeIn();
            }
         
     });
     
-    editquestion.on('click', function(e) {
-        e.preventDefault();
-        var content = $('#questiontext').text();
-        $('#questioninput').val(content);
-        //show modal
-        $('#qmodal').modal();
-    });
+    //the pencil icon for editing the question text - 
+//    editquestion.on('click', function(e) {
+//        e.preventDefault();
+//        var content = $('#questiontext').text();
+//        $('#questioninput').val(content);
+//        //show modal
+//        $('#qmodal').modal();
+//    });
     
-    savetext.on('click', function(e) {
-        var content = $('#questioninput').val();
-        $('#questiontext').html(content);
-        //show modal
-        $('#qmodal').modal("hide");
-        context.html("<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>");
-        context.fadeIn();
-    });
+    // the 'save changes' button inside the modal
+//    savetext.on('click', function(e) {
+//        var content = $('#questioninput').val();
+//        $('#questiontext').html(content);
+//        //hide modal
+//        $('#qmodal').modal("hide");
+//        context.html(saveprompt);
+//        context.fadeIn();
+//    });
     
+    //the button to add another answer for this question
     add.on('click', function() {
         $.each( $('.answer-row:visible'), function(index, value) {
             $(this).find('.correct').val(index);
@@ -52,8 +57,22 @@ $(function(){
         console.log("number of answers before adding this one " + numanswers);
         $('tbody').append(newansweritem);
         newansweritem.fadeIn(800);
-        context.html("<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>");
+        context.html(saveprompt);
         context.fadeIn();
+    });
+    
+    // on form submission
+    qform.on('submit', function(e) {
+        
+        $.each( $('.answer-row:visible'), function(index, value) {
+            if ( $(this).find("input[type='text']").val() === '' ) {
+                console.log("empty input");
+                e.preventDefault();
+                context2.html('<div class="alert alert-dismissable alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Answers can\'t be empty.</div>');
+                context2.show().delay( 2000 ).fadeOut( 400 );
+            }
+            
+        });
     });
     
 });

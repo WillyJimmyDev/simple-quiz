@@ -112,13 +112,7 @@ class Quiz implements Base\QuizInterface {
     
     public function updateAnswers(Array $answers, $quizid, $questionid) 
     {
-        //get rid of old answers
-        $sql = "delete from answers where quiz_id = :quizid and question_num = :questionid";
-        $stmt = $this->_db->prepare($sql);
-        $stmt->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
-        $stmt->execute();
-        
+        $this->deleteAnswers($quizid, $questionid);
         //insert new  answers
         $sql2 = "insert into answers (question_num, quiz_id, text, correct) values(:questionid, :quizid, :answer, :correct)";
         $stmt2 = $this->_db->prepare($sql2);
@@ -132,6 +126,17 @@ class Quiz implements Base\QuizInterface {
             $correct = $answer[1];
             $stmt2->execute();
         }
+        return true;
+    }
+    
+    public function deleteAnswers($quizid, $questionid)
+    {
+        //get rid of old answers
+        $sql = "delete from answers where quiz_id = :quizid and question_num = :questionid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->execute();
         return true;
     }
     
