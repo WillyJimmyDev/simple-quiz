@@ -54,6 +54,7 @@ Within the download you'll find the following directories and files:
 * Unpack the zip archive.
 * Place the contents of the /public directory inside your document root.
 * All other directories should be placed outside of the document root and not accessible via a web browser (look at the above diagram to see the structure).
+* The mod_rewrite module (if using apache server) will need to be enabled in your server configuration.
 * Create a MySQL database called 'simple-quiz'
 * Import simple-quiz.sql into MySQL using a tool like phpmyadmin.
 * Change credentials in /SimpleQuiz/Utils/Base/Config.php to suit.

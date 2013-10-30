@@ -140,6 +140,17 @@ class Quiz implements Base\QuizInterface {
         return true;
     }
     
+    public function updateQuestion ($quizid, $questionnum, $text) 
+    {
+        $sql = "update questions set text = :text where quiz_id = :quizid and num = :num";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':num', $questionnum, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':text', $text, \PDO::PARAM_STR);
+        $stmt->execute();
+        return true;
+    }
+
     public function getQuestion($questionid) 
     {
         $questionsql = "select text from questions where num = :id and quiz_id = :quizid";

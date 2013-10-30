@@ -5,7 +5,6 @@ include'header.php';
         <div class="row">
           <div id="intro" class="col-md-8 col-md-offset-2">
               <div><a class="btn btn-primary" href="<?php echo $root; ?>/admin/quiz/<?php echo $quizid; ?>/"><span class="glyphicon glyphicon-arrow-left"></span> Back to  quiz details</a></div>
-                <h2>Simple Quiz :: Admin <small><?php echo $user; ?></small></h2>
                 <h3>Edit Answers: </h3>
                 <div class="row">
                     <div class="col-md-7">
@@ -14,8 +13,8 @@ include'header.php';
                         <h4><?php echo $question; ?></h4>
                         <!--<h4><span id="questiontext"><?php //echo $question; ?></span> <a id="editor" class="edit"><span class="glyphicon glyphicon-pencil"></span></a></h4>-->
 
-                            <form id="questionedit" action="" method="post">
-                            <table class="table table-responsive table-hover table-bordered">
+                            <form id="answeredit" action="" method="post">
+                            <table id="answers" class="table table-responsive table-hover table-bordered">
                                 <thead>
                                     <tr><th style="text-align: center;">Correct Answer</th><th>Text</th></tr>
                                 </thead>
@@ -69,23 +68,4 @@ include'header.php';
       </div><!-- /.row -->
         
     </div><!--container-->
-    
-    <!-- Modal -->
-    <div class="modal fade" id="qmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Edit Question:</h4>
-          </div>
-          <div class="modal-body">
-              <p><input id="questioninput" type="text" class="form-control" /></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            <button id="savetext" type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
     <?php include 'footer.php'; ?>

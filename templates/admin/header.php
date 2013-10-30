@@ -25,11 +25,9 @@
           <a class="navbar-brand" href="<?php echo $root; ?>/">Simple Quiz</a>
         </div>
         <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="<?php echo $root; ?>/">Quizzes</a></li>
-          </ul>
+            
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
+            <li class="dropdown active">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="<?php echo $root; ?>/admin/">All Quizzes</a></li>
@@ -40,6 +38,7 @@
                 </ul>
             </li>
           </ul>
+            <p class="signed navbar-text pull-right"><span class="glyphicon glyphicon-user"></span> Signed in as <strong><?php echo $user; ?></strong></p>
         </div><!--/.nav-collapse -->
       </div>
     </div>

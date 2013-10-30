@@ -101,6 +101,32 @@ $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         
 })->conditions(array('id' => '[0-9]'));
 
+$app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+    
+    $questionid = $app->request()->post('questionid');
+    $text = $app->request()->post('questiontext');
+    
+    if ( (! ctype_digit($id)) || (! ctype_digit($questionid)) || (trim($text) == '') ) {
+        $app->redirect($app->request->getRootUri().'/admin/');
+    }
+    
+    $quiz = $app->quiz;
+    
+    if ($quiz->setId($id)) {
+        
+        try {
+            $quiz->updateQuestion($id, $questionid, $text);
+            $app->flashnow('success', 'Question saved successfully');
+        } catch (Exception $e ) {
+            $app->flashnow('error', $e->getMessage());
+        }
+        $quiz->populateQuestions();
+        $quiz->populateUsers();
+        $app->render('admin/quiz.php', array('quiz' => $quiz));
+    }
+        
+});
+
 $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
    
     $quiz = $app->quiz;
@@ -147,7 +173,7 @@ $app->post("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app)
         }
         try {
             $quiz->updateAnswers($answers, $quizid, $questionid);
-            $app->flashnow('success', 'Question saved successfully');
+            $app->flashnow('success', 'Answers saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', 'An error occurred');
         }

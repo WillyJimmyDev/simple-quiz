@@ -5,10 +5,10 @@ $(function(){
     var context = $('#contextual');
     var context2 = $('#contextual2');
     var add = $('#addanswer');
-    var qform = $('form#questionedit');
+    var aform = $('form#answeredit');
     var saveprompt = "<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>";
     
-    $('table').on('click', '.remove', function() {
+    $('table#answers').on('click', '.remove', function() {
            var parenttr = $(this).parents('tr');
            if (parenttr.find('input.correct').is(':checked')) {
                context2.html('<div class="alert alert-dismissable alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>You can\'t delete an answer if it is marked as correct.</div>');
@@ -25,24 +25,46 @@ $(function(){
         
     });
     
+    $('table#questions').on('click', '.remove', function() {
+        var parenttr = $(this).parents('tr');
+           
+        parenttr.fadeOut(800).remove();
+        $.each( $('.answer-row:visible'), function(index, value) {
+            $(this).find('.correct').val(index);
+            console.log(index + 1);
+        });
+        context.html(saveprompt);
+        context.fadeIn();
+    });
+    
+    $('table').on('click', 'button.edit', function() {
+        var id = $(this).attr("data-question-id");
+        var q = $(this).parents('tr').find('td.question').text();
+        $('#questioninput').val(q);
+        $('#questionid').val(id);
+        $('#qmodal').modal();
+        
+    });
+    
     //the pencil icon for editing the question text - 
-//    editquestion.on('click', function(e) {
-//        e.preventDefault();
-//        var content = $('#questiontext').text();
-//        $('#questioninput').val(content);
-//        //show modal
-//        $('#qmodal').modal();
+//    $.each(editbuttons, function (index, value) {
+//        $(this).on('click', function() {
+//            
+//            var content = $('#questiontext').text();
+//            $('#questioninput').val(content);
+//            //show modal
+//            $('#qmodal').modal();
+//        });
 //    });
+//
     
     // the 'save changes' button inside the modal
-//    savetext.on('click', function(e) {
-//        var content = $('#questioninput').val();
-//        $('#questiontext').html(content);
-//        //hide modal
-//        $('#qmodal').modal("hide");
-//        context.html(saveprompt);
-//        context.fadeIn();
-//    });
+    $('#questionedit').on('submit', function(e) {
+        if ($('#questioninput').val() === '') {
+          e.preventDefault();
+          $('#helper').fadeIn('slow').delay(2000).fadeOut('slow');
+        }
+    });
     
     //the button to add another answer for this question
     add.on('click', function() {
@@ -62,7 +84,7 @@ $(function(){
     });
     
     // on form submission
-    qform.on('submit', function(e) {
+    aform.on('submit', function(e) {
         
         $.each( $('.answer-row:visible'), function(index, value) {
             if ( $(this).find("input[type='text']").val() === '' ) {
