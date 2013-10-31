@@ -19,6 +19,8 @@ interface QuizInterface {
     
     public function updateQuestion ($quizid, $questionnum, $text);
     
+    public function deleteQuestion($quizid, $questionid);
+    
     public function deleteAnswers($quizid, $questionid);
     
     public function getQuestion($questionid);

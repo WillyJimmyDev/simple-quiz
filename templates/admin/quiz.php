@@ -6,6 +6,7 @@ include'header.php';
             <div id="intro" class="col-md-8 col-md-offset-2">
                  <?php if (isset($flash['success'])) { echo '<div id="updater" class="alert alert-success">'.$flash["success"].'</div>'; } ?>
                  <?php if (isset($flash['error'])) { echo '<div id="updater" class="alert alert-danger">'.$flash["error"].'</div>'; } ?>
+                <div id="ajaxupdater" class="alert"></div>
                 <h3>Quiz Details:</h3>
                 <ul>
                     <li><strong>Name</strong>: <?php echo $quiz->getName(); ?></li>
@@ -28,16 +29,16 @@ include'header.php';
                             <td class="question"><?php echo $text; ?></td>
                             <td style="text-align:center;">
                                 <button data-question-id="<?php echo $id; ?>" title="Edit Question" class="edit btn btn-default btn-primary" type="button"><span class="glyphicon glyphicon-pencil"></span></button>
-                                <a href="<?php echo $root; ?>/admin/quiz/<?php echo $quiz->getId(); ?>/question/<?php echo $id; ?>/edit/" title="Edit Answers" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-list"></span></a>
-                                <button title="Delete Question" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                <a href="<?php echo $root; ?>/admin/quiz/<?php echo $quiz->getId(); ?>/question/<?php echo $id; ?>/edit/" title="Edit Answers" class="answerlink btn btn-default btn-primary"><span class="glyphicon glyphicon-list"></span></a>
+                                <button data-question-id="<?php echo $id; ?>" data-quiz-id="<?php echo $quiz->getId(); ?>" title="Delete Question" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
                             </td>
                         </tr>
                         <?php endforeach; ?>  
                     </tbody>
                 </table>
-                <!-- <p>
-                    <button id="addanswer" title="Add New Question" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
-                </p>-->
+                <p>
+                    <button id="addquestion" title="Add New Question" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
+                </p>
             </div>
       </div><!-- /.row -->
         

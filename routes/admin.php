@@ -103,10 +103,11 @@ $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
 
 $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
-    $questionid = $app->request()->post('questionid');
-    $text = $app->request()->post('questiontext');
+    $questionid = $app->request->post('questionid');
+    $text = $app->request->post('questiontext');
+    $action = $app->request->post('action');
     
-    if ( (! ctype_digit($id)) || (! ctype_digit($questionid)) || (trim($text) == '') ) {
+    if (! ctype_digit($id)) {
         $app->redirect($app->request->getRootUri().'/admin/');
     }
     
@@ -114,6 +115,21 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
     if ($quiz->setId($id)) {
         
+        // if we are deleting a question via ajax
+        // return a json array and stop further processing
+        if ( ($action == 'delete') && ($app->request->isAjax()) ) {
+            try {
+                $quiz->deleteQuestion($id, $questionid);
+            } catch (Exception $e ) {
+                echo json_encode(array('error' => $e->getMessage()));
+            }
+            echo json_encode(array('success' => 'Question successfully deleted'));
+            $app->stop();
+        }
+        
+        if ( (! ctype_digit($questionid)) || (trim($text) == '') ) {
+            $app->redirect($app->request->getRootUri().'/admin/');
+        }
         try {
             $quiz->updateQuestion($id, $questionid, $text);
             $app->flashnow('success', 'Question saved successfully');
@@ -123,6 +139,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         $quiz->populateQuestions();
         $quiz->populateUsers();
         $app->render('admin/quiz.php', array('quiz' => $quiz));
+        
     }
         
 });

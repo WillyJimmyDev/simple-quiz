@@ -1,10 +1,10 @@
 $(function(){
     $('#updater').fadeIn('slow').delay(2000).fadeOut('slow');
-//    var editquestion = $('#editor');
-//    var savetext = $('#savetext');
+
     var context = $('#contextual');
     var context2 = $('#contextual2');
-    var add = $('#addanswer');
+    var addanswer = $('#addanswer');
+    var addquestion = $('#addquestion');
     var aform = $('form#answeredit');
     var saveprompt = "<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>";
     
@@ -26,15 +26,45 @@ $(function(){
     });
     
     $('table#questions').on('click', '.remove', function() {
-        var parenttr = $(this).parents('tr');
+        
+        var questionid = $(this).attr("data-question-id");
+        var quizid = $(this).attr("data-quiz-id");
+        
+        if (window.confirm("This can't be undone. OK?") ) {
+            
+            var parenttr = $(this).parents('tr.question');
            
-        parenttr.fadeOut(800).remove();
-        $.each( $('.answer-row:visible'), function(index, value) {
-            $(this).find('.correct').val(index);
-            console.log(index + 1);
-        });
-        context.html(saveprompt);
-        context.fadeIn();
+            parenttr.find('td').html('<img src="/images/ajax-loader.gif" />');
+
+            $.ajax({
+                url: location.pathname,
+                type: "POST",
+                cache: false,
+                data : {action : 'delete',quizid : quizid, questionid : questionid},
+                dataType: "json",
+                success: function(response) {
+                    if (typeof response.success !== 'undefined') {
+                
+                        parenttr.fadeOut('slow').remove();
+                        $.each( $('tr.question:visible'), function(index, value) {
+                            $(this).find('.edit').attr("data-question-id",index);
+                            $(this).find('.remove').attr("data-question-id",index);
+                            var regex = /question\/\d+\/edit/;
+                            index++;
+                            var oldhref = $(this).find('.answerlink').attr("href");
+                            var newhref = oldhref.replace(regex, "question/" + index + "/edit");
+                            $(this).find('.answerlink').attr("href", newhref);
+                            // flash success message
+                            $('#ajaxupdater').addClass("alert-success").html(response.success).show('slow').delay(2000).hide('slow');
+                        });
+                    } else {
+                        $('#ajaxupdater').addClass("alert-danger").html(response.error).show('slow').delay(2000).hide('slow');
+                    }
+                }
+            });          
+        }
+        
+
     });
     
     $('table').on('click', 'button.edit', function() {
@@ -46,18 +76,6 @@ $(function(){
         
     });
     
-    //the pencil icon for editing the question text - 
-//    $.each(editbuttons, function (index, value) {
-//        $(this).on('click', function() {
-//            
-//            var content = $('#questiontext').text();
-//            $('#questioninput').val(content);
-//            //show modal
-//            $('#qmodal').modal();
-//        });
-//    });
-//
-    
     // the 'save changes' button inside the modal
     $('#questionedit').on('submit', function(e) {
         if ($('#questioninput').val() === '') {
@@ -67,23 +85,40 @@ $(function(){
     });
     
     //the button to add another answer for this question
-    add.on('click', function() {
+    addanswer.on('click', function() {
         $.each( $('.answer-row:visible'), function(index, value) {
             $(this).find('.correct').val(index);
-            console.log(index + 1);
+            
         });
         var numanswers = $('.answer-row:visible').length;
         var newansweritem = $('tr.template').clone().removeClass('template');
         newansweritem.find('.answerinput').attr('name', 'answer[]');
         newansweritem.find('.correct').val(numanswers);
-        console.log("number of answers before adding this one " + numanswers);
+        
         $('tbody').append(newansweritem);
         newansweritem.fadeIn(800);
         context.html(saveprompt);
         context.fadeIn();
     });
     
-    // on form submission
+    //the button to add another question for this quiz
+    addquestion.on('click', function() {
+        $.each( $('.answer-row:visible'), function(index, value) {
+            $(this).find('.correct').val(index);
+            
+        });
+        var numanswers = $('.answer-row:visible').length;
+        var newansweritem = $('tr.template').clone().removeClass('template');
+        newansweritem.find('.answerinput').attr('name', 'answer[]');
+        newansweritem.find('.correct').val(numanswers);
+        
+        $('tbody').append(newansweritem);
+        newansweritem.fadeIn(800);
+        context.html(saveprompt);
+        context.fadeIn();
+    });
+    
+    // on answer form submission
     aform.on('submit', function(e) {
         
         $.each( $('.answer-row:visible'), function(index, value) {

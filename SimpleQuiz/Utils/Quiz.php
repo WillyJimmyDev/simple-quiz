@@ -150,6 +150,25 @@ class Quiz implements Base\QuizInterface {
         $stmt->execute();
         return true;
     }
+    
+    public function deleteQuestion($quizid, $questionid)
+    {
+        //foreign_key constraints in db will also delete associated answers
+        $sql = "delete from questions where num = :num and quiz_id = :quizid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        //reorder the num column field
+        $sql = "update questions set num = num - 1 where num > :num and quiz_id = :quizid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return true;
+    }
 
     public function getQuestion($questionid) 
     {

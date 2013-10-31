@@ -79,6 +79,6 @@ strong.currentuser {
 }
 #contextual, #contextual2 {display:none;}
 a#editor {cursor:pointer;}
-#updater {display:none;}
+#updater, #ajaxupdater {display:none;}
 p.signed {padding-right:20px;}
 #helper { display:none;}
