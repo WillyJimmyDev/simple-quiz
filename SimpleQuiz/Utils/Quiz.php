@@ -186,15 +186,24 @@ class Quiz implements Base\QuizInterface {
     
     public function deleteQuestion($questionid)
     {
-        //foreign_key constraints in db will also delete associated answers
+        //foreign_key constraints would be great but too difficult to debug
         $sql = "delete from questions where num = :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
         $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
         $stmt->execute();
         
-        //reorder the num column field
+        $this->deleteAnswers($questionid);
+        
+        //reorder the num column in questions table
         $sql = "update questions set num = num - 1 where num > :num and quiz_id = :quizid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        //reorder the question_num column in answers table
+        $sql = "update answers set question_num = question_num - 1 where question_num > :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
         $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
