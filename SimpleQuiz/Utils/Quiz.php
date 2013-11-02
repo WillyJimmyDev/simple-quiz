@@ -112,11 +112,30 @@ class Quiz implements Base\QuizInterface {
     
     public function updateAnswers(Array $answers, $quizid, $questionid) 
     {
-        $this->deleteAnswers($quizid, $questionid);
+        $this->deleteAnswers($questionid);
+        
         //insert new  answers
-        $sql2 = "insert into answers (question_num, quiz_id, text, correct) values(:questionid, :quizid, :answer, :correct)";
+        $this->addAnswers($quizid, $questionid, $answers);
+
+        return true;
+    }
+    
+    public function deleteAnswers($questionid)
+    {
+        //get rid of old answers
+        $sql = "delete from answers where quiz_id = :quizid and question_num = :questionid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    }
+    
+    public function addAnswers($quizid, $questionnum, Array $answers)
+    {
+        $sql2 = "insert into answers (question_num, quiz_id, text, correct) values(:questionnum, :quizid, :answer, :correct)";
         $stmt2 = $this->_db->prepare($sql2);
-        $stmt2->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
+        $stmt2->bindParam(':questionnum', $questionnum, \PDO::PARAM_INT);
         $stmt2->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
         $stmt2->bindParam(':answer', $text, \PDO::PARAM_STR);
         $stmt2->bindParam(':correct', $correct, \PDO::PARAM_INT);
@@ -129,14 +148,28 @@ class Quiz implements Base\QuizInterface {
         return true;
     }
     
-    public function deleteAnswers($quizid, $questionid)
+    public function addQuestion($quizid, $question, Array $answers)
     {
-        //get rid of old answers
-        $sql = "delete from answers where quiz_id = :quizid and question_num = :questionid";
+        //throw illegalargument exception on answers array
+        $sql = "SELECT max(num) as maxnum FROM `questions` WHERE quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
-        $stmt->bindParam(':questionid', $questionid, \PDO::PARAM_INT);
         $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt->execute(); 
+        $row = $stmt->fetchObject();
+        $num = (int) $row->maxnum;
+        
+        $num = $num + 1;
+        
+        //insert new question
+        $sql = "insert into questions (num, quiz_id, text) values(:num, :quizid, :question)";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':num', $num, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':question', $question, \PDO::PARAM_STR);
+        $stmt->execute(); 
+        
+        $this->addAnswers($quizid, $num, $answers);
+        
         return true;
     }
     
@@ -151,13 +184,13 @@ class Quiz implements Base\QuizInterface {
         return true;
     }
     
-    public function deleteQuestion($quizid, $questionid)
+    public function deleteQuestion($questionid)
     {
         //foreign_key constraints in db will also delete associated answers
         $sql = "delete from questions where num = :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
         $stmt->execute();
         
         //reorder the num column field

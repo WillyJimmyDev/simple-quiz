@@ -81,4 +81,4 @@ strong.currentuser {
 a#editor {cursor:pointer;}
 #updater, #ajaxupdater {display:none;}
 p.signed {padding-right:20px;}
-#helper { display:none;}
+.helper { display:none;}

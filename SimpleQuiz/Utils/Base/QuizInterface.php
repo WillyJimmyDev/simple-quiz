@@ -15,13 +15,17 @@ interface QuizInterface {
     
     public function getAnswers($questionid = false);
     
-    public function updateAnswers(Array $answers, $quizid, $questionid);
+    public function addAnswers($quizid, $questionid, Array $answers);
+    
+    public function addQuestion($quizid, $question, Array $answers);
     
     public function updateQuestion ($quizid, $questionnum, $text);
     
-    public function deleteQuestion($quizid, $questionid);
+    public function deleteQuestion($questionid);
     
-    public function deleteAnswers($quizid, $questionid);
+    public function updateAnswers(Array $answers, $quizid, $questionid);
+    
+    public function deleteAnswers($questionid);
     
     public function getQuestion($questionid);
     

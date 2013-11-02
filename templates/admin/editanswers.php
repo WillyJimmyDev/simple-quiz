@@ -57,6 +57,7 @@ include'header.php';
                                 <button type="submit" class="btn btn-success">Save <span class="glyphicon glyphicon-ok"></span></button>
                                 <button id="addanswer" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
                             </p>
+                            <input type="hidden" name="_METHOD" value="PUT" />
                         </form> 
                     </div>
                     <div class="col-md-3">

@@ -43,7 +43,8 @@ include'header.php';
       </div><!-- /.row -->
         
 </div><!--container-->
-<!-- Modal -->
+<!-- Modals -->
+<!-- Edit Question Modal -->
     <div class="modal fade" id="qmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -56,12 +57,85 @@ include'header.php';
                 <p>
                    <input name="questiontext" id="questioninput" type="text" class="form-control" />
                    <input name="questionid" id="questionid" type="hidden" />
-                   <span id="helper" class="help-block">Questions can't be empty!.</span>
+                   <input type="hidden" name="_METHOD" value="PUT" />
+                   <span class="helper help-block">Questions can't be empty!.</span>
                 </p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
               <button id="savetext" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+<!-- Add Question Modal -->
+    <div class="modal fade" id="q-add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add A New Question:</h4>
+          </div>
+            <form id="questionadd" method="post" action="">
+            <div class="modal-body">
+                <p><label for="newquestioninput">Question:</label>
+                   <input name="questiontext" id="newquestioninput" type="text" placeholder="Your question here" class="form-control" />
+                   <span class="helper help-block">Questions can't be empty!</span>
+                </p>
+                <h5><strong>Answers:</strong></h5>
+                <table id="newanswers" class="table table-responsive table-hover table-bordered">
+                    <thead>
+                        <tr><th style="text-align: center;">Correct Answer?</th><th>Answer</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="answer-row">
+                            <td style="text-align: center;">
+                               <input class="correct" name="correct" value="0" type="radio" /> 
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="answer[]" placeholder="Answer" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="answer-row">
+                            <td style="text-align: center;">
+                               <input class="correct" name="correct" value="1" type="radio" /> 
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="answer[]" placeholder="Answer" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="template answer-row" style="display:none;">
+                            <td style="text-align: center;">
+                               <input class="correct" name="correct" type="radio" /> 
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                <input type="text" placeholder="Answer" name="" value="" class="form-control answerinput">
+                                <span class="input-group-btn">
+                                    <button class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><button id="addanswer" type="button" class="btn btn-primary pull-right">Add Another Answer <span class="glyphicon glyphicon-plus-sign"></span></button></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Save Question</button>
             </div>
             </form>
         </div><!-- /.modal-content -->

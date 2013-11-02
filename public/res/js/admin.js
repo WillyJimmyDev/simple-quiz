@@ -5,6 +5,7 @@ $(function(){
     var context2 = $('#contextual2');
     var addanswer = $('#addanswer');
     var addquestion = $('#addquestion');
+    var questionaddform = $('#questionadd');
     var aform = $('form#answeredit');
     var saveprompt = "<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>";
     
@@ -40,7 +41,7 @@ $(function(){
                 url: location.pathname,
                 type: "POST",
                 cache: false,
-                data : {action : 'delete',quizid : quizid, questionid : questionid},
+                data : {'_METHOD' : 'DELETE', quizid : quizid, questionid : questionid},
                 dataType: "json",
                 success: function(response) {
                     if (typeof response.success !== 'undefined') {
@@ -54,9 +55,10 @@ $(function(){
                             var oldhref = $(this).find('.answerlink').attr("href");
                             var newhref = oldhref.replace(regex, "question/" + index + "/edit");
                             $(this).find('.answerlink').attr("href", newhref);
-                            // flash success message
-                            $('#ajaxupdater').addClass("alert-success").html(response.success).show('slow').delay(2000).hide('slow');
+                            
                         });
+                        // flash success message
+                        $('#ajaxupdater').addClass("alert-success").html(response.success).show('slow').delay(2000).hide('slow');
                     } else {
                         $('#ajaxupdater').addClass("alert-danger").html(response.error).show('slow').delay(2000).hide('slow');
                     }
@@ -80,7 +82,7 @@ $(function(){
     $('#questionedit').on('submit', function(e) {
         if ($('#questioninput').val() === '') {
           e.preventDefault();
-          $('#helper').fadeIn('slow').delay(2000).fadeOut('slow');
+          $('#questionedit .helper').fadeIn('slow').delay(2000).fadeOut('slow');
         }
     });
     
@@ -103,19 +105,7 @@ $(function(){
     
     //the button to add another question for this quiz
     addquestion.on('click', function() {
-        $.each( $('.answer-row:visible'), function(index, value) {
-            $(this).find('.correct').val(index);
-            
-        });
-        var numanswers = $('.answer-row:visible').length;
-        var newansweritem = $('tr.template').clone().removeClass('template');
-        newansweritem.find('.answerinput').attr('name', 'answer[]');
-        newansweritem.find('.correct').val(numanswers);
-        
-        $('tbody').append(newansweritem);
-        newansweritem.fadeIn(800);
-        context.html(saveprompt);
-        context.fadeIn();
+        $('#q-add-modal').modal();
     });
     
     // on answer form submission
@@ -127,6 +117,23 @@ $(function(){
                 e.preventDefault();
                 context2.html('<div class="alert alert-dismissable alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Answers can\'t be empty.</div>');
                 context2.show().delay( 2000 ).fadeOut( 400 );
+            }
+            
+        });
+    });
+    
+    //add a new question modal
+    questionaddform.on('submit', function(e) {
+        // if question text is empty
+        if ($('#newquestioninput').val() === '') {
+          e.preventDefault();
+          $('#questionadd .helper').fadeIn('slow').delay(2000).fadeOut('slow');
+        }
+        //if any of the answers is empty
+        $.each( $('#newanswers .answer-row:visible'), function(index, value) {
+            if ( $(this).find("input[type='text']").val() === '' ) {
+                console.log("empty input");
+                e.preventDefault();
             }
             
         });

@@ -11,16 +11,6 @@ $authenticate = function ($app) {
     };
 };
 
-$app->get('/admin/', $authenticate($app), function () use ($app) {
-    
-    $simple = $app->simple;
-    $simple->getQuizzes(false);
-
-    $quizzes = $simple->quizzes;
-
-    $app->render('admin/index.php', array('quizzes' => $quizzes));
-});
-
 $app->get('/admin/login/', function () use ($app) {
     
     $session = $app->session;
@@ -88,6 +78,22 @@ $app->post('/admin/login/', function () use ($app) {
     $app->redirect($app->request->getRootUri() . '/admin/');
 });
 
+$app->get("/logout/", function () use ($app) {
+    $session = $app->session;
+    $session->end();
+    $app->redirect($app->request->getRootUri().'/');
+});
+
+$app->get('/admin/', $authenticate($app), function () use ($app) {
+    
+    $simple = $app->simple;
+    $simple->getQuizzes(false);
+
+    $quizzes = $simple->quizzes;
+
+    $app->render('admin/index.php', array('quizzes' => $quizzes));
+});
+
 $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
     $quiz = $app->quiz;
@@ -99,13 +105,12 @@ $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         $app->render('admin/quiz.php', array('quiz' => $quiz));
     }
         
-})->conditions(array('id' => '[0-9]'));
+})->conditions(array('id' => '\d+'));
 
-$app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+$app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
-    $questionid = $app->request->post('questionid');
-    $text = $app->request->post('questiontext');
-    $action = $app->request->post('action');
+    $questionid = $app->request->put('questionid');
+    $text = $app->request->put('questiontext');
     
     if (! ctype_digit($id)) {
         $app->redirect($app->request->getRootUri().'/admin/');
@@ -114,18 +119,6 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
-        
-        // if we are deleting a question via ajax
-        // return a json array and stop further processing
-        if ( ($action == 'delete') && ($app->request->isAjax()) ) {
-            try {
-                $quiz->deleteQuestion($id, $questionid);
-            } catch (Exception $e ) {
-                echo json_encode(array('error' => $e->getMessage()));
-            }
-            echo json_encode(array('success' => 'Question successfully deleted'));
-            $app->stop();
-        }
         
         if ( (! ctype_digit($questionid)) || (trim($text) == '') ) {
             $app->redirect($app->request->getRootUri().'/admin/');
@@ -144,6 +137,77 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         
 });
 
+$app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+    
+    if  (! ctype_digit($id)) {
+        $app->redirect($app->request->getRootUri().'/admin/');
+    }
+    
+    $quiz = $app->quiz;
+    
+    $question = trim($app->request->post('questiontext'));
+    $correct = (int) trim($app->request()->post('correct'));
+    $answerarray = $app->request()->post('answer');
+    
+    if ($quiz->setId($id)) {
+        
+        $i = 0;
+        foreach ($answerarray as $answer) {
+            if (trim($answer) == '') {
+                $app->flashnow('error', 'Answers can\'t be empty');
+                $app->render('admin/quiz.php', array('quiz' => $quiz));
+                $app->stop();
+            }
+            if ($i == $correct) {
+                $correctAnswer = 1;
+            } else {
+               $correctAnswer = 0;
+            }
+            $answers[] = array($answer, $correctAnswer);
+
+            $i++;
+        }
+        try {
+            $quiz->addQuestion($id, $question, $answers);
+            $app->flashnow('success', 'New Question saved successfully');
+        } catch (Exception $e ) {
+            $app->flashnow('error', 'An error occurred creating a new question');
+            $app->flashnow('error', $e->getMessage());
+        }
+        
+        $quiz->populateQuestions();
+        $quiz->populateUsers();
+   
+        $app->render('admin/quiz.php', array('quiz' => $quiz));
+    } else {
+        echo 'oops';
+    }
+        
+});
+
+$app->delete("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+    
+    $questionid = $app->request->post('questionid');
+            
+    if (! ctype_digit($id)) {
+        $app->redirect($app->request->getRootUri().'/admin/');
+    }
+    
+    $quiz = $app->quiz;
+    
+    if ($quiz->setId($id)) {
+        
+        try {
+            $quiz->deleteQuestion($questionid);
+        } catch (Exception $e ) {
+            echo json_encode(array('error' => $e->getMessage()));
+        }
+        echo json_encode(array('success' => 'Question successfully deleted'));
+        $app->stop();
+    }
+        
+});
+
 $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
    
     $quiz = $app->quiz;
@@ -158,7 +222,7 @@ $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
         
 })->conditions(array('quizid' => '\d+', 'questionid' => '\d+'));
 
-$app->post("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
+$app->put("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
    
     if ( (! ctype_digit($quizid)) || (! ctype_digit($questionid))) {
         $app->redirect($app->request->getRootUri().'/admin/');
@@ -166,8 +230,8 @@ $app->post("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app)
     
     $quiz = $app->quiz;
     
-    $correct = (int) trim($app->request()->post('correct'));
-    $answerarray = $app->request()->post('answer');
+    $correct = (int) trim($app->request()->put('correct'));
+    $answerarray = $app->request()->put('answer');
     
     if ($quiz->setId($quizid)) {
         $question = $quiz->getQuestion($questionid);
@@ -199,10 +263,4 @@ $app->post("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app)
     } else {
         echo 'oops';
     }
-});
-
-$app->get("/logout/", function () use ($app) {
-    $session = $app->session;
-    $session->end();
-    $app->redirect($app->request->getRootUri().'/');
 });

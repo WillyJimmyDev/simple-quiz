@@ -14,6 +14,7 @@ $app = new \Slim\Slim(array(
         ));
 
 require '../routes/public.php';
+//require '../routes/session.php';
 require '../routes/admin.php';
 
 $app->session = $session;
