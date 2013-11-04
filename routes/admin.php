@@ -94,6 +94,73 @@ $app->get('/admin/', $authenticate($app), function () use ($app) {
     $app->render('admin/index.php', array('quizzes' => $quizzes));
 });
 
+$app->post("/admin/quiz/", $authenticate($app), function() use ($app) {
+    
+    $quizmeta = array();
+    
+    $quizname = trim($app->request->post('quizname'));
+    $quizdescription = trim($app->request->post('description'));
+    $active = (int) trim($app->request()->post('active'));
+    
+    if ( ($quizname !== '') && ($quizdescription !== '') ) {
+        $quizmeta['name'] = ucwords($quizname);
+        $quizmeta['description'] = $quizdescription;
+        $quizmeta['active'] = $active;
+        
+        $simple = $app->simple;
+    
+        if ($simple->addQuiz($quizmeta)) {
+            $app->flash('success', 'Quiz has been created successfully');
+
+            $app->redirect($app->request->getRootUri().'/admin/');
+        } else {
+            //problem adding quiz
+            $app->flash('error', 'Problem creating the quiz');
+            $app->redirect($app->request->getRootUri().'/admin/');
+        }
+    } else {
+        //problem with post inputs
+        $app->flash('error', 'Problem creating the quiz. Something wrong wth inputs');
+        $app->redirect($app->request->getRootUri().'/admin/');
+    }
+        
+});
+
+$app->put("/admin/quiz/", $authenticate($app), function() use ($app) {
+    
+    $quizmeta = array();
+    
+    $quizid = trim($app->request->put('quizid'));
+    $quizname = trim($app->request->put('quizname'));
+    $quizdescription = trim($app->request->put('description'));
+    $active = (int) trim($app->request()->put('active'));
+    
+    if ( ($quizname !== '') && ($quizdescription !== '') && (ctype_digit($quizid)) ) {
+        
+        $quizmeta['id'] = $quizid;
+        $quizmeta['name'] = ucwords($quizname);
+        $quizmeta['description'] = $quizdescription;
+        $quizmeta['active'] = $active;
+        
+        $simple = $app->simple;
+    
+        if ($simple->updateQuiz($quizmeta)) {
+            $app->flash('success', 'Quiz has been updated');
+
+            $app->redirect($app->request->getRootUri().'/admin/');
+        } else {
+            //problem adding quiz
+            $app->flash('error', 'Problem updating the quiz');
+            $app->redirect($app->request->getRootUri().'/admin/');
+        }
+    } else {
+        //problem with post inputs
+        $app->flash('error', 'Problem updating the quiz. Something wrong wth inputs');
+        $app->redirect($app->request->getRootUri().'/admin/');
+    }
+        
+});
+
 $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
     $quiz = $app->quiz;

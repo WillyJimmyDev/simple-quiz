@@ -4,7 +4,9 @@ include'header.php';
 <div id="container" class="quiz">
       <div class="row">
           <div id="intro" class="col-md-8 col-md-offset-2">
-              <h2>Simple Quiz :: Admin <small><?php echo $user; ?></small></h2>
+              <?php if (isset($flash['success'])) { echo '<div id="updater" class="alert alert-success">'.$flash["success"].'</div>'; } ?>
+              <?php if (isset($flash['error'])) { echo '<div id="updater" class="alert alert-danger">'.$flash["error"].'</div>'; } ?>
+              
           <h4>Welcome Quizmaster!</h4>
           <p>Be careful; with great power comes great responsiblity.</p>    
           <h4>Quizzes</h4>
@@ -14,15 +16,53 @@ include'header.php';
                 </thead>
                 <tbody>
                     <?php
-                    foreach ($quizzes as $quiz) :
-                        $activeSpan = $quiz->active == 1 ? 'glyphicon-ok-circle' : 'glyphicon-remove-circle';
-                        echo '<tr><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td></tr>';
-                    endforeach;
+                    if (count($quizzes) > 0):
+                        foreach ($quizzes as $quiz) :
+                            $activeSpan = $quiz->active == 1 ? 'glyphicon-ok-circle' : 'glyphicon-remove-circle';
+                            echo '<tr><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td></tr>';
+                        endforeach;
+                    endif;
                     ?>
                 </tbody>
             </table>
+            <p>
+                <button id="addquiz" title="Add New Quiz" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
+            </p>
         </div>
       </div><!-- /.row -->
         
     </div><!--container-->
+    
+    <!-- Add Quiz Modal -->
+    <div class="modal fade" id="quiz-add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add A New Quiz:</h4>
+          </div>
+            <form id="quizadd" method="post" action="<?php echo $root . '/admin/quiz/'; ?>">
+            <div class="modal-body">
+                <p><label for="quizname">Quiz Name:</label>
+                   <input name="quizname" id="quizname" type="text" placeholder="Quiz Name" class="form-control" />
+                   <span class="helper help-block">Please provide a name for the quiz</span>
+                </p>
+                <p><label for="description">Quiz Description:</label>
+                   <input name="description" id="description" type="text" placeholder="Quiz Description" class="form-control" />
+                </p>
+                <h4>Active?</h4>
+                <p><label for="quizactiveyes">Yes:</label>
+                   <input name="active" id="quizactiveyes" value="1" type="radio" class="form-control" />
+                   <label for="quizactiveno">No:</label>
+                   <input name="active" id="quizactiveno" value="0" type="radio" class="form-control" />
+                </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Create Quiz</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <?php include 'footer.php'; ?>

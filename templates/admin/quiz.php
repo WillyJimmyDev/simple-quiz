@@ -7,40 +7,49 @@ include'header.php';
                  <?php if (isset($flash['success'])) { echo '<div id="updater" class="alert alert-success">'.$flash["success"].'</div>'; } ?>
                  <?php if (isset($flash['error'])) { echo '<div id="updater" class="alert alert-danger">'.$flash["error"].'</div>'; } ?>
                 <div id="ajaxupdater" class="alert"></div>
-                <h3>Quiz Details:</h3>
-                <ul>
-                    <li><strong>Name</strong>: <?php echo $quiz->getName(); ?></li>
-                    <li><strong>Description</strong>: <?php echo $quiz->getDescription(); ?></li>
-                    <li><strong>Active? <?php echo $quiz->isActive() ? '<span class="glyphicon glyphicon-ok">' : '<span class="glyphicon glyphicon-remove-circle">' ?></strong></li>
-                    <li><strong>Number Of Questions</strong>: <?php echo count($quiz->getQuestions()); ?></li>
-                    <li><strong>Times Taken</strong>: <?php echo count($quiz->getUsers()); ?></li>
-                </ul>
-                <h4>Questions:</h4>
-                <table id="questions" class="table table-striped table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Question</th><th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($quiz->getQuestions() as $id => $text) :?>
-                        <tr class="question">
-                            <td class="question"><?php echo $text; ?></td>
-                            <td style="text-align:center;">
-                                <button data-question-id="<?php echo $id; ?>" title="Edit Question" class="edit btn btn-default btn-primary" type="button"><span class="glyphicon glyphicon-pencil"></span></button>
-                                <a href="<?php echo $root; ?>/admin/quiz/<?php echo $quiz->getId(); ?>/question/<?php echo $id; ?>/edit/" title="Edit Answers" class="answerlink btn btn-default btn-primary"><span class="glyphicon glyphicon-list"></span></a>
-                                <button data-question-id="<?php echo $id; ?>" data-quiz-id="<?php echo $quiz->getId(); ?>" title="Delete Question" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>  
-                    </tbody>
-                </table>
-                <p>
-                    <button id="addquestion" title="Add New Question" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
-                </p>
+                <div><a class="btn btn-primary" href="<?php echo $root; ?>/admin/"><span class="glyphicon glyphicon-arrow-left"></span> Back to all quizzes</a></div>
+                <br />
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading"><h3>Quiz Details:</h3></div>
+                    <div class="panel-body">
+                      <ul style="width:50%;" class="list-group">
+                          <li class="list-group-item"><strong>Name</strong>: <?php echo $quiz->getName(); ?></li>
+                          <li class="list-group-item"><strong>Description</strong>: <?php echo $quiz->getDescription(); ?></li>
+                          <li class="list-group-item"><strong>Active? </strong><?php echo $quiz->isActive() ? '<span class="glyphicon glyphicon-ok">' : '<span class="glyphicon glyphicon-remove-circle">' ?></li>
+                          <li class="list-group-item"><strong>Number Of Questions</strong>: <span class="badge"><?php echo count($quiz->getQuestions()); ?></span></li>
+                          <li class="list-group-item"><strong>Times Taken</strong>: <span class="badge"><?php echo count($quiz->getUsers()); ?></span></li>
+                      </ul>
+                        <button id="editquiz" title="Edit Quiz Details" type="button" class="btn btn-primary">Edit Quiz Details <span class="glyphicon glyphicon-pencil"></span></button>
+                    </div>
+                  <div class="panel-heading"><h3>Questions:</h3></div>
+                    <!-- Table -->
+                    <table id="questions" class="table table-striped table-responsive">
+                          <thead>
+                              <tr>
+                                  <th>Question</th><th>Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <?php
+                              foreach ($quiz->getQuestions() as $id => $text) :?>
+                              <tr class="question">
+                                  <td class="question"><?php echo $text; ?></td>
+                                  <td style="text-align:center;">
+                                      <button data-question-id="<?php echo $id; ?>" title="Edit Question" class="edit btn btn-default btn-primary" type="button"><span class="glyphicon glyphicon-pencil"></span></button>
+                                      <a href="<?php echo $root; ?>/admin/quiz/<?php echo $quiz->getId(); ?>/question/<?php echo $id; ?>/edit/" title="Edit Answers" class="answerlink btn btn-default btn-primary"><span class="glyphicon glyphicon-list"></span></a>
+                                      <button data-question-id="<?php echo $id; ?>" data-quiz-id="<?php echo $quiz->getId(); ?>" title="Delete Question" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </td>
+                              </tr>
+                              <?php endforeach; ?>  
+                          </tbody>
+                      </table>
+                      <div class="panel-body">
+                          <button id="addquestion" title="Add New Question" type="button" class="btn btn-primary pull-right">Add Question <span class="glyphicon glyphicon-plus-sign"></span></button>
+                      </div>
+                </div>
             </div>
-      </div><!-- /.row -->
+            </div><!-- /.row -->
         
 </div><!--container-->
 <!-- Modals -->
@@ -136,6 +145,41 @@ include'header.php';
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-success">Save Question</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+    <!-- Update Quiz Modal -->
+    <div class="modal fade" id="quiz-edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Edit Quiz:</h4>
+          </div>
+            <form id="quizedit" method="post" action="<?php echo $root . '/admin/quiz/'; ?>">
+            <div class="modal-body">
+                <p><label for="quizname">Quiz Name:</label>
+                   <input name="quizname" id="quizname" type="text" placeholder="Quiz Name" class="form-control" value="<?php echo $quiz->getName(); ?>" />
+                   <span class="helper help-block">Please provide a name for the quiz</span>
+                </p>
+                <p><label for="description">Quiz Description:</label>
+                   <input name="description" id="description" type="text" placeholder="Quiz Description" value="<?php echo $quiz->getDescription(); ?>" class="form-control" />
+                </p>
+                <h4>Active?</h4>
+                <p><label for="quizactiveyes">Yes:</label>
+                   <input name="active" id="quizactiveyes" value="1" <?php if ($quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control" />
+                   <label for="quizactiveno">No:</label>
+                   <input name="active" id="quizactiveno" value="0" <?php if (! $quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control" />
+                   <input type="hidden" name="_METHOD" value="PUT" />
+                   <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
+                </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Save Changes</button>
             </div>
             </form>
         </div><!-- /.modal-content -->

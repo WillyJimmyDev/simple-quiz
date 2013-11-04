@@ -11,12 +11,45 @@ class Simple implements Base\SimpleInterface {
         $this->_db = $container->db;
     }
     
+    public function addQuiz(Array $quizmeta)
+    {
+        $name = $quizmeta['name'];
+        $description = $quizmeta['description'];
+        $active = $quizmeta['active'];
+        
+        $sql = "insert into quizzes (name, description, active) values(:name, :description, :active)";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
+        $stmt->bindParam(':description', $description, \PDO::PARAM_STR);
+        $stmt->bindParam(':active', $active, \PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    }
+    
+    public function updateQuiz(Array $quizmeta)
+    {
+        $quizid = $quizmeta['id'];
+        $name = $quizmeta['name'];
+        $description = $quizmeta['description'];
+        $active = $quizmeta['active'];
+        
+        $sql = "update quizzes set name = :name, description = :description, active = :active where id = :quizid";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
+        $stmt->bindParam(':description', $description, \PDO::PARAM_STR);
+        $stmt->bindParam(':active', $active, \PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    }
+    
     public function getQuizzes($active = true) {
+        
         $this->quizzes = array();
         if ($active) {
-            $sql = "SELECT id, name, description, active from quizzes where active = 1";
+            $sql = "SELECT quizzes.id, quizzes.name, quizzes.description, quizzes.active from quizzes inner join questions q on quizzes.id = q.quiz_id where quizzes.active = 1 group by quizzes.id having count(q.quiz_id) > 0";
         } else {
-            $sql = "SELECT id, name, description, active from quizzes";
+            $sql = "SELECT quizzes.id, quizzes.name, quizzes.description, quizzes.active from quizzes inner join questions q on quizzes.id = q.quiz_id";
         }
         $stmt = $this->_db->query($sql);
         $stmt->execute();
