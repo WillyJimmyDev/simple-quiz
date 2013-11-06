@@ -70,13 +70,48 @@ $(function(){
 
     });
     
-    $('table').on('click', 'button.edit', function() {
+    $('table#questions').on('click', 'button.edit', function() {
         var id = $(this).attr("data-question-id");
         var q = $(this).parents('tr').find('td.question').text();
         $('#questioninput').val(q);
         $('#questionid').val(id);
         $('#qmodal').modal();
         
+    });
+    
+    $('table#quizzes').on('click', '.remove', function() {
+        
+        //console.log('http://' + location.hostname + '/admin/quiz/');
+        //console.log(location.pathname + 'quiz/');
+        //console.log(location.pathname);
+        var quizid = $(this).attr("data-quiz-id");
+        
+        if (window.confirm("This can't be undone. OK?") ) {
+            
+            var parenttr = $(this).parents('tr.quiz');
+           
+            parenttr.find('td').html('<img src="/images/ajax-loader.gif" />');
+
+            $.ajax({
+                url: location.pathname + 'quiz/',
+                type: "POST",
+                cache: false,
+                data : {'_METHOD' : 'DELETE', quizid : quizid},
+                dataType: "json",
+                success: function(response) {
+                    if (typeof response.success !== 'undefined') {
+                
+                        parenttr.fadeOut('slow').remove();
+                        // flash success message
+                        $('#ajaxupdater').addClass("alert-success").html(response.success).show('slow').delay(2000).hide('slow');
+                    } else {
+                        $('#ajaxupdater').addClass("alert-danger").html(response.error).show('slow').delay(2000).hide('slow');
+                    }
+                }
+            });          
+        }
+        
+
     });
     
     // the 'save changes' button inside the modal

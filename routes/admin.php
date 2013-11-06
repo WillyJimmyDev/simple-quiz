@@ -161,6 +161,27 @@ $app->put("/admin/quiz/", $authenticate($app), function() use ($app) {
         
 });
 
+$app->delete("/admin/quiz/", $authenticate($app), function() use ($app) {
+    
+    $quizid = trim($app->request->post('quizid'));
+    
+    if (ctype_digit($quizid) ) {
+        
+        $simple = $app->simple;
+        try {
+            $simple->deleteQuiz($quizid);
+        } catch (Exception $e ) {
+            echo json_encode(array('error' => $e->getMessage()));
+        }
+        echo json_encode(array('success' => 'Quiz has been deleted successfully'));
+        $app->stop();
+        
+    } else {
+        echo json_encode(array('error' => 'non-int quiz'));
+    }
+        
+});
+
 $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
     $quiz = $app->quiz;

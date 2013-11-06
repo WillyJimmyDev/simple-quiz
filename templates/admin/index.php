@@ -6,20 +6,20 @@ include'header.php';
           <div id="intro" class="col-md-8 col-md-offset-2">
               <?php if (isset($flash['success'])) { echo '<div id="updater" class="alert alert-success">'.$flash["success"].'</div>'; } ?>
               <?php if (isset($flash['error'])) { echo '<div id="updater" class="alert alert-danger">'.$flash["error"].'</div>'; } ?>
-              
+              <div id="ajaxupdater" class="alert"></div>
           <h4>Welcome Quizmaster!</h4>
           <p>Be careful; with great power comes great responsiblity.</p>    
           <h4>Quizzes</h4>
-            <table class="table table-striped">
+            <table id="quizzes" class="table table-striped">
                 <thead>
-                    <tr><th>Name</th><th>Description</th><th>Active</th></tr>
+                    <tr><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                     <?php
                     if (count($quizzes) > 0):
                         foreach ($quizzes as $quiz) :
                             $activeSpan = $quiz->active == 1 ? 'glyphicon-ok-circle' : 'glyphicon-remove-circle';
-                            echo '<tr><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td></tr>';
+                            echo '<tr class="quiz"><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td><td><a href="'. $root .'/admin/quiz/'. $quiz->id .'" data-quiz-id="'.$quiz->id.'" title="Edit Quiz" class="edit btn btn-default btn-primary"><span class="glyphicon glyphicon-pencil"></span></a> <button data-quiz-id="'.$quiz->id.'" title="Delete Quiz" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
                         endforeach;
                     endif;
                     ?>

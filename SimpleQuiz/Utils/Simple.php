@@ -43,13 +43,22 @@ class Simple implements Base\SimpleInterface {
         return true;
     }
     
+     public function deleteQuiz($quizid)
+    {
+        $sql = "delete from quizzes where id = :id";
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bindParam(':id', $quizid, \PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    }
+    
     public function getQuizzes($active = true) {
         
         $this->quizzes = array();
         if ($active) {
             $sql = "SELECT quizzes.id, quizzes.name, quizzes.description, quizzes.active from quizzes inner join questions q on quizzes.id = q.quiz_id where quizzes.active = 1 group by quizzes.id having count(q.quiz_id) > 0";
         } else {
-            $sql = "SELECT quizzes.id, quizzes.name, quizzes.description, quizzes.active from quizzes inner join questions q on quizzes.id = q.quiz_id";
+            $sql = "SELECT quizzes.id, quizzes.name, quizzes.description, quizzes.active from quizzes left join questions q on quizzes.id = q.quiz_id group by quizzes.id";
         }
         $stmt = $this->_db->query($sql);
         $stmt->execute();
