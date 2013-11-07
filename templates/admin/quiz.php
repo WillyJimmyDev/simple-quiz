@@ -169,10 +169,10 @@ include'header.php';
                    <input name="description" id="description" type="text" placeholder="Quiz Description" value="<?php echo $quiz->getDescription(); ?>" class="form-control" />
                 </p>
                 <h4>Active?</h4>
-                <p><label for="quizactiveyes">Yes:</label>
-                   <input name="active" id="quizactiveyes" value="1" <?php if ($quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control" />
-                   <label for="quizactiveno">No:</label>
-                   <input name="active" id="quizactiveno" value="0" <?php if (! $quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control" />
+                <p><label for="quizactiveyes"> Yes: </label>
+                   <input name="active" id="quizactiveyes" value="1" <?php if ($quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control radio-inline" />
+                   <label for="quizactiveno"> No: </label>
+                   <input name="active" id="quizactiveno" value="0" <?php if (! $quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control radio-inline" />
                    <input type="hidden" name="_METHOD" value="PUT" />
                    <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
                 </p>

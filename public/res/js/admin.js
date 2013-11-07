@@ -10,6 +10,23 @@ $(function(){
     var aform = $('form#answeredit');
     var saveprompt = "<div class=\"alert alert-warning\">Click 'Save' to make the changes permanent.</div>";
     
+    $('table#newanswers').on('click', '.remove', function() {
+           var parenttr = $(this).parents('tr');
+           if (parenttr.find('input.correct').is(':checked')) {
+               context2.html('<div class="alert alert-dismissable alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>You can\'t delete an answer if it is marked as correct.</div>');
+               context2.show().delay( 2000 ).fadeOut( 400 );
+           } else {
+                parenttr.fadeOut(800).remove();
+                $.each( $('.answer-row:visible'), function(index, value) {
+                    $(this).find('.correct').val(index);
+                    console.log(index + 1);
+                });
+                context.html(saveprompt);
+                context.fadeIn();
+           }
+        
+    });
+    
     $('table#answers').on('click', '.remove', function() {
            var parenttr = $(this).parents('tr');
            if (parenttr.find('input.correct').is(':checked')) {

@@ -10,21 +10,24 @@ include'header.php';
           <h4>Welcome Quizmaster!</h4>
           <p>Be careful; with great power comes great responsiblity.</p>    
           <h4>Quizzes</h4>
+          <?php if (count($quizzes) > 0): ?>
             <table id="quizzes" class="table table-striped">
                 <thead>
                     <tr><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                     <?php
-                    if (count($quizzes) > 0):
                         foreach ($quizzes as $quiz) :
                             $activeSpan = $quiz->active == 1 ? 'glyphicon-ok-circle' : 'glyphicon-remove-circle';
-                            echo '<tr class="quiz"><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td><td><a href="'. $root .'/admin/quiz/'. $quiz->id .'" data-quiz-id="'.$quiz->id.'" title="Edit Quiz" class="edit btn btn-default btn-primary"><span class="glyphicon glyphicon-pencil"></span></a> <button data-quiz-id="'.$quiz->id.'" title="Delete Quiz" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
+                            echo '<tr class="quiz"><td><strong><a href="'. $root .'/admin/quiz/'. $quiz->id .'">' . $quiz->name. '</a></strong></td><td>'.$quiz->description.'</td><td><span class="glyphicon '.$activeSpan.'"></span></td><td><a href="'. $root .'/admin/quiz/'. $quiz->id .'" data-quiz-id="'.$quiz->id.'" title="Edit Questions" class="edit btn btn-default btn-primary"><span class="glyphicon glyphicon-pencil"></span></a> <button data-quiz-id="'.$quiz->id.'" title="Delete Quiz" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
                         endforeach;
-                    endif;
                     ?>
                 </tbody>
             </table>
+          <?php else: ?>
+          <p>There aren't any quizzes at the moment. Why not create one now?</p>
+          <p>Just click the 'Add' button below...</p>
+          <?php endif; ?>
             <p>
                 <button id="addquiz" title="Add New Quiz" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
             </p>
@@ -51,10 +54,10 @@ include'header.php';
                    <input name="description" id="description" type="text" placeholder="Quiz Description" class="form-control" />
                 </p>
                 <h4>Active?</h4>
-                <p><label for="quizactiveyes">Yes:</label>
-                   <input name="active" id="quizactiveyes" value="1" type="radio" class="form-control" />
-                   <label for="quizactiveno">No:</label>
-                   <input name="active" id="quizactiveno" value="0" type="radio" class="form-control" />
+                <p><label for="quizactiveyes"> Yes: </label>
+                   <input name="active" id="quizactiveyes" value="1" type="radio" class="form-control radio-inline" />
+                   <label for="quizactiveno"> No: </label>
+                   <input name="active" id="quizactiveno" value="0" type="radio" class="form-control radio-inline" />
                 </p>
             </div>
             <div class="modal-footer">
