@@ -60,7 +60,6 @@ Within the download you'll find the following directories and files:
 * Change credentials in /SimpleQuiz/Utils/Base/Config.php to suit.
 * Default web admin user is example@gmail.com with password of 123456
 * Remember to change admin password from within phpMyadmin. Make sure password is sha1 hashed.
-* To create your own questions and answers, phpmyadmin is probably the easiest solution for now until an Admin backend exists.
 * Navigate to the web accessible folder in your browser.
 
 ## Twitter Stuff
