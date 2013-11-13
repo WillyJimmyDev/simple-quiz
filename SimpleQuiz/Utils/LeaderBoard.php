@@ -39,28 +39,13 @@ class LeaderBoard implements Base\LeaderBoardInterface {
     }
     
     public function addMember($quizid, $user,$score,$start,$end,$timetaken)
-    {
-        $userid = '';
-        
-        $sql = "select count(name) as num, id from users where name = :user";
+    {    
+        $sql = "replace into users (name) values(:user)";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':user',$user,\PDO::PARAM_STR);
         $stmt->execute();
+        $userid = $this->_db->lastInsertId();
         
-        if ($row = $stmt->fetchObject())
-        {
-            if ($row->num == 1) {
-                $userid = $row->id;
-            }
-        } 
-        
-        if ($userid == '') {
-            $sql = "insert into users (name) values(:user)";
-            $stmt = $this->_db->prepare($sql);
-            $stmt->bindParam(':user',$user,\PDO::PARAM_STR);
-            $stmt->execute();
-            $userid = $this->_db->lastInsertId();
-        }
        
         $sql = "insert into quiz_users (quiz_id,user_id,score,start_time,date_submitted,time_taken) values (:quizid,:userid,:score,:start,:end,:timetaken)";
         $stmt = $this->_db->prepare($sql);

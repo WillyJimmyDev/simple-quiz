@@ -4,6 +4,11 @@ ini_set('error-reporting', E_ALL);
 ini_set('display_errors', 1);
 require '../vendor/autoload.php';
 
+ORM::configure('mysql:host=' . \SimpleQuiz\Utils\Base\Config::$dbhost. ';dbname=' . \SimpleQuiz\Utils\Base\Config::$dbname);
+ORM::configure('username', \SimpleQuiz\Utils\Base\Config::$dbuser);
+ORM::configure('password', \SimpleQuiz\Utils\Base\Config::$dbpassword);
+ORM::configure('return_result_sets', true);
+
 $db = new \SimpleQuiz\Utils\Base\DB();
 $session = new \SimpleQuiz\Utils\Session($db);
 

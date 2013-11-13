@@ -22,15 +22,7 @@ class Quiz implements Base\QuizInterface {
     public function __construct(\Slim\Helper\Set $container)
     {
         $this->_leaderboard = $container->leaderboard;
-        
-        try
-        {
-            $this->_db = $container->db;
-        }
-        catch (\PDOException $e)
-        {
-            return $e;
-        }
+        $this->_db = $container->db;
       
     }
     
@@ -150,7 +142,6 @@ class Quiz implements Base\QuizInterface {
     
     public function addQuestion($quizid, $question, Array $answers)
     {
-        //throw illegalargument exception on answers array
         $sql = "SELECT max(num) as maxnum FROM `questions` WHERE quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
