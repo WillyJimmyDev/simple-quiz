@@ -19,14 +19,13 @@ $app = new \Slim\Slim(array(
         ));
 
 require '../routes/public.php';
-//require '../routes/session.php';
 require '../routes/admin.php';
 
 $app->session = $session;
 $app->db = $db;
 
-$app->leaderboard = function($app) {
-    return new \SimpleQuiz\Utils\LeaderBoard($app);
+$app->leaderboard = function() {
+    return new \SimpleQuiz\Utils\LeaderBoard();
 };
 
 $app->quiz = function ($app) {
@@ -37,8 +36,8 @@ $app->admin = function ($app) {
     return new \SimpleQuiz\Utils\Admin($app);
 };
 
-$app->simple = function ($app) {
-    return new \SimpleQuiz\Utils\Simple($app);
+$app->simple = function () {
+    return new \SimpleQuiz\Utils\Simple();
 };
 
 $app->hook('slim.before.dispatch', function() use ($app) { 

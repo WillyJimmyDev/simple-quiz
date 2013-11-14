@@ -1,9 +1,7 @@
 <?php
 $app->get('/', function () use ($app) {
     $simple = $app->simple;
-    $simple->getQuizzes(true);
-
-    $quizzes = $simple->quizzes;
+    $quizzes = $simple->getQuizzes(true);
 
     $session = $app->session;
 

@@ -3,14 +3,6 @@ namespace SimpleQuiz\Utils;
 
 class Simple implements Base\SimpleInterface {
     
-    private $_db;
-    public $quizzes;
-    
-    public function __construct(\Slim\Helper\Set $container) 
-    {
-        $this->_db = $container->db;
-    }
-    
     public function addQuiz(Array $quizmeta)
     {
         $quiz = \ORM::for_table('quizzes')->create();
@@ -46,10 +38,11 @@ class Simple implements Base\SimpleInterface {
     public function getQuizzes($active = true) {
         
         if ($active) {
-            $this->quizzes = \ORM::for_table('quizzes')->where('active',1)->find_many();
+            $quizzes = \ORM::for_table('quizzes')->where('active',1)->find_many();
         } else {
-            $this->quizzes = \ORM::for_table('quizzes')->find_many();
+            $quizzes = \ORM::for_table('quizzes')->find_many();
         }
+        return $quizzes;
     }
     
     public function getUsers($quizid = false)

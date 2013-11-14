@@ -87,9 +87,7 @@ $app->get("/logout/", function () use ($app) {
 $app->get('/admin/', $authenticate($app), function () use ($app) {
     
     $simple = $app->simple;
-    $simple->getQuizzes(false);
-
-    $quizzes = $simple->quizzes;
+    $quizzes = $simple->getQuizzes(false);
 
     $app->render('admin/index.php', array('quizzes' => $quizzes));
 });

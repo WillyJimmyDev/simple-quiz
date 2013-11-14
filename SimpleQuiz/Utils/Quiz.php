@@ -232,7 +232,7 @@ class Quiz implements Base\QuizInterface {
             $this->_questions[$row->num] = $row->text;
         }
     }
-    
+    //following 2 methods to be combined
     public function populateUsers() 
     {
         $this->_users = $this->_leaderboard->getMembers($this->_id);
@@ -250,7 +250,12 @@ class Quiz implements Base\QuizInterface {
     
     public function registerUser($username)
     {
-        return ! array_key_exists($username,$this->_users);
+        foreach ($this->_users as $user) {
+            if ($user['name'] == $username) {
+                return false;
+            }
+        }
+        return true;
     }
     
     public function addQuizTaker($user,$score,$start,$end,$timetaken)

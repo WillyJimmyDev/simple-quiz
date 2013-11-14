@@ -54,14 +54,16 @@
                     <?php
                     $leaders = $quiz->getLeaders(30);
                     $counter = 1;
-                    foreach ($leaders as $key => $value) :
-                        
+                    foreach ($leaders as $leader) :
+                        $name = '';
                         //if current user, bolden the username
-                        if ($key == $user) :
-                            $key = '<strong class="currentuser">' . $key . '</strong>';
+                        if ($leader['name'] == $user) :
+                            $name = '<strong class="currentuser">' . $leader['name'] . '</strong>';
+                        else:
+                            $name = $leader['name'];
                         endif;
                         
-                        echo '<li>' . $key. ': ' .  $value . '/' . $numquestions . '</li>';
+                        echo '<li>' . $name. ': ' .  $leader['score'] . '/' . $numquestions . '</li>';
                         
                         $counter++;
                         
