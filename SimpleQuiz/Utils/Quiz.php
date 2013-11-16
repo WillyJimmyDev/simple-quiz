@@ -199,14 +199,14 @@ class Quiz implements Base\QuizInterface {
         $sql = "update questions set num = num - 1 where num > :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $this->id, \PDO::PARAM_INT);
         $stmt->execute();
         
         //reorder the question_num column in answers table
         $sql = "update answers set question_num = question_num - 1 where question_num > :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $this->id, \PDO::PARAM_INT);
         $stmt->execute();
         
         return true;
