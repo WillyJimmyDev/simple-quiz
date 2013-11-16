@@ -9,7 +9,8 @@ class Simple implements Base\SimpleInterface {
         $quiz->name = $quizmeta['name'];
         $quiz->description = $quizmeta['description'];
         $quiz->active = $quizmeta['active']; 
-        
+        $quiz->set_expr('created', 'NOW()');
+        $quiz->set_expr('updated', 'NOW()');
         $quiz->save();
         return true;
     }
@@ -23,6 +24,7 @@ class Simple implements Base\SimpleInterface {
             'description'  => $quizmeta['description'],
             'active' => $quizmeta['active']
         ));
+        $quiz->set_expr('updated', 'NOW()');
         $quiz->save();
    
         return true;

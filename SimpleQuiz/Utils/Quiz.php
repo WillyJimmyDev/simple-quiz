@@ -177,41 +177,39 @@ class Quiz implements Base\QuizInterface {
     
     public function deleteQuestion($questionid)
     {
-        //foreign_key constraints would be great but too difficult to debug
+        //foreign_key constraints take care of deleting related answers
         $sql = "delete from questions where num = :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
         $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
         $stmt->execute();
         
-        $this->deleteAnswers($questionid);
-        
         //reorder the num column in questions table
+        //foreign_key constraints take care of updating related answers
         $sql = "update questions set num = num - 1 where num > :num and quiz_id = :quizid";
         $stmt = $this->_db->prepare($sql);
         $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+        $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
         $stmt->execute();
         
         //reorder the question_num column in answers table
-        $sql = "update answers set question_num = question_num - 1 where question_num > :num and quiz_id = :quizid";
-        $stmt = $this->_db->prepare($sql);
-        $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
-        $stmt->execute();
+//        $sql = "update answers set question_num = question_num - 1 where question_num > :num and quiz_id = :quizid";
+//        $stmt = $this->_db->prepare($sql);
+//        $stmt->bindParam(':num', $questionid, \PDO::PARAM_INT);
+//        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
+//        $stmt->execute();
         
         return true;
     }
 
     public function getQuestion($questionid) 
     {
-        $questionsql = "select text from questions where num = :id and quiz_id = :quizid";
-        $stmt = $this->_db->prepare($questionsql);
-        $stmt->bindParam(':id', $questionid, \PDO::PARAM_INT);
-        $stmt->bindParam(':quizid', $this->_id, \PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetchObject();
-        $this->_question = $row->text;
+        $q = \ORM::for_table('questions')
+                ->select('text')
+                ->where('num', $questionid)
+                ->where('quiz_id', $this->_id)
+                ->find_one();
+        $this->_question = $q->text;
         
         return $this->_question;
     }

@@ -22,6 +22,8 @@ class LeaderBoard implements Base\LeaderBoardInterface {
     
     public function addMember($quizid, $user,$score,$start,$end,$timetaken)
     {  
+        //this should be called at start of quiz and fail if user already exists
+        //record should be updated at end of quiz with score etc
         $userexists =  \ORM::for_table('users')->where('name', $user)->find_one();
         
         if (! $userexists) {
