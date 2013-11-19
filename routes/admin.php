@@ -33,22 +33,14 @@ $app->post('/admin/login/', function () use ($app) {
             $errors['loginerror'] = "The email was invalid. Please try again.";
         }
         else {
+            $password = sha1($password);
             //process inputs
-            $authsql = "SELECT count(id) as num, name FROM users where email = :email and pass = :pass and level = 1";
-            $stmt = $app->db->prepare($authsql);
-            $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
-            $stmt->bindParam(':pass', sha1($password), \PDO::PARAM_STR);
-            $stmt->execute();
+            $authsql = \ORM::for_table('users')->where('email', $email)->where('pass', $password)->where('level', 1)->find_one();
 
-            if ($result = $stmt->fetchObject()) {
-                if ($result->num != 1) {
+            if (! $authsql){
                     $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
-                } else {
-                    $name = $result->name;
-                }
-
             } else {
-                $errors['loginerror'] = "A problem has occurred. Woops!.";
+                $name = $authsql->name;
             }
         }
     }

@@ -9,8 +9,8 @@ ORM::configure('username', \SimpleQuiz\Utils\Base\Config::$dbuser);
 ORM::configure('password', \SimpleQuiz\Utils\Base\Config::$dbpassword);
 ORM::configure('return_result_sets', true);
 
-$db = new \SimpleQuiz\Utils\Base\DB();
-$session = new \SimpleQuiz\Utils\Session($db);
+//$db = new \SimpleQuiz\Utils\Base\DB();
+$session = new \SimpleQuiz\Utils\Session();
 
 $app = new \Slim\Slim(array(
     'debug' => true,
@@ -22,7 +22,7 @@ require '../routes/public.php';
 require '../routes/admin.php';
 
 $app->session = $session;
-$app->db = $db;
+//$app->db = $db;
 
 $app->leaderboard = function() {
     return new \SimpleQuiz\Utils\LeaderBoard();

@@ -160,6 +160,7 @@ class Quiz implements Base\QuizInterface {
                 ->where('num', $questionid)
                 ->where('quiz_id', $this->_id)
                 ->find_one();
+        //borked somewhere
         $this->_question = $q->text;
         
         return $this->_question;

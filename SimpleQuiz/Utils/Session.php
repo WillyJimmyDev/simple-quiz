@@ -7,18 +7,7 @@ namespace SimpleQuiz\Utils;
 
 class Session implements Base\SessionInterface {
 
-    private  $db;
-    
-    public function __construct(\PDO $db) {
-        
-        try
-        {
-            $this->db = $db;
-        }
-        catch (\PDOException $e)
-        {
-            return $e;
-        }
+    public function __construct() {
         
         \session_set_save_handler(array($this,'open'),
                                  array($this,'close'),
@@ -71,7 +60,7 @@ class Session implements Base\SessionInterface {
 
     public function close()
     {
-        $this->db = null;
+        return true;
     }
     
     public function regenerate() 
@@ -81,23 +70,29 @@ class Session implements Base\SessionInterface {
 
     public function read($id)
     {
-        $sql = "SELECT * FROM sessions WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',$id,\PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return $result['data'];
+        $sql = \ORM::for_table('sessions')->find_one($id);
+        if ($sql) {
+            return $sql->data;
+        }
     }
 
     public function write($id,$data)
     {
         $access = time();
-        $sql = "REPLACE INTO sessions VALUES  (:id, :access, :data)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',$id,\PDO::PARAM_STR);
-        $stmt->bindParam(':access',$access,\PDO::PARAM_STR);
-        $stmt->bindParam(':data',$data,\PDO::PARAM_STR);
-        $stmt->execute();
+        $session =  \ORM::for_table('sessions')->where('id', $id)->find_one();
+        
+        if (! $session) {
+           $newsession = \ORM::for_table('sessions')->create();
+           $newsession->set('id', $id);
+           $newsession->set('access', $access);
+           $newsession->set('data', $data);
+           $newsession->save();
+        } else {
+           $session->set('id', $id);
+           $session->set('access', $access);
+           $session->set('data', $data);
+           $session->save();
+        }
         return true;
     }
 
@@ -110,10 +105,8 @@ class Session implements Base\SessionInterface {
             setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
         }
         
-        $sql = 'DELETE FROM sessions WHERE id = :id';
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',$id,\PDO::PARAM_STR);
-        $stmt->execute();
+        $session = \ORM::for_table('sessions')->find_one($id);
+        $session->delete();
         return true;
     }
 
@@ -121,12 +114,9 @@ class Session implements Base\SessionInterface {
     public function clean($max)
     {
         $old = time() - $max;
-        $sql = 'DELETE FROM sessions WHERE  access < :old';
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':old',$old,\PDO::PARAM_STR);
-        $stmt->execute();
+        $sql = \ORM::for_table('sessions')->where_lt('access', $old)->delete_many();
+        
         return true;
     }
 
 }
-?>
