@@ -210,7 +210,7 @@ $app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
             $app->redirect($app->request->getRootUri().'/admin/');
         }
         try {
-            $quiz->updateQuestion($id, $questionid, $text);
+            $quiz->updateQuestion($questionid, $text);
             $app->flashnow('success', 'Question saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', $e->getMessage());
@@ -240,7 +240,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         $i = 0;
         foreach ($answerarray as $answer) {
             if (trim($answer) == '') {
-                $app->flashnow('error', 'Answers can\'t be empty');
+                $app->flashnow('error', "Answers can't be empty");
                 $app->render('admin/quiz.php', array('quiz' => $quiz));
                 $app->stop();
             }
@@ -254,7 +254,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
             $i++;
         }
         try {
-            $quiz->addQuestion($id, $question, $answers);
+            $quiz->addQuestion($question, $answers);
             $app->flashnow('success', 'New Question saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', 'An error occurred creating a new question');
@@ -339,7 +339,7 @@ $app->put("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
             $i++;
         }
         try {
-            $quiz->updateAnswers($answers, $quizid, $questionid);
+            $quiz->updateAnswers($answers, $questionid);
             $app->flashnow('success', 'Answers saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', 'An error occurred');

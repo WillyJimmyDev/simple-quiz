@@ -15,15 +15,15 @@ interface QuizInterface {
     
     public function getAnswers($questionid = false);
     
-    public function addAnswers($quizid, $questionid, Array $answers);
+    public function addAnswers($questionid, Array $answers);
     
-    public function addQuestion($quizid, $question, Array $answers);
+    public function addQuestion($question, Array $answers);
     
-    public function updateQuestion ($quizid, $questionnum, $text);
+    public function updateQuestion ($questionnum, $text);
     
     public function deleteQuestion($questionid);
     
-    public function updateAnswers(Array $answers, $quizid, $questionid);
+    public function updateAnswers(Array $answers, $questionid);
     
     public function deleteAnswers($questionid);
     
