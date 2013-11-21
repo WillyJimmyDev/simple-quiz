@@ -63,7 +63,7 @@ class Quiz implements Base\QuizInterface {
     {   
         if ($questionid)
         {
-            //pull answers from db for only this question with correct answer first
+            //pull answers from db for only this question ordered by correct answer first
             $obj = \ORM::for_table('answers')->where('question_num', $questionid)->where('quiz_id', $this->_id)->order_by_desc('correct')->find_many();
             foreach ($obj as $answer) {
                 array_push($this->_answers,$answer->text);
@@ -147,7 +147,9 @@ class Quiz implements Base\QuizInterface {
         //reorder the num column in questions table
         //foreign_key constraints take care of updating related answers
         $toupdate = \ORM::for_table('questions')->where('quiz_id', $this->_id)->where_gt('num', $questionid)->find_many();
-        $toupdate->set_expr('num', 'num - 1');
+        foreach ($toupdate as $question) {
+            $question->num = $question->num - 1;
+        }
         $toupdate->save();
         
         return true;
@@ -160,7 +162,6 @@ class Quiz implements Base\QuizInterface {
                 ->where('num', $questionid)
                 ->where('quiz_id', $this->_id)
                 ->find_one();
-        //borked somewhere
         $this->_question = $q->text;
         
         return $this->_question;
