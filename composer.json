@@ -1,7 +1,8 @@
 {
     "name": "elanman/simple-quiz",
     "require": {
-        "slim/slim": "2.*"
+        "slim/slim": "2.*",
+        "j4mie/idiorm": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

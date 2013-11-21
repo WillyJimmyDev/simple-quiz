@@ -10,3 +10,7 @@ function shuffle_assoc($array)
     }
      return $shuffled;
 }
+
+function memberSort( $a, $b ) {
+    return $b['score'] - $a['score'];
+}

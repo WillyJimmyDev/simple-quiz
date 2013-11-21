@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.8
+-- version 4.0.9
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 07, 2013 at 09:44 PM
+-- Generation Time: Nov 21, 2013 at 10:21 PM
 -- Server version: 5.5.33a-MariaDB-log
--- PHP Version: 5.5.5
+-- PHP Version: 5.5.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -37,55 +37,57 @@ CREATE TABLE IF NOT EXISTS `answers` (
   KEY `question_id` (`correct`),
   KEY `quiz_id` (`quiz_id`),
   KEY `quiz_question_num` (`question_num`,`quiz_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=374 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=452 ;
 
 --
 -- Dumping data for table `answers`
 --
 
 INSERT INTO `answers` (`id`, `question_num`, `quiz_id`, `text`, `correct`) VALUES
-(328, 1, 4, 'Norman Cooke', 0),
-(329, 1, 4, 'Norman Wisdom', 0),
-(330, 1, 4, 'Norman Bates', 1),
-(331, 1, 4, 'Norman Tebbit', 0),
-(332, 2, 4, 'Stan and Oliver', 1),
-(333, 2, 4, 'Stan and Groucho', 0),
-(334, 2, 4, 'Oliver and Marco', 0),
-(335, 2, 4, 'Bob and Billy', 0),
-(336, 3, 4, 'Bob Hoskins', 1),
-(337, 3, 4, 'Adam Sandler', 0),
-(338, 3, 4, 'Charlie Sheen', 0),
-(339, 3, 4, 'Hugh Grant', 0),
-(340, 3, 4, 'Robert De Niro', 0),
-(341, 4, 4, 'damn', 1),
-(342, 4, 4, 'darn', 0),
-(343, 4, 4, 'hoot', 0),
-(344, 4, 4, 'twist', 0),
-(345, 5, 4, 'Morgan Freeman', 1),
-(346, 5, 4, 'Jude Law', 0),
-(347, 5, 4, 'Tim Robbins', 0),
-(348, 5, 4, 'Samuel L Jackson', 0),
-(349, 5, 4, 'Tom Cruise', 0),
-(350, 1, 5, 'Muhammad Ali', 1),
-(351, 1, 5, 'Mike Tyson', 0),
-(352, 1, 5, 'Henry Cooper', 0),
-(353, 1, 5, 'Marvin Hagler', 0),
-(354, 2, 5, 'Tennis', 1),
-(355, 2, 5, 'Rowing', 0),
-(356, 2, 5, 'Snooker', 0),
-(357, 2, 5, 'Golf', 0),
-(358, 3, 5, 'Thorpedo', 1),
-(359, 3, 5, 'Thorpester', 0),
-(360, 3, 5, 'ThorpeMan', 0),
-(361, 3, 5, 'The Thorpe Meister', 0),
-(366, 4, 5, 'Cricketer', 1),
-(367, 4, 5, 'Footballer', 0),
-(368, 4, 5, 'Rower', 0),
-(369, 4, 5, 'Tennis Player', 0),
-(370, 5, 5, '5', 1),
-(371, 5, 5, '4', 0),
-(372, 5, 5, '3', 0),
-(373, 5, 5, '6', 0);
+(433, 1, 6, 'Tom Hanks', 1),
+(434, 1, 6, 'Marlon Brando', 0),
+(435, 1, 6, 'Robert De Niro', 0),
+(436, 1, 6, 'Bob Hoskins', 0),
+(437, 2, 6, 'Robert De Niro', 1),
+(438, 2, 6, 'Tom Hanks', 0),
+(439, 2, 6, 'Bob Hope', 0),
+(440, 2, 6, 'Christopher Hall', 0),
+(441, 3, 6, 'Norman Bates', 1),
+(442, 3, 6, 'Norman Tebbit', 0),
+(443, 3, 6, 'Norman Wisdom', 0),
+(444, 3, 6, 'Norman Cooke', 0),
+(445, 4, 6, 'Stan and Oliver', 1),
+(446, 4, 6, 'Stan and Groucho', 0),
+(447, 4, 6, 'Bob and Billy', 0),
+(448, 5, 6, 'Morgan Freeman', 1),
+(449, 5, 6, 'Marlon Brando', 0),
+(450, 5, 6, 'Tim Robbins', 0),
+(451, 5, 6, 'Tom Cruise', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `description`) VALUES
+(1, 'Sports', 'Sports related quizzes'),
+(2, 'Films', 'Movie related quizzes'),
+(3, 'Technology', 'Tecnology related quizzes'),
+(4, 'General Knowledge', 'General Knowledge related quizzes'),
+(5, 'Science', 'Science related quizzes'),
+(6, 'Music', 'Music related quizzes');
 
 -- --------------------------------------------------------
 
@@ -94,29 +96,27 @@ INSERT INTO `answers` (`id`, `question_num`, `quiz_id`, `text`, `correct`) VALUE
 --
 
 CREATE TABLE IF NOT EXISTS `questions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `num` int(11) unsigned NOT NULL,
   `quiz_id` int(11) unsigned NOT NULL,
   `text` varchar(255) NOT NULL,
-  PRIMARY KEY (`num`,`quiz_id`),
+  PRIMARY KEY (`id`),
   KEY `quiz_id` (`quiz_id`),
-  KEY `num` (`num`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `num` (`num`),
+  KEY `num_2` (`num`,`quiz_id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`num`, `quiz_id`, `text`) VALUES
-(1, 4, 'What was the name of the killer in Psycho?'),
-(1, 5, 'Who ''floated like a butterfly''?'),
-(2, 4, 'What were the first names of Laurel And Hardy?'),
-(2, 5, 'The Davis Cup is awarded in which sport?'),
-(3, 4, 'Who played the lead ''real'' person in Who Framed Roger Rabbit?'),
-(3, 5, 'What was the nickname of Australian swimmer Ian Thorpe?'),
-(4, 4, 'Fill in the missing word from this famous movie quote: ''Frankly my dear, I don''t give a ....!'''),
-(4, 5, 'W.G Grace was a famous what?'),
-(5, 4, 'Who played ''Red'' in The Shawshank Redemption?'),
-(5, 5, 'How many points are scored for a try in Rugby Union?');
+INSERT INTO `questions` (`id`, `num`, `quiz_id`, `text`) VALUES
+(15, 1, 6, 'Who played Forrest Gump?'),
+(16, 2, 6, 'Who played the lead role in Taxi Driver?'),
+(17, 3, 6, 'What was the name of the killer in Psycho?'),
+(18, 4, 6, 'What were the first names of Laurel And Hardy?'),
+(19, 5, 6, 'Who played ''Red'' in The Shawshank Redemption?');
 
 -- --------------------------------------------------------
 
@@ -129,18 +129,21 @@ CREATE TABLE IF NOT EXISTS `quizzes` (
   `name` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `active` (`active`),
-  KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+  KEY `id` (`id`),
+  KEY `created` (`created`),
+  KEY `updated` (`updated`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `quizzes`
 --
 
-INSERT INTO `quizzes` (`id`, `name`, `description`, `active`) VALUES
-(4, 'Movies', 'Know your movie trivia? Prove it!', 1),
-(5, 'Sports', 'Test Your Sports Knowledge', 1);
+INSERT INTO `quizzes` (`id`, `name`, `description`, `active`, `created`, `updated`) VALUES
+(6, 'Movies', 'Know your movie trivia? Prove it!', 1, '2013-11-21 21:55:12', '2013-11-21 21:55:12');
 
 -- --------------------------------------------------------
 
@@ -149,23 +152,24 @@ INSERT INTO `quizzes` (`id`, `name`, `description`, `active`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `quiz_users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `quiz_id` int(11) unsigned NOT NULL,
   `user_id` int(11) unsigned NOT NULL,
   `score` int(11) NOT NULL,
   `start_time` datetime NOT NULL,
   `date_submitted` datetime NOT NULL,
   `time_taken` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `quiz_id` (`quiz_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=35 ;
 
 --
 -- Dumping data for table `quiz_users`
 --
 
-INSERT INTO `quiz_users` (`quiz_id`, `user_id`, `score`, `start_time`, `date_submitted`, `time_taken`) VALUES
-(4, 177, 4, '2013-11-07 21:20:53', '2013-11-07 21:21:27', '00:34'),
-(5, 177, 5, '2013-11-07 21:38:49', '2013-11-07 21:39:09', '00:20');
+INSERT INTO `quiz_users` (`id`, `quiz_id`, `user_id`, `score`, `start_time`, `date_submitted`, `time_taken`) VALUES
+(34, 6, 182, 5, '2013-11-21 21:59:59', '2013-11-21 22:00:16', '00:17');
 
 -- --------------------------------------------------------
 
@@ -185,15 +189,21 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `access`, `data`) VALUES
-('071adaj79juoqagmgonh8hb212', 1383684151, 'slim.flash|a:0:{}quizid|s:1:"4";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
-('e4oahg6km02qb6f7tlabvtaim7', 1383775979, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
-('eecugv9igr6ojjjam1lrc0ijb5', 1383860357, 'slim.flash|a:0:{}'),
-('gdm5s36ohoo0ov5vvqpl3ukef0', 1383600543, 'slim.flash|a:0:{}urlRedirect|s:13:"/admin/quiz/2";'),
-('gtuqpkqfpgroth1gfiav9glt01', 1383776127, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";'),
-('h79o130mqpon3kl31ibao86pm1', 1383601835, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
-('hrns6rn86lkfqd0hmdons28137', 1383601727, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
-('m7sqb4u5spnp45gojfef36st37', 1383775684, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
-('q6v7bf6mio9ri8bjnnfh5mi1i0', 1383859307, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";');
+('0lc4o8hk08tu5eus7l18puf0v2', 1384895797, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('1p03rmbt53mk93puqiohkhc9e0', 1384595829, 'slim.flash|a:0:{}quizid|s:1:"5";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
+('3og1gvjl0nlciid506qbb96en3', 1385072406, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
+('5d5onh98jvu80n8somv95bdbg1', 1384469694, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('7ar9l1fqancg9o2fhspjfhml11', 1384900287, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";'),
+('bpg70ci1ugd94f0rggmr8kkrn6', 1385072261, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('c4g6914rkh5rq0prd1vripq702', 1384899916, 'slim.flash|a:0:{}quizid|s:1:"4";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
+('ffamg7aj4qpsk494uqtvc8n7i1', 1384600655, 'slim.flash|a:0:{}quizid|s:1:"5";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;adminuser|b:1;user|s:5:"Admin";'),
+('fi0upe3jmujg26u2eenagom3h4', 1384809113, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('hj1laglukn7pjcm4rsu4dvver4', 1384984270, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('iuer9a54ishdai3v5t7h9fndq1', 1384898612, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('ldpj1trc2fdo6krqfdri1of333', 1384470264, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";'),
+('mghuldejfedett61td1boem2k4', 1384981507, 'quizid|s:1:"7";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('r5kdhm6ta73er542ppfca6m2r6', 1384899950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('ufh1jiienhn8bbad9jinae6lk7', 1385069950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";');
 
 -- --------------------------------------------------------
 
@@ -210,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `pass` (`pass`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=178 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=209 ;
 
 --
 -- Dumping data for table `users`
@@ -391,7 +401,38 @@ INSERT INTO `users` (`id`, `name`, `pass`, `email`, `level`) VALUES
 (174, 'dsdww', '', '', 0),
 (175, 'dwdw', '', '', 0),
 (176, 'kikik', '', '', 0),
-(177, 'ElanMan', '', '', 0);
+(177, 'ElanMan', '', '', 0),
+(178, 'fdsfdssdf', '', '', 0),
+(179, 'werrfeg', '', '', 0),
+(180, 'qqq', '', '', 0),
+(181, 'wettyjjk', '', '', 0),
+(182, 'bobb', '', '', 0),
+(183, 'swerty', '', '', 0),
+(184, 'deertyttyt', '', '', 0),
+(185, 'dswew', '', '', 0),
+(186, 'vfdvfd', '', '', 0),
+(187, 'dewrttytyy', '', '', 0),
+(188, 'dwdd', '', '', 0),
+(189, 'sasa', '', '', 0),
+(190, 'lkjljk', '', '', 0),
+(191, 'bvc', '', '', 0),
+(192, 'fff', '', '', 0),
+(193, 'gyky', '', '', 0),
+(194, 'kjh', '', '', 0),
+(195, 'loi', '', '', 0),
+(196, 'sdp', '', '', 0),
+(197, 'lkja', '', '', 0),
+(198, 'deeww', '', '', 0),
+(199, 'gtgt', '', '', 0),
+(200, 'gfdd', '', '', 0),
+(201, 'iiii', '', '', 0),
+(202, 'hgfff', '', '', 0),
+(203, 'dwwww', '', '', 0),
+(204, 'sqqqqq', '', '', 0),
+(205, 'dwdwdw', '', '', 0),
+(206, 'dwdwdwd', '', '', 0),
+(207, 'hyuiy', '', '', 0),
+(208, 'lkgi', '', '', 0);
 
 --
 -- Constraints for dumped tables

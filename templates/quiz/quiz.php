@@ -19,9 +19,9 @@
                         <?php
                         $leaders = $quiz->getLeaders($leadersToShow);
                         $counter = 1;
-                        foreach ($leaders as $key => $value) :
+                        foreach ($leaders as $leader) :
 
-                            echo '<li><strong>' . $key. '</strong>: ' .  $value . '/' . $numquestions . '</li>';
+                            echo '<li><strong>' . $leader["name"] . '</strong>: ' .  $leader["score"] . '/' . $numquestions . '</li>';
 
                             //Use modulus to create new sub-list if required.
                             if ($counter % (round($leadersToShow/2)) == 0) :  

@@ -3,75 +3,49 @@ namespace SimpleQuiz\Utils;
 
 class LeaderBoard implements Base\LeaderBoardInterface {
     
-    private $_db;
-    protected $_members = array();
-    
-    public function __construct(\Slim\Helper\Set $container) 
-    {
-        $this->_db = $container->db;
-    }
-    
     public function getMembers($quizid, $number = false)
     {  
-        try
-        {
-            $sql = "select u.name, q.score from users u left join quiz_users q on q.user_id = u.id where q.quiz_id = :quizid order by score desc";
-            $stmt = $this->_db->prepare($sql);
-            $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
-            $stmt->execute();
-            while ($row = $stmt->fetchObject())
-            {
-                $this->_members[$row->name]= $row->score;
-            }
-        }
-        catch (\PDOException $e)
-        {
-            return $e;
-        }
+        $members = \ORM::for_table('users')
+                ->left_outer_join('quiz_users', array('quiz_users.user_id', '=', 'users.id'))
+                ->where('quiz_users.quiz_id', $quizid)
+                ->order_by_desc('quiz_users.score')
+                ->find_array();
         
         if ($number)
         {
-            arsort($this->_members,SORT_NUMERIC);
-            return array_slice($this->_members, 0, $number, true);
+            usort($members, 'memberSort');
+            return array_slice($members, 0, $number, true);
         }
         
-        return $this->_members;
+        return $members;
     }
     
     public function addMember($quizid, $user,$score,$start,$end,$timetaken)
-    {
-        $userid = '';
+    {  
+        //this should be called at start of quiz and fail if user already exists
+        //record should be updated at end of quiz with score etc
+        $userexists =  \ORM::for_table('users')->where('name', $user)->find_one();
         
-        $sql = "select count(name) as num, id from users where name = :user";
-        $stmt = $this->_db->prepare($sql);
-        $stmt->bindParam(':user',$user,\PDO::PARAM_STR);
-        $stmt->execute();
-        
-        if ($row = $stmt->fetchObject())
-        {
-            if ($row->num == 1) {
-                $userid = $row->id;
-            }
-        } 
-        
-        if ($userid == '') {
-            $sql = "insert into users (name) values(:user)";
-            $stmt = $this->_db->prepare($sql);
-            $stmt->bindParam(':user',$user,\PDO::PARAM_STR);
-            $stmt->execute();
-            $userid = $this->_db->lastInsertId();
+        if (! $userexists) {
+           $newuser = \ORM::for_table('users')->create();
+           $newuser->set('name', $user);
+           $newuser->save();
+           $userid = $newuser->id();
         }
-       
-        $sql = "insert into quiz_users (quiz_id,user_id,score,start_time,date_submitted,time_taken) values (:quizid,:userid,:score,:start,:end,:timetaken)";
-        $stmt = $this->_db->prepare($sql);
-        $stmt->bindParam(':quizid', $quizid, \PDO::PARAM_INT);
-        $stmt->bindParam(':userid',$userid,\PDO::PARAM_STR);
-        $stmt->bindParam(':score',$score,\PDO::PARAM_INT);
-        $stmt->bindParam(':start',$start,\PDO::PARAM_STR);
-        $stmt->bindParam(':end',$end,\PDO::PARAM_STR);
-        $stmt->bindParam(':timetaken',$timetaken,\PDO::PARAM_STR);
-        $stmt->execute();
+        else {
+            $userid = $userexists->id();
+        }
+        
+        $quizuser = \ORM::for_table('quiz_users')->create();
+        $quizuser->set(array(
+            'quiz_id' => $quizid,
+            'user_id'  => $userid,
+            'score' => $score,
+            'start_time' => $start,
+            'date_submitted' => $end,
+            'time_taken' => $timetaken
+        ));
+        $quizuser->save();
         return true;
     }
 }
-?>

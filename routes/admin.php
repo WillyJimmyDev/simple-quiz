@@ -33,22 +33,14 @@ $app->post('/admin/login/', function () use ($app) {
             $errors['loginerror'] = "The email was invalid. Please try again.";
         }
         else {
+            $password = sha1($password);
             //process inputs
-            $authsql = "SELECT count(id) as num, name FROM users where email = :email and pass = :pass and level = 1";
-            $stmt = $app->db->prepare($authsql);
-            $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
-            $stmt->bindParam(':pass', sha1($password), \PDO::PARAM_STR);
-            $stmt->execute();
+            $authsql = \ORM::for_table('users')->where('email', $email)->where('pass', $password)->where('level', 1)->find_one();
 
-            if ($result = $stmt->fetchObject()) {
-                if ($result->num != 1) {
+            if (! $authsql){
                     $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
-                } else {
-                    $name = $result->name;
-                }
-
             } else {
-                $errors['loginerror'] = "A problem has occurred. Woops!.";
+                $name = $authsql->name;
             }
         }
     }
@@ -87,9 +79,7 @@ $app->get("/logout/", function () use ($app) {
 $app->get('/admin/', $authenticate($app), function () use ($app) {
     
     $simple = $app->simple;
-    $simple->getQuizzes(false);
-
-    $quizzes = $simple->quizzes;
+    $quizzes = $simple->getQuizzes(false);
 
     $app->render('admin/index.php', array('quizzes' => $quizzes));
 });
@@ -212,7 +202,7 @@ $app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
             $app->redirect($app->request->getRootUri().'/admin/');
         }
         try {
-            $quiz->updateQuestion($id, $questionid, $text);
+            $quiz->updateQuestion($questionid, $text);
             $app->flashnow('success', 'Question saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', $e->getMessage());
@@ -242,7 +232,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         $i = 0;
         foreach ($answerarray as $answer) {
             if (trim($answer) == '') {
-                $app->flashnow('error', 'Answers can\'t be empty');
+                $app->flashnow('error', "Answers can't be empty");
                 $app->render('admin/quiz.php', array('quiz' => $quiz));
                 $app->stop();
             }
@@ -256,7 +246,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
             $i++;
         }
         try {
-            $quiz->addQuestion($id, $question, $answers);
+            $quiz->addQuestion($question, $answers);
             $app->flashnow('success', 'New Question saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', 'An error occurred creating a new question');
@@ -341,7 +331,7 @@ $app->put("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
             $i++;
         }
         try {
-            $quiz->updateAnswers($answers, $quizid, $questionid);
+            $quiz->updateAnswers($answers, $questionid);
             $app->flashnow('success', 'Answers saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', 'An error occurred');
