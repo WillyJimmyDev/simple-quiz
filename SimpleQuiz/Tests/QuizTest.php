@@ -3,7 +3,6 @@ namespace SimpleQuiz\Tests;
 
 require 'vendor/autoload.php';
 /**
-* Description of QuizTest
 *
 * @author elanman
 */

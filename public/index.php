@@ -9,7 +9,6 @@ ORM::configure('username', \SimpleQuiz\Utils\Base\Config::$dbuser);
 ORM::configure('password', \SimpleQuiz\Utils\Base\Config::$dbpassword);
 ORM::configure('return_result_sets', true);
 
-//$db = new \SimpleQuiz\Utils\Base\DB();
 $session = new \SimpleQuiz\Utils\Session();
 
 $app = new \Slim\Slim(array(
@@ -22,7 +21,6 @@ require '../routes/public.php';
 require '../routes/admin.php';
 
 $app->session = $session;
-//$app->db = $db;
 
 $app->leaderboard = function() {
     return new \SimpleQuiz\Utils\LeaderBoard();
@@ -38,6 +36,10 @@ $app->admin = function ($app) {
 
 $app->simple = function () {
     return new \SimpleQuiz\Utils\Simple();
+};
+
+$app->installer = function () {
+    return new \SimpleQuiz\Utils\Base\Installer();
 };
 
 $app->hook('slim.before.dispatch', function() use ($app) { 

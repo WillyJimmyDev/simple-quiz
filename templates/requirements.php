@@ -8,12 +8,12 @@
 <div>
 <h2>Checking Dependencies</h2>
 <ul>
-<li><p>PHP Version: <?php echo $requirements['version'][0] . ' ' . $requirements['version'][1]; ?></p>
-<p class="alert alert-info">(<?php echo $requirements['version'][2]; ?>)</p>
+<li><p>PHP Version: <?php echo $requirements['version']['vers'] . ' <span class="glyphicon glyphicon-' . $requirements['version']['img'] . '"></span>'; ?></p>
+<p class="alert alert-info">(<?php echo $requirements['version']['msg']; ?>)</p>
 </li>
 <li>
-<p>Access To Randomness: <?php echo $requirements['random'][0] . ' ' . $requirements['random'][1]; ?></p>
-<p class="alert alert-info">(<?php echo $requirements['random'][2]; ?>)</p>
+<p>Access To Randomness: <?php echo $requirements['random']['random'] . ' <span class="glyphicon glyphicon-' . $requirements['random']['img']. '"></span>'; ?></p>
+<p class="alert alert-info">(<?php echo nl2br($requirements['random']['msg']); ?>)</p>
 </li>
 </ul>
 </div>

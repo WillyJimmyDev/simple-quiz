@@ -10,23 +10,8 @@ $app->get('/', function () use ($app) {
 
 $app->get('/requirements/', function () use ($app) {
     
-    $requirements = array();
-    
-    $version = phpversion();
-    $versionimg = version_compare($version, '5.3.0', '<=') ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>';
-    $versionmsg = 'PHP Version 5.3.3 or greater is required.';
-    try {
-        $random = file_exists('/dev/urandom');
-        $randomimg = '<span class="glyphicon glyphicon-ok"></span>';
-        $randommsg = 'This is needed to generate random number sfor use with the PasswordLib library';
-    } catch (Exception $e) {
-        $random = false;
-        $randomimg = '<span class="glyphicon glyphicon-remove"></span>';
-        $randommsg = $e->getMessage();
-    }
-    
-    $requirements['version'] = array($version, $versionimg, $versionmsg);
-    $requirements['random'] = array($random, $randomimg, $randommsg);
+    $installer = $app->installer;
+    $requirements = $installer->getRequirements();
     
     $app->render('requirements.php', array('requirements' => $requirements));
     
