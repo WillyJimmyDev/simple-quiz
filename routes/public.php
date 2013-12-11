@@ -8,6 +8,30 @@ $app->get('/', function () use ($app) {
     $app->render('index.php', array('quizzes' => $quizzes, 'session' => $session));
 });
 
+$app->get('/requirements/', function () use ($app) {
+    
+    $requirements = array();
+    
+    $version = phpversion();
+    $versionimg = version_compare($version, '5.3.0', '<=') ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>';
+    $versionmsg = 'PHP Version 5.3.3 or greater is required.';
+    try {
+        $random = file_exists('/dev/urandom');
+        $randomimg = '<span class="glyphicon glyphicon-ok"></span>';
+        $randommsg = 'This is needed to generate random number sfor use with the PasswordLib library';
+    } catch (Exception $e) {
+        $random = false;
+        $randomimg = '<span class="glyphicon glyphicon-remove"></span>';
+        $randommsg = $e->getMessage();
+    }
+    
+    $requirements['version'] = array($version, $versionimg, $versionmsg);
+    $requirements['random'] = array($random, $randomimg, $randommsg);
+    
+    $app->render('requirements.php', array('requirements' => $requirements));
+    
+});
+
 $app->get('/quiz/:id/', function ($id) use ($app) {
     
     $flash = $app->view()->getData('flash'); 
