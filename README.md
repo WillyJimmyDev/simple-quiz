@@ -1,4 +1,5 @@
 # [Simple-Quiz](http://quiz.elanman.com)
+[![Build Status](https://travis-ci.org/ElanMan/simple-quiz.png?branch=master)](https://travis-ci.org/ElanMan/simple-quiz)
 
 Simple-Quiz is a simple framework for creating quizzes for the web, created and maintained by [Ben Hall](http://twitter.com/elanman).
 

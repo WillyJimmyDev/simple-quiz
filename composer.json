@@ -4,6 +4,9 @@
         "slim/slim": "2.*",
         "j4mie/idiorm": "dev-master"
     },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.28"
+    },
     "minimum-stability": "dev",
     "autoload": {
         "files" : ["SimpleQuiz/Utils/Base/setup.php"],
