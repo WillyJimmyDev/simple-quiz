@@ -62,8 +62,8 @@
                         else:
                             $name = $leader['name'];
                         endif;
-                        
-                        echo '<li>' . $name. ': ' .  $leader['score'] . '/' . $numquestions . '</li>';
+                        $percentage = round(( (int) $leader['score'] / (int) $numquestions ) * 100);
+                        echo '<li>' . $name. ': ' .  $percentage . '%</li>';
                         
                         $counter++;
                         

@@ -36,9 +36,10 @@
             $timeportions = explode(':', $timetaken);
             $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
             $secs = $timeportions[1] . ' secs' ;
+            $percentage = round(( (int) $session->get('score') / (int) count($quiz->getQuestions()) ) * 100);
             echo '<div id="finalscore">';
-            echo '<h2 id="score">' . $user . ', your final score is:</h2>' . PHP_EOL;
-            echo '<h2 class="userscore">' . $session->get('score') . '/'. count($quiz->getQuestions()) .'</h2>' . PHP_EOL;
+            echo '<h2 id="score">' . $user . ', you answered ' . $session->get('score') . ' correct out of a possible ' . count($quiz->getQuestions()) . '</h2>' . PHP_EOL;
+            echo '<h2 class="userscore">' .  $percentage . '%</h2>' . PHP_EOL;
             echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
 
             echo '<p id="compare"><a href="'. $root . '/quiz/' . $quiz->getId() . '/results">See how you compare! <img src="images/arrow.png" /></a></p>';
