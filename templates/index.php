@@ -26,10 +26,9 @@
           <div class="well sidebar-nav">
             <ul class="nav">
               <li>Quizzes</li>
-              <?php foreach ($quizzes as $simplequiz)
-              {
+              <?php foreach ($quizzes as $simplequiz) :
                   echo '<li><a href="'.$root . '/quiz/' . $simplequiz->id .'">'. $simplequiz->name . '</a></li>';
-              }
+              endforeach;
               ?>
             </ul>
           </div><!--/.well -->

@@ -16,6 +16,7 @@ include'header.php';
                       <ul style="width:50%;" class="list-group">
                           <li class="list-group-item"><strong>Name</strong>: <?php echo $quiz->getName(); ?></li>
                           <li class="list-group-item"><strong>Description</strong>: <?php echo $quiz->getDescription(); ?></li>
+                          <li class="list-group-item"><strong>Category</strong>: <?php echo $quiz->getCategory(); ?></li>
                           <li class="list-group-item"><strong>Active? </strong><?php echo $quiz->isActive() ? '<span class="glyphicon glyphicon-ok">' : '<span class="glyphicon glyphicon-remove-circle">' ?></li>
                           <li class="list-group-item"><strong>Number Of Questions</strong>: <span class="badge"><?php echo count($quiz->getQuestions()); ?></span></li>
                           <li class="list-group-item"><strong>Times Taken</strong>: <span class="badge"><?php echo count($quiz->getUsers()); ?></span></li>
@@ -167,6 +168,14 @@ include'header.php';
                 </p>
                 <p><label for="description">Quiz Description:</label>
                    <input name="description" id="description" type="text" placeholder="Quiz Description" value="<?php echo $quiz->getDescription(); ?>" class="form-control" />
+                </p>
+                <p><label for="category">Quiz Category:</label>
+                   <select name="category" id="category" class="form-control" />
+                     <?php foreach ($categories as $category) : ?>
+                           <?php $selected = ($category->name == $quiz->getCategory()) ? 'selected' : ''; ?>
+                           <option value="<?php echo $category->id; ?>" <?php echo $selected; ?>><?php echo $category->name; ?></option>
+                       <?php endforeach; ?>
+                   </select>
                 </p>
                 <h4>Active?</h4>
                 <p><label for="quizactiveyes"> Yes: </label>

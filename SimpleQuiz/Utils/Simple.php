@@ -8,6 +8,7 @@ class Simple implements Base\SimpleInterface {
         $quiz = \ORM::for_table('quizzes')->create();
         $quiz->name = $quizmeta['name'];
         $quiz->description = $quizmeta['description'];
+        $quiz->category = $quizmeta['category'];
         $quiz->active = $quizmeta['active']; 
         $quiz->set_expr('created', 'NOW()');
         $quiz->set_expr('updated', 'NOW()');
@@ -21,7 +22,8 @@ class Simple implements Base\SimpleInterface {
         
         $quiz->set(array(
             'name' => $quizmeta['name'],
-            'description'  => $quizmeta['description'],
+            'description' => $quizmeta['description'],
+            'category' => $quizmeta['category'],
             'active' => $quizmeta['active']
         ));
         $quiz->set_expr('updated', 'NOW()');
@@ -45,6 +47,12 @@ class Simple implements Base\SimpleInterface {
             $quizzes = \ORM::for_table('quizzes')->find_many();
         }
         return $quizzes;
+    }
+    
+    public function getCategories() {
+        
+        $categories = \ORM::for_table('categories')->find_many();
+        return $categories;
     }
     
     public function getUsers($quizid = false)

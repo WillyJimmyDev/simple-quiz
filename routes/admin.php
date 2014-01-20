@@ -80,8 +80,9 @@ $app->get('/admin/', $authenticate($app), function () use ($app) {
     
     $simple = $app->simple;
     $quizzes = $simple->getQuizzes(false);
+    $categories = $simple->getCategories();
 
-    $app->render('admin/index.php', array('quizzes' => $quizzes));
+    $app->render('admin/index.php', array('quizzes' => $quizzes, 'categories' => $categories));
 });
 
 $app->post("/admin/quiz/", $authenticate($app), function() use ($app) {
@@ -90,11 +91,13 @@ $app->post("/admin/quiz/", $authenticate($app), function() use ($app) {
     
     $quizname = trim($app->request->post('quizname'));
     $quizdescription = trim($app->request->post('description'));
+    $quizcategory = trim($app->request->post('category'));
     $active = (int) trim($app->request()->post('active'));
     
     if ( ($quizname !== '') && ($quizdescription !== '') ) {
         $quizmeta['name'] = ucwords($quizname);
         $quizmeta['description'] = $quizdescription;
+        $quizmeta['category'] = $quizcategory;
         $quizmeta['active'] = $active;
         
         $simple = $app->simple;
@@ -123,6 +126,7 @@ $app->put("/admin/quiz/", $authenticate($app), function() use ($app) {
     $quizid = trim($app->request->put('quizid'));
     $quizname = trim($app->request->put('quizname'));
     $quizdescription = trim($app->request->put('description'));
+    $quizcategory = trim($app->request->post('category'));
     $active = (int) trim($app->request()->put('active'));
     
     if ( ($quizname !== '') && ($quizdescription !== '') && (ctype_digit($quizid)) ) {
@@ -130,6 +134,7 @@ $app->put("/admin/quiz/", $authenticate($app), function() use ($app) {
         $quizmeta['id'] = $quizid;
         $quizmeta['name'] = ucwords($quizname);
         $quizmeta['description'] = $quizdescription;
+        $quizmeta['category'] = $quizcategory;
         $quizmeta['active'] = $active;
         
         $simple = $app->simple;
@@ -174,13 +179,15 @@ $app->delete("/admin/quiz/", $authenticate($app), function() use ($app) {
 
 $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
+    $simple = $app->simple;
+    $categories = $simple->getCategories();
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
         $quiz->populateQuestions();
         $quiz->populateUsers();
         
-        $app->render('admin/quiz.php', array('quiz' => $quiz));
+        $app->render('admin/quiz.php', array('quiz' => $quiz, 'categories' => $categories));
     }
         
 })->conditions(array('id' => '\d+'));

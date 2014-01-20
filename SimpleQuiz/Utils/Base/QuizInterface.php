@@ -31,6 +31,8 @@ interface QuizInterface {
     
     public function getQuestions();
     
+    public function getCategory();
+    
     public function populateQuestions();
     
     public function getUsers();

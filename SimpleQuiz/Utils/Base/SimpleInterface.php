@@ -11,6 +11,8 @@ interface SimpleInterface {
 
     public function getQuizzes($active = true);
     
+    public function getCategories();
+    
     public function getUsers($quizid = false);
     
 }

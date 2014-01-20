@@ -11,6 +11,7 @@ class Quiz implements Base\QuizInterface {
     protected $_id;
     protected $_name;
     protected $_description;
+    protected $_category;
     protected $_active;
     protected $_answers = array();
     protected $_questions = array();
@@ -25,12 +26,13 @@ class Quiz implements Base\QuizInterface {
     
     public function setId($id)
     {
-        $quizobj = \ORM::for_table('quizzes')->select_many('name', 'description', 'active')->find_one($id);
+        $quizobj = \ORM::for_table('quizzes')->join('categories', array('quizzes.category', '=', 'categories.id'))->select_many('quizzes.name', 'quizzes.description', array('category' => 'categories.name'), 'quizzes.active')->find_one($id);
        
         if ($quizobj) {
             $this->_id = $id;
             $this->_name = $quizobj->name;
             $this->_description = $quizobj->description;
+            $this->_category = $quizobj->category;
             $this->_active = $quizobj->active;
             
             return true;
@@ -170,6 +172,11 @@ class Quiz implements Base\QuizInterface {
     public function getQuestions()
     {
         return $this->_questions;
+    }
+    
+    public function getCategory()
+    {
+        return $this->_category;
     }
     
     public function populateQuestions() 
