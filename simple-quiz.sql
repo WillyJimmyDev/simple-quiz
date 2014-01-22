@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.9
+-- version 4.0.6deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2013 at 10:21 PM
--- Server version: 5.5.33a-MariaDB-log
--- PHP Version: 5.5.6
+-- Generation Time: Jan 22, 2014 at 06:53 PM
+-- Server version: 5.5.35-0ubuntu0.13.10.1
+-- PHP Version: 5.5.3-1ubuntu2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
   KEY `question_id` (`correct`),
   KEY `quiz_id` (`quiz_id`),
   KEY `quiz_question_num` (`question_num`,`quiz_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=452 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=460 ;
 
 --
 -- Dumping data for table `answers`
@@ -48,10 +48,6 @@ INSERT INTO `answers` (`id`, `question_num`, `quiz_id`, `text`, `correct`) VALUE
 (434, 1, 6, 'Marlon Brando', 0),
 (435, 1, 6, 'Robert De Niro', 0),
 (436, 1, 6, 'Bob Hoskins', 0),
-(437, 2, 6, 'Robert De Niro', 1),
-(438, 2, 6, 'Tom Hanks', 0),
-(439, 2, 6, 'Bob Hope', 0),
-(440, 2, 6, 'Christopher Hall', 0),
 (441, 3, 6, 'Norman Bates', 1),
 (442, 3, 6, 'Norman Tebbit', 0),
 (443, 3, 6, 'Norman Wisdom', 0),
@@ -62,7 +58,15 @@ INSERT INTO `answers` (`id`, `question_num`, `quiz_id`, `text`, `correct`) VALUE
 (448, 5, 6, 'Morgan Freeman', 1),
 (449, 5, 6, 'Marlon Brando', 0),
 (450, 5, 6, 'Tim Robbins', 0),
-(451, 5, 6, 'Tom Cruise', 0);
+(451, 5, 6, 'Tom Cruise', 0),
+(452, 6, 6, '4', 1),
+(453, 6, 6, '1', 0),
+(454, 6, 6, '2', 0),
+(455, 6, 6, '3', 0),
+(456, 2, 6, 'Robert De Niro', 1),
+(457, 2, 6, 'Tom Hanks', 0),
+(458, 2, 6, 'Bob Hope', 0),
+(459, 2, 6, 'Christopher Hall', 0);
 
 -- --------------------------------------------------------
 
@@ -105,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `questions` (
   KEY `num` (`num`),
   KEY `num_2` (`num`,`quiz_id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `questions`
@@ -116,7 +120,8 @@ INSERT INTO `questions` (`id`, `num`, `quiz_id`, `text`) VALUES
 (16, 2, 6, 'Who played the lead role in Taxi Driver?'),
 (17, 3, 6, 'What was the name of the killer in Psycho?'),
 (18, 4, 6, 'What were the first names of Laurel And Hardy?'),
-(19, 5, 6, 'Who played ''Red'' in The Shawshank Redemption?');
+(19, 5, 6, 'Who played ''Red'' in The Shawshank Redemption?'),
+(20, 6, 6, 'How many films were there in the ''Alien'' series?');
 
 -- --------------------------------------------------------
 
@@ -128,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `quizzes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL,
+  `category` int(11) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL,
@@ -142,8 +148,8 @@ CREATE TABLE IF NOT EXISTS `quizzes` (
 -- Dumping data for table `quizzes`
 --
 
-INSERT INTO `quizzes` (`id`, `name`, `description`, `active`, `created`, `updated`) VALUES
-(6, 'Movies', 'Know your movie trivia? Prove it!', 1, '2013-11-21 21:55:12', '2013-11-21 21:55:12');
+INSERT INTO `quizzes` (`id`, `name`, `description`, `category`, `active`, `created`, `updated`) VALUES
+(6, 'Movies', 'Know your movie trivia? Prove it!', 2, 1, '2013-11-21 21:55:12', '2014-01-20 21:16:46');
 
 -- --------------------------------------------------------
 
@@ -162,14 +168,18 @@ CREATE TABLE IF NOT EXISTS `quiz_users` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `quiz_id` (`quiz_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=35 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
 
 --
 -- Dumping data for table `quiz_users`
 --
 
 INSERT INTO `quiz_users` (`id`, `quiz_id`, `user_id`, `score`, `start_time`, `date_submitted`, `time_taken`) VALUES
-(34, 6, 182, 5, '2013-11-21 21:59:59', '2013-11-21 22:00:16', '00:17');
+(34, 6, 182, 5, '2013-11-21 21:59:59', '2013-11-21 22:00:16', '00:17'),
+(35, 6, 209, 6, '2013-12-31 11:14:38', '2013-12-31 11:15:02', '00:24'),
+(36, 6, 210, 3, '2014-01-05 20:04:30', '2014-01-05 20:04:58', '00:28'),
+(37, 6, 211, 1, '2014-01-05 20:06:29', '2014-01-05 20:06:55', '00:26'),
+(38, 6, 212, 2, '2014-01-05 20:23:32', '2014-01-05 20:23:59', '00:27');
 
 -- --------------------------------------------------------
 
@@ -202,7 +212,11 @@ INSERT INTO `sessions` (`id`, `access`, `data`) VALUES
 ('iuer9a54ishdai3v5t7h9fndq1', 1384898612, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
 ('ldpj1trc2fdo6krqfdri1of333', 1384470264, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";'),
 ('mghuldejfedett61td1boem2k4', 1384981507, 'quizid|s:1:"7";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('o0dqueei6rr6aavt4s6e2a2tu7', 1388953550, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('plf1kd6l64t7d7mk7fpbkfkfk1', 1388488263, 'slim.flash|a:0:{}'),
+('q8191hknupipqu2lqq4om47oa3', 1388437224, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
 ('r5kdhm6ta73er542ppfca6m2r6', 1384899950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('t5k642bmd1hv2qn03cabsoocr2', 1390252748, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
 ('ufh1jiienhn8bbad9jinae6lk7', 1385069950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";');
 
 -- --------------------------------------------------------
@@ -220,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `pass` (`pass`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=209 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=213 ;
 
 --
 -- Dumping data for table `users`
@@ -432,7 +446,11 @@ INSERT INTO `users` (`id`, `name`, `pass`, `email`, `level`) VALUES
 (205, 'dwdwdw', '', '', 0),
 (206, 'dwdwdwd', '', '', 0),
 (207, 'hyuiy', '', '', 0),
-(208, 'lkgi', '', '', 0);
+(208, 'lkgi', '', '', 0),
+(209, 'Sweaty', '', '', 0),
+(210, 'quizma1', '', '', 0),
+(211, 'quizma2', '', '', 0),
+(212, 'quizma3', '', '', 0);
 
 --
 -- Constraints for dumped tables
