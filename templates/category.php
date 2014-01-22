@@ -8,14 +8,14 @@
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
           <div class="jumbotron">
-            <h1>Simple Quiz</h1>
-            <p>A simple framework for creating and displaying quizzes. Written in PHP.</p>
+            <h1><?php echo $category->name; ?></h1>
+            <p><?php echo $category->description; ?>.</p>
           </div>
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
           <div class="sidebar-nav">
-              <h4>Recent Quizzes</h4>
+              <h4><?php echo $category->name; ?> Quizzes</h4>
               <div class="list-group">
               <?php foreach ($quizzes as $quiz) : 
                     echo '<a href="'.$root . '/quiz/' . $quiz->id .'" class="list-group-item">';

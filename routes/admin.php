@@ -80,7 +80,7 @@ $app->get('/admin/', $authenticate($app), function () use ($app) {
     
     $simple = $app->simple;
     $quizzes = $simple->getQuizzes(false);
-    $categories = $simple->getCategories();
+    $categories = $simple->getCategories(false);
 
     $app->render('admin/index.php', array('quizzes' => $quizzes, 'categories' => $categories));
 });
@@ -180,7 +180,7 @@ $app->delete("/admin/quiz/", $authenticate($app), function() use ($app) {
 $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
     $simple = $app->simple;
-    $categories = $simple->getCategories();
+    $categories = $simple->getCategories(false);
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
