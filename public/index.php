@@ -54,6 +54,11 @@ $app->hook('slim.before.dispatch', function() use ($app) {
     
     $root = $app->request->getRootUri();
     $app->view()->setData('root', $root);
+    
+    $simple = $app->simple;
+    $categories = $simple->getCategories();
+    
+    $app->view()->setData('categories', $categories);
 });
 
 $app->run();

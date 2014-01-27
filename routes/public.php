@@ -2,43 +2,39 @@
 $app->get('/', function () use ($app) {
     $simple = $app->simple;
     $quizzes = $simple->getQuizzes(true);
-    $categories = $simple->getCategories();
 
     $session = $app->session;
+    $session->set('adminuser', false);
 
-    $app->render('index.php', array('quizzes' => $quizzes, 'categories' => $categories, 'session' => $session));
+    $app->render('index.php', array('quizzes' => $quizzes,'session' => $session));
 });
 
 $app->get('/requirements/', function () use ($app) {
     
     $installer = $app->installer;
     $requirements = $installer->getRequirements();
-    $simple = $app->simple;
-    $categories = $simple->getCategories();
     
-    $app->render('requirements.php', array( 'categories' => $categories,'requirements' => $requirements));
+    $app->render('requirements.php', array('requirements' => $requirements));
     
 });
 
 $app->get('/categories/', function () use ($app) {
     $simple = $app->simple;
     $quizzes = $simple->getQuizzes(true);
-    $categories = $simple->getCategories();
 
     $session = $app->session;
 
-    $app->render('index.php', array('quizzes' => $quizzes, 'categories' => $categories, 'session' => $session));
+    $app->render('index.php', array('quizzes' => $quizzes,'session' => $session));
 });
 
 $app->get('/categories/:id', function ($id) use ($app) {
     $simple = $app->simple;
     $category = $simple->getCategory($id);
     $quizzes = $simple->getCategoryQuizzes($id);
-    $categories = $simple->getCategories();
 
     $session = $app->session;
 
-    $app->render('category.php', array('category' => $category, 'quizzes' => $quizzes, 'categories' => $categories, 'session' => $session));
+    $app->render('category.php', array('category' => $category, 'quizzes' => $quizzes, 'session' => $session));
 })->conditions(array('id' => '\d+'));
 
 $app->get('/quiz/:id/', function ($id) use ($app) {
@@ -52,9 +48,6 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
     $quiz = $app->quiz;
 
     $session = $app->session;
-    
-    $simple = $app->simple;
-    $categories = $simple->getCategories();
 
     if ($quiz->setId($id)) {
         $quiz->populateQuestions();
@@ -68,11 +61,12 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
         $session->set('last', null);
         $session->set('timetaken', null);
         $session->set('starttime', null);
-
-        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'categories' => $categories, 'session' => $session, 'error' => $error));
+        $session->set('adminuser', false);
+        
+        $app->render('quiz/quiz.php', array('quiz' => $quiz, 'session' => $session, 'error' => $error));
     } else {
         $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
+        $app->render('quiz/error.php', array('session' => $session));
     }
 })->conditions(array('id' => '\d+'));
 
@@ -87,9 +81,6 @@ $app->post('/quiz/process/', function () use ($app) {
     $quiz = $app->quiz;
 
     $session = $app->session;
-    
-    $simple = $app->simple;
-    $categories = $simple->getCategories();
 
     if ($quiz->setId($id)) {
         
@@ -158,26 +149,23 @@ $app->post('/quiz/process/', function () use ($app) {
         }
     } else {
         $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
+        $app->render('quiz/error.php', array( 'session' => $session));
     }
 });
 
 $app->get('/quiz/:id/test/', function ($id) use ($app) {
 
     $session = $app->session;
-    
-    $simple = $app->simple;
-    $categories = $simple->getCategories();
 
     if ( $session->get('quizid') !== $id) {
         $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
+        $app->render('quiz/error.php', array('session' => $session));
         $app->stop();
     }
     
     if (! $session->get('user')) {
         $app->flashnow('quizerror','You need to register a username before taking a quiz');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
+        $app->render('quiz/error.php', array('session' => $session));
         $app->stop();
     }
     
@@ -210,10 +198,10 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
             }
         }
 
-        $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'timetaken' => $timetaken, 'categories' => $categories, 'session' => $session));
+        $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'timetaken' => $timetaken, 'session' => $session));
     } else {
         $app->flashnow('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
+        $app->render('quiz/error.php', array('session' => $session));
         $app->stop();
     }
 })->conditions(array('id' => '\d+'));
@@ -224,16 +212,13 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
 
     $session = $app->session;
     
-    $simple = $app->simple;
-    $categories = $simple->getCategories();
-    
     if ($session->get('finished') != 'yes') {
         $app->redirect($app->request->getRootUri().'/');
     }
 
     if ($session->get('quizid') !== $id) {
         $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/error.php', array('quiz' => $quiz, 'categories' => $categories, 'session' => $session));
+        $app->render('quiz/error.php', array('quiz' => $quiz, 'session' => $session));
         $app->stop();
     }
 
@@ -245,10 +230,10 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
         //destroy the session
         $session->end();
 
-        $app->render('quiz/results.php', array('quiz' => $quiz, 'categories' => $categories, 'session' => $session));
+        $app->render('quiz/results.php', array('quiz' => $quiz, 'session' => $session));
     } else {
         $app->flashnow('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
-        $app->render('quiz/error.php', array('quiz' => $quiz, 'categories' => $categories, 'session' => $session));
+        $app->render('quiz/error.php', array('quiz' => $quiz, 'session' => $session));
         $app->stop();
     }
 })->conditions(array('id' => '\d+'));

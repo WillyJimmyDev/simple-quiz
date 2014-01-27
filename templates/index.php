@@ -1,5 +1,6 @@
 <?php 
     include'quiz/header.php'; 
+    #print_r($_SESSION);
 ?>
     <div id="container" class="quiz">
         <div class="row row-offcanvas row-offcanvas-right">
