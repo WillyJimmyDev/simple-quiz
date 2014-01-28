@@ -26,14 +26,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-              <li class="dropdown active">
-                <a href="<?php echo $root; ?>/categories/" class="dropdown-toggle" data-toggle="dropdown">Categories <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <?php foreach ($categories as $category): ?>
-                       <li><a href="<?php echo $root; ?>/categories/<?php echo $category->id ;?>"><?php echo $category->name; ?></a></li> 
-                    <?php endforeach; ?>
-                </ul>
-            </li>
+            <li><a href="<?php echo $root; ?>/">Quizzes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="<?php echo $root; ?>/admin/">Admin</a></li>
