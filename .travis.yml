@@ -1,7 +1,7 @@
 before_script:
   - mysql -e 'create database `simple-quiz`;use `simple-quiz`;source simple-quiz.sql;'
   - composer self-update
-  - composer install --no-interaction --prefer-source
+  - composer install --no-interaction --prefer-source --no-dev
 language: php
 php:
   - "5.4"
