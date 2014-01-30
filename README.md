@@ -52,8 +52,8 @@ Within the download you'll find the following directories and files:
 ## Installation
 
 * Get The Code
- If you are downloading from SourceForge or downloading a release from GitHub, you don't need to have composer installed to add the project dependencies as they are bundled with the project.
- If, however, you are cloning from github, you must run composer install to get the latest changes as new dependencies are being added all the time and the vendor directory is no longer in version control.
+ If you are downloading from SourceForge, you don't need to have composer installed to add the project dependencies as they are bundled with the project.
+ If, however, you are cloning from GitHub, you must run composer install to get the latest changes as new dependencies are being added all the time and the vendor directory is no longer in version control.
 * Unpack the zip archive.
 * Place the contents of the /public directory inside your document root.
 * All other directories should be placed outside of the document root and not accessible via a web browser (look at the above diagram to see the structure).
