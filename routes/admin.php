@@ -33,12 +33,13 @@ $app->post('/admin/login/', function () use ($app) {
             $errors['loginerror'] = "The email was invalid. Please try again.";
         }
         else {
-            $password = sha1($password);
             //process inputs
-            $authsql = \ORM::for_table('users')->where('email', $email)->where('pass', $password)->where('level', 1)->find_one();
-
-            if (! $authsql){
-                    $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
+            $authsql = \ORM::for_table('users')->select_many('pass','name')->where('email', $email)->where('level', 1)->find_one();
+            
+            //verify the password against hash
+            if (! password_verify($password, $authsql->pass)) {
+                
+                $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
             } else {
                 $name = $authsql->name;
             }
@@ -51,6 +52,7 @@ $app->post('/admin/login/', function () use ($app) {
     if (count($errors) > 0) {
         $app->flash('errors', $errors);
         $session->remove('user');
+        $session->remove('adminuser');
         $app->redirect($app->request->getRootUri() . '/admin/login/');
     }
     
