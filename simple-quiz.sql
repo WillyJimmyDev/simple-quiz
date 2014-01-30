@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 22, 2014 at 06:53 PM
--- Server version: 5.5.35-0ubuntu0.13.10.1
+-- Generation Time: Jan 30, 2014 at 09:43 PM
+-- Server version: 5.5.35-0ubuntu0.13.10.2
 -- PHP Version: 5.5.3-1ubuntu2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
   KEY `question_id` (`correct`),
   KEY `quiz_id` (`quiz_id`),
   KEY `quiz_question_num` (`question_num`,`quiz_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=460 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=470 ;
 
 --
 -- Dumping data for table `answers`
@@ -66,7 +66,13 @@ INSERT INTO `answers` (`id`, `question_num`, `quiz_id`, `text`, `correct`) VALUE
 (456, 2, 6, 'Robert De Niro', 1),
 (457, 2, 6, 'Tom Hanks', 0),
 (458, 2, 6, 'Bob Hope', 0),
-(459, 2, 6, 'Christopher Hall', 0);
+(459, 2, 6, 'Christopher Hall', 0),
+(460, 7, 6, 'Jeff Daniels', 1),
+(461, 7, 6, 'Jeff Goldblum', 0),
+(462, 7, 6, 'Jeff Bridges', 0),
+(463, 7, 6, 'Jeff Branson', 0),
+(468, 1, 8, 'Muhammad Ali', 1),
+(469, 1, 8, 'Samuel L Jackson', 0);
 
 -- --------------------------------------------------------
 
@@ -109,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `questions` (
   KEY `num` (`num`),
   KEY `num_2` (`num`,`quiz_id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
 
 --
 -- Dumping data for table `questions`
@@ -121,7 +127,9 @@ INSERT INTO `questions` (`id`, `num`, `quiz_id`, `text`) VALUES
 (17, 3, 6, 'What was the name of the killer in Psycho?'),
 (18, 4, 6, 'What were the first names of Laurel And Hardy?'),
 (19, 5, 6, 'Who played ''Red'' in The Shawshank Redemption?'),
-(20, 6, 6, 'How many films were there in the ''Alien'' series?');
+(20, 6, 6, 'How many films were there in the ''Alien'' series?'),
+(21, 7, 6, 'Who starred in ''Chasing Sleep'' from 2000'),
+(23, 1, 8, 'Famous Boxer');
 
 -- --------------------------------------------------------
 
@@ -142,14 +150,15 @@ CREATE TABLE IF NOT EXISTS `quizzes` (
   KEY `id` (`id`),
   KEY `created` (`created`),
   KEY `updated` (`updated`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `quizzes`
 --
 
 INSERT INTO `quizzes` (`id`, `name`, `description`, `category`, `active`, `created`, `updated`) VALUES
-(6, 'Movies', 'Know your movie trivia? Prove it!', 2, 1, '2013-11-21 21:55:12', '2014-01-20 21:16:46');
+(6, 'Movies', 'Know your movie trivia? Prove it!', 2, 1, '2013-11-21 21:55:12', '2014-01-20 21:16:46'),
+(8, 'Sporting Greats', 'Do yoou know these sporting legends?', 1, 1, '2014-01-27 19:40:52', '2014-01-27 19:40:52');
 
 -- --------------------------------------------------------
 
@@ -168,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `quiz_users` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `quiz_id` (`quiz_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
 
 --
 -- Dumping data for table `quiz_users`
@@ -179,7 +188,9 @@ INSERT INTO `quiz_users` (`id`, `quiz_id`, `user_id`, `score`, `start_time`, `da
 (35, 6, 209, 6, '2013-12-31 11:14:38', '2013-12-31 11:15:02', '00:24'),
 (36, 6, 210, 3, '2014-01-05 20:04:30', '2014-01-05 20:04:58', '00:28'),
 (37, 6, 211, 1, '2014-01-05 20:06:29', '2014-01-05 20:06:55', '00:26'),
-(38, 6, 212, 2, '2014-01-05 20:23:32', '2014-01-05 20:23:59', '00:27');
+(38, 6, 212, 2, '2014-01-05 20:23:32', '2014-01-05 20:23:59', '00:27'),
+(39, 6, 213, 0, '2014-01-27 19:11:18', '2014-01-27 19:11:35', '00:17'),
+(40, 8, 178, 1, '2014-01-27 19:42:34', '2014-01-27 19:42:37', '00:03');
 
 -- --------------------------------------------------------
 
@@ -200,24 +211,33 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 
 INSERT INTO `sessions` (`id`, `access`, `data`) VALUES
 ('0lc4o8hk08tu5eus7l18puf0v2', 1384895797, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
+('12neulpo58g5r8a92oue8abpv6', 1390675781, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:1:{i:1;a:1:{i:0;s:14:"Robert De Niro";}}finished|s:2:"no";num|i:2;last|N;timetaken|N;starttime|s:19:"2014-01-25 18:49:29";user|s:4:"dsad";'),
+('1hcrkbig56gmukitueu11s3tr4', 1390850581, 'adminuser|b:0;slim.flash|a:0:{}urlRedirect|s:7:"/admin/";quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
 ('1p03rmbt53mk93puqiohkhc9e0', 1384595829, 'slim.flash|a:0:{}quizid|s:1:"5";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
 ('3og1gvjl0nlciid506qbb96en3', 1385072406, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
+('5c3dhrrqmhtpibr8abqunfhgh7', 1391117567, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;adminuser|b:1;user|s:5:"Admin";'),
 ('5d5onh98jvu80n8somv95bdbg1', 1384469694, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
 ('7ar9l1fqancg9o2fhspjfhml11', 1384900287, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";'),
+('9la5mksb7j5u7bgikiu89ihjs5', 1391117343, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
 ('bpg70ci1ugd94f0rggmr8kkrn6', 1385072261, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
 ('c4g6914rkh5rq0prd1vripq702', 1384899916, 'slim.flash|a:0:{}quizid|s:1:"4";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
 ('ffamg7aj4qpsk494uqtvc8n7i1', 1384600655, 'slim.flash|a:0:{}quizid|s:1:"5";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;adminuser|b:1;user|s:5:"Admin";'),
 ('fi0upe3jmujg26u2eenagom3h4', 1384809113, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
 ('hj1laglukn7pjcm4rsu4dvver4', 1384984270, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
 ('iuer9a54ishdai3v5t7h9fndq1', 1384898612, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('jo88rbig0nbl88bqi05ivu2g97', 1391117016, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
+('khass19ohm6gdudnuftt7suis5', 1390675136, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;urlRedirect|s:7:"/admin/";'),
+('la8120u8centqj79e7ap1qvg71', 1390849692, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;user|s:5:"Admin";adminuser|b:0;urlRedirect|s:7:"/admin/";'),
 ('ldpj1trc2fdo6krqfdri1of333', 1384470264, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";'),
 ('mghuldejfedett61td1boem2k4', 1384981507, 'quizid|s:1:"7";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('nqd5adk9ta1hi6fdn45c0rh781', 1390851578, 'adminuser|b:0;slim.flash|a:0:{}quizid|s:1:"7";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;user|s:5:"Admin";urlRedirect|s:7:"/admin/";'),
 ('o0dqueei6rr6aavt4s6e2a2tu7', 1388953550, 'urlRedirect|s:7:"/admin/";slim.flash|a:0:{}'),
 ('plf1kd6l64t7d7mk7fpbkfkfk1', 1388488263, 'slim.flash|a:0:{}'),
 ('q8191hknupipqu2lqq4om47oa3', 1388437224, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
 ('r5kdhm6ta73er542ppfca6m2r6', 1384899950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
-('t5k642bmd1hv2qn03cabsoocr2', 1390252748, 'slim.flash|a:0:{}adminuser|b:1;user|s:5:"Admin";quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;'),
-('ufh1jiienhn8bbad9jinae6lk7', 1385069950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";');
+('ufh1jiienhn8bbad9jinae6lk7', 1385069950, 'slim.flash|a:0:{}urlRedirect|s:7:"/admin/";'),
+('ukpikrv6d21j8e06kk9ndco893', 1391117309, 'slim.flash|a:0:{}quizid|s:1:"6";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;adminuser|b:0;user|N;urlRedirect|s:7:"/admin/";'),
+('v9e170bg1925p73meml2o24aq0', 1390851716, 'adminuser|b:0;slim.flash|a:0:{}quizid|s:1:"8";score|i:0;correct|a:0:{}wrong|a:0:{}finished|s:2:"no";num|i:0;last|N;timetaken|N;starttime|N;user|s:5:"Admin";urlRedirect|s:7:"/admin/";');
 
 -- --------------------------------------------------------
 
@@ -228,13 +248,13 @@ INSERT INTO `sessions` (`id`, `access`, `data`) VALUES
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
-  `pass` varchar(40) NOT NULL,
+  `pass` varchar(255) NOT NULL,
   `email` varchar(40) NOT NULL,
   `level` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `pass` (`pass`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=213 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=214 ;
 
 --
 -- Dumping data for table `users`
@@ -395,7 +415,7 @@ INSERT INTO `users` (`id`, `name`, `pass`, `email`, `level`) VALUES
 (154, 'Anon799', '', '', 0),
 (155, 'cdcdscds', '', '', 0),
 (156, 'bbbbbb', '', '', 0),
-(157, 'Admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'example@gmail.com', 1),
+(157, 'Admin', '$2y$10$LK9O0BesGScRkDWPnpVP3uGVcN6JqB/xsuFTq/xQFpNjsx2DvTOl2', 'example@gmail.com', 1),
 (158, 'cdwerr', '', '', 0),
 (159, 'badass', '', '', 0),
 (160, 'bilbo', '', '', 0),
@@ -450,7 +470,8 @@ INSERT INTO `users` (`id`, `name`, `pass`, `email`, `level`) VALUES
 (209, 'Sweaty', '', '', 0),
 (210, 'quizma1', '', '', 0),
 (211, 'quizma2', '', '', 0),
-(212, 'quizma3', '', '', 0);
+(212, 'quizma3', '', '', 0),
+(213, 'lopiuh', '', '', 0);
 
 --
 -- Constraints for dumped tables

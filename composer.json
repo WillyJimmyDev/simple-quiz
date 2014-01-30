@@ -3,7 +3,7 @@
     "require": {
         "slim/slim": "2.*",
         "j4mie/idiorm": "dev-master",
-        "ircmaxell/password_compat": "dev-master"
+        "ircmaxell/password-compat": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.28"

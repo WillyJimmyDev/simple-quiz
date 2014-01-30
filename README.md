@@ -3,6 +3,8 @@
 
 Simple-Quiz is a simple framework for creating quizzes for the web, created and maintained by [Ben Hall](http://twitter.com/elanman).
 
+PHP version > 5.3.7 is required
+
 
 ## Quick start
 
@@ -49,7 +51,7 @@ Within the download you'll find the following directories and files:
 
 ## Installation
 
-* Things have changed...
+* Get The Code
  If you are downloading from SourceForge or downloading a release from GitHub, you don't need to have composer installed to add the project dependencies as they are bundled with the project.
  If, however, you are cloning from github, you must run composer install to get the latest changes as new dependencies are being added all the time and the vendor directory is no longer in version control.
 * Unpack the zip archive.
@@ -60,7 +62,6 @@ Within the download you'll find the following directories and files:
 * Import simple-quiz.sql into MySQL using a tool like phpmyadmin.
 * Change credentials in /SimpleQuiz/Utils/Base/Config.php to suit.
 * Default web admin user is example@gmail.com with password of 123456
-* Remember to change admin password from within phpMyadmin. Make sure password is sha1 hashed.
 * Navigate to the web accessible folder in your browser.
 
 ## Twitter Stuff
