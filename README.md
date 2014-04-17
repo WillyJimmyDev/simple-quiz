@@ -10,7 +10,7 @@ PHP version > 5.3.7 is required
 
 Three quick start options are available:
 
-* [Download the latest release (github)](https://github.com/elanman/simple-quiz/releases/tag/v1.6.0).
+* [Download the latest release (github)](https://github.com/elanman/simple-quiz/releases/latest).
 * [Download the latest release (sourceforge)](https://sourceforge.net/projects/simple-quiz/).
 * Clone the repo: `git clone https://github.com/elanman/simple-quiz.git`.
 
