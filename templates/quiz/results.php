@@ -2,7 +2,11 @@
 <div id="container" class="quiz">
         <div class="row">
             <div class="col-md-5 col-md-offset-2">
-                <h2>The Results Page For <span><?php echo $user;  ?></span></h2> 
+                <?php if ($requireauth) : ?>
+                    <h2>The Results Page For <span><?php echo $user;  ?></span></h2> 
+                <?php else: ?>
+                    <h2>The Results Page</h2>
+                <?php endif; ?>
             <?php
             $x = 1;
             $numquestions = count($quiz->getQuestions());

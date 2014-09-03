@@ -1,5 +1,6 @@
 <?php
 //index.php
+#comment out the ini_set lines in production
 ini_set('error-reporting', E_ALL);
 ini_set('display_errors', 1);
 require '../vendor/autoload.php';
@@ -45,12 +46,20 @@ $app->installer = function () {
 $app->hook('slim.before.dispatch', function() use ($app) { 
 
     $user = null;
+    $requireauth = SimpleQuiz\Utils\Base\Config::$requireauth;
+    
+    //if no auth required to take quizzes, set a default user
+    if (! $requireauth)
+    {
+        $app->session->set('user', SimpleQuiz\Utils\Base\Config::$defaultUser);
+    }
     
     if ($app->session->get('user')) {
        $user = $app->session->get('user');
     }
     
     $app->view()->setData('user', $user);
+    $app->view()->setData('requireauth', $requireauth);
     
     $root = $app->request->getRootUri();
     $app->view()->setData('root', $root);

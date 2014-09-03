@@ -101,8 +101,25 @@ $app->post('/quiz/process/', function () use ($app) {
         $num = $app->request()->post('num');
         $answers = $app->request()->post('answers');
 
-        if (!isset($submitter)) { //register a user
-            if (isset($register)) {
+        if (! isset($submitter)) { //register a user unless auth not required
+            if (! SimpleQuiz\Utils\Base\Config::$requireauth) {
+                $username = SimpleQuiz\Utils\Base\Config::$defaultUser;
+                if ($quiz->registerUser($username)) {
+                    $session->set('user', $username);
+                    $session->set('score', 0);
+                    $session->set('correct', array());
+                    $session->set('wrong', array());
+                    $session->set('finished', 'no');
+                    $session->set('num', 0);
+                    $session->set('starttime', date('Y-m-d H:i:s'));
+
+                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+                } else {
+                    $app->flash('usererror', 'That name is already registered, please choose another.');
+                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
+                }
+            }
+            else if (isset($register)) { //auth required, try and register a new user
                 if (empty($username)) {
                     $app->flash('usererror', 'Please create a username.');
                     $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
@@ -203,8 +220,9 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
                 $time = $end - $start;
                 $timetaken = date("i:s", $time); //formatted as minutes:seconds
                 $_SESSION['timetaken'] = $timetaken;
-
-                $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime, $timetaken);
+                if (SimpleQuiz\Utils\Base\Config::$requireauth) {
+                    $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime, $timetaken);
+                }
             } else {
                 $timetaken = $_SESSION['timetaken'];
             }

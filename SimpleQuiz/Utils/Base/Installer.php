@@ -6,10 +6,10 @@ class Installer
     public $requirements = array();
     public $version;
     public $versionimg;
-    public $versionmsg = 'PHP Version 5.3.0 or greater is required.';
+    public $versionmsg = 'PHP Version 5.3.7 or greater is required.';
     public $random = false;
     public $randomimg = 'ok';
-    public $randommsg = 'This is needed to generate random number for use with the PasswordLib library';
+    public $randommsg = 'This is needed to generate random numbers for use with the PasswordLib library';
 
     public function __construct() {
         $this->version = phpversion();
@@ -17,7 +17,7 @@ class Installer
     
     public function getRequirements() {
         
-        $this->versionimg = version_compare($this->version, '5.3.0', '>=') ? 'ok' : 'remove';
+        $this->versionimg = version_compare($this->version, '5.3.7', '>=') ? 'ok' : 'remove';
         
         try {
             $this->random = file_exists('/dev/urandom');

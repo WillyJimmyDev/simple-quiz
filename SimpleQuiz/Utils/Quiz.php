@@ -205,6 +205,10 @@ class Quiz implements Base\QuizInterface {
     
     public function registerUser($username)
     {
+        //assuming no auth required
+        if ($username == Base\Config::$defaultUser) {
+            return true;
+        }
         foreach ($this->_users as $user) {
             if ($user['name'] == $username) {
                 return false;

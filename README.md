@@ -60,7 +60,7 @@ Within the download you'll find the following directories and files:
 * The mod_rewrite module (if using apache server) will need to be enabled in your server configuration.
 * Create a MySQL database called 'simple-quiz'
 * Import simple-quiz.sql into MySQL using a tool like phpmyadmin.
-* Change credentials in /SimpleQuiz/Utils/Base/Config.php to suit.
+* Change credentials in /SimpleQuiz/Utils/Base/Config.php.
 * Default web admin user is example@gmail.com with password of 123456
 * Navigate to the web accessible folder in your browser.
 
