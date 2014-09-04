@@ -25,16 +25,18 @@ Within the download you'll find the following directories and files:
     │   ├── Utils/
     │       ├── Base/
     │       │   ├── Config.php
-    │       │   ├── DB.php
+    │       │   ├── Installer.php
     │       │   ├── LeaderBoardInterface.php
     │       │   ├── QuizInterface.php
     │       │   ├── SessionInterface.php
     │       │   ├── SimpleInterface.php
+    │       │   ├── UserInterface.php
     │       │   └── setup.php
     │       ├── LeaderBoard.php
     │       ├── Quiz.php
     │       ├── Session.php
     │       └── Simple.php
+    │       └── User.php
     ├── public/ (**this is your document root**)
     │   ├── images/
     │   ├── res/
@@ -61,6 +63,7 @@ Within the download you'll find the following directories and files:
 * Create a MySQL database called 'simple-quiz'
 * Import simple-quiz.sql into MySQL using a tool like phpmyadmin.
 * Change credentials in /SimpleQuiz/Utils/Base/Config.php.
+* If users aren't required to login to take a quiz, change $requireauth to false in /SimpleQuiz/Utils/Base/Config.php.
 * Default web admin user is example@gmail.com with password of 123456
 * Navigate to the web accessible folder in your browser.
 
