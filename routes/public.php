@@ -100,6 +100,14 @@ $app->post('/quiz/process/', function () use ($app) {
         $username = $app->request()->post('username');
         $num = $app->request()->post('num');
         $answers = $app->request()->post('answers');
+        
+        $nonce = $app->request()->post('nonce');
+        
+        //check for a valid nonce to prevent cached submissions e.g (back button)
+        if ($session->get('nonce') != $nonce)
+        {
+            $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+        }
 
         if (! isset($submitter)) { //register a user unless auth not required
             if (! SimpleQuiz\Utils\Base\Config::$requireauth) {
@@ -205,10 +213,16 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
         $quiz->populateUsers();
         
         $timetaken = '';
+        
+        $nonce = md5(uniqid());
+        $session->set('nonce', $nonce);
 
         $num = $session->get('num') ? $session->get('num') : 1;
 
         if (isset($_SESSION['last']) && $_SESSION['last'] == true) {
+            
+            $session->set('nonce', null);
+            
             //first two vars formatted for insertion into database as datetime fields
             $starttime = $session->get('starttime');
             $endtime = date('Y-m-d H:i:s');
@@ -228,7 +242,7 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
             }
         }
 
-        $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'timetaken' => $timetaken, 'categories' => $categories, 'session' => $session));
+        $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'nonce' => $nonce, 'timetaken' => $timetaken, 'categories' => $categories, 'session' => $session));
     } else {
         $app->flashnow('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
         $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
