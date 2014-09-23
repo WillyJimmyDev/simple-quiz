@@ -27,6 +27,7 @@
                 ?>
                 </ul>
             <p>
+                <input type="hidden" name="nonce" value="<?php echo $nonce; ?>" />
                 <input type="hidden" name="num" value="<?php echo $num; ?>" />
                 <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
                 <input type="hidden" name="submitter" value="TRUE" />
