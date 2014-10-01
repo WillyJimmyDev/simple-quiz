@@ -1,5 +1,7 @@
 {
     "name": "elanman/simple-quiz",
+    "description": "A simple quiz framework written in PHP using slim micro-framework, idiorm and bootstrap",
+    "license": "Apache-2.0",
     "require": {
         "slim/slim": "2.*",
         "j4mie/idiorm": "dev-master",
