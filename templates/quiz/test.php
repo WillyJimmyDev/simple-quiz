@@ -11,7 +11,7 @@
                 <h4>Current tester: <strong><?php echo $user; ?></strong></h4>
             <?php endif; ?>
             <h2>Question <?php echo $num; ?>:</h2>
-            <p><?php echo $question; ?></p>
+            <p><?php echo $question->getText(); ?></p>
             <form id="questionBox" method="post" action="<?php echo $root; ?>/quiz/process">
                 <ul>
                 <?php 
@@ -39,10 +39,11 @@
             $timeportions = explode(':', $timetaken);
             $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
             $secs = $timeportions[1] . ' secs' ;
-            $percentage = round(( (int) $session->get('score') / (int) count($quiz->getQuestions()) ) * 100);
+            $percentage = round(( (int) $session->get('score') / (int) $quiz->countQuestions() ) * 100);
             echo '<div id="finalscore">';
             $user = $requireauth ? $user : "";
-            echo '<h2 id="score">' . $user . 'answered ' . $session->get('score') . ' correct out of a possible ' . count($quiz->getQuestions()) . '</h2>' . PHP_EOL;
+            echo '<h2 id="score">' . $user . ' answered ' . $session->get('score') . ' correct out of a possible ' .
+                $quiz->countQuestions() . '</h2>' . PHP_EOL;
             echo '<h2 class="userscore">' .  $percentage . '%</h2>' . PHP_EOL;
             echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
 

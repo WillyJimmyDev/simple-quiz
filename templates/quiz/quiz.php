@@ -1,6 +1,6 @@
 <?php 
     include'header.php';
-    $numquestions = count($quiz->getQuestions());
+    $numquestions = $quiz->countQuestions();
     $leadersToShow = 10;
 ?>
     <div id="container" class="quiz">

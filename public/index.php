@@ -18,10 +18,10 @@ $app = new \Slim\Slim(array(
     'templates.path' => '../templates'
         ));
 
+$app->session = $session;
+
 require '../routes/public.php';
 require '../routes/admin.php';
-
-$app->session = $session;
 
 $app->leaderboard = function() {
     return new \SimpleQuiz\Utils\LeaderBoard();
@@ -58,11 +58,11 @@ $app->hook('slim.before.dispatch', function() use ($app) {
        $user = $app->session->get('user');
     }
     
-    $app->view()->setData('user', $user);
-    $app->view()->setData('requireauth', $requireauth);
+    $app->view()->appendData(['user' => $user]);
+    $app->view()->appendData(['requireauth' => $requireauth]);
     
     $root = $app->request->getRootUri();
-    $app->view()->setData('root', $root);
+    $app->view()->appendData(['root' => $root]);
 });
 
 $app->run();

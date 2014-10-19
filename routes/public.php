@@ -84,10 +84,20 @@ $app->post('/quiz/process/', function () use ($app) {
         $app->redirect($app->request->getRootUri().'/');
     }
 
+    $session = $app->session;
+
+    /**
+     * @todo check if serialised quiz exists in session before instantiating new
+     */
+//    if ($session->get('quiz'))
+//    {
+//        $quiz = serialize($session->get('quiz'));
+//    }
+//    else{
+//        $quiz = $app->quiz;
+//    }
     $quiz = $app->quiz;
 
-    $session = $app->session;
-    
     $simple = $app->simple;
     $categories = $simple->getCategories();
 
@@ -162,7 +172,7 @@ $app->post('/quiz/process/', function () use ($app) {
             $quiz->populateUsers();
             $session->set('num', (int) $num);
 
-            $numquestions = count($quiz->getQuestions());
+            $numquestions = $quiz->countQuestions();
             $quizanswers = $quiz->getAnswers($num);
 
             if ($answers == $quizanswers[0]) { //first answer in array is correct one
@@ -207,10 +217,12 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
     }
     
     $quiz = $app->quiz;
-
+    /**
+     * @todo implement serialize() on quiz object and store in session
+     */
     if ($quiz->setId($id)) {
-        $quiz->populateQuestions();
-        $quiz->populateUsers();
+        $quiz->populateQuestions()->populateUsers();
+        //$quiz->populateUsers();
         
         $timetaken = '';
         

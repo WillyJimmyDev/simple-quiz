@@ -180,19 +180,19 @@ $app->delete("/admin/quiz/", $authenticate($app), function() use ($app) {
 });
 
 $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
-    
-    $simple = $app->simple;
-    $categories = $simple->getCategories(false);
+
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
         $quiz->populateQuestions();
         $quiz->populateUsers();
+        $categories = $app->simple->getCategories(false);
         
         $app->render('admin/quiz.php', array('quiz' => $quiz, 'categories' => $categories));
     }
         
 })->conditions(array('id' => '\d+'));
+
 
 $app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     
@@ -206,19 +206,23 @@ $app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     $quiz = $app->quiz;
     
     if ($quiz->setId($id)) {
+
+        $quiz->populateQuestions();
+
+        $categories = $app->simple->getCategories(false);
         
         if ( (! ctype_digit($questionid)) || (trim($text) == '') ) {
             $app->redirect($app->request->getRootUri().'/admin/');
         }
+
         try {
             $quiz->updateQuestion($questionid, $text);
             $app->flashnow('success', 'Question saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', $e->getMessage());
         }
-        $quiz->populateQuestions();
         $quiz->populateUsers();
-        $app->render('admin/quiz.php', array('quiz' => $quiz));
+        $app->render('admin/quiz.php', array('quiz' => $quiz, 'categories' => $categories));
         
     }
         
@@ -237,12 +241,13 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
     $answerarray = $app->request()->post('answer');
     
     if ($quiz->setId($id)) {
-        
+        $quiz->populateQuestions();
+        $categories = $app->simple->getCategories(false);
         $i = 0;
         foreach ($answerarray as $answer) {
             if (trim($answer) == '') {
                 $app->flashnow('error', "Answers can't be empty");
-                $app->render('admin/quiz.php', array('quiz' => $quiz));
+                $app->render('admin/quiz.php', array('quiz' => $quiz, 'categories' => $categories));
                 $app->stop();
             }
             if ($i == $correct) {
@@ -261,11 +266,9 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
             $app->flashnow('error', 'An error occurred creating a new question');
             $app->flashnow('error', $e->getMessage());
         }
-        
-        $quiz->populateQuestions();
         $quiz->populateUsers();
    
-        $app->render('admin/quiz.php', array('quiz' => $quiz));
+        $app->render('admin/quiz.php', array('quiz' => $quiz, 'categories' => $categories));
     } else {
         echo 'oops';
     }
@@ -300,6 +303,7 @@ $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
     $quiz = $app->quiz;
     
     if ($quiz->setId($quizid)) {
+        $quiz->populateQuestions();
         $question = $quiz->getQuestion($questionid);
         $answers = $quiz->getAnswers($questionid);
         $app->render('admin/editanswers.php', array('quizid' => $quizid,'questionid' => $questionid, 'question' => $question, 'answers' => $answers));
@@ -321,6 +325,7 @@ $app->put("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
     $answerarray = $app->request()->put('answer');
     
     if ($quiz->setId($quizid)) {
+        $quiz->populateQuestions();
         $question = $quiz->getQuestion($questionid);
         $i = 0;
         foreach ($answerarray as $answer) {

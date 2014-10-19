@@ -1,29 +1,34 @@
 <?php
 namespace SimpleQuiz\Utils;
 
-/*
- *
- * @author Ben Hall
- */
+use Slim\Helper\Set;
 
 class Quiz implements Base\QuizInterface {
-    
+
     protected $_id;
     protected $_name;
     protected $_description;
     protected $_category;
     protected $_active;
     protected $_answers = array();
-    protected $_questions = array();
+    protected $_questions;
     protected $_question;
     protected $_users;
     protected $_leaderboard;
-    
-    public function __construct(\Slim\Helper\Set $container)
+
+    /**
+     * @param Set $container
+     */
+    public function __construct(Set $container)
     {
         $this->_leaderboard = $container->leaderboard;
+        $this->_questions = new QuestionStorage();
     }
-    
+
+    /**
+     * @param $id
+     * @return bool
+     */
     public function setId($id)
     {
         $quizobj = \ORM::for_table('quizzes')->join('categories', array('quizzes.category', '=', 'categories.id'))->select_many('quizzes.name', 'quizzes.description', array('category' => 'categories.name'), 'quizzes.active')->find_one($id);
@@ -40,106 +45,153 @@ class Quiz implements Base\QuizInterface {
        
         return false;
     }
-    
+
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->_id;
     }
-    
+
+    /**
+     * @return string
+     */
     public function getName()
     {
         return ucwords($this->_name);
     }
-    
+
+    /**
+     * @return mixed
+     */
     public function getDescription()
     {
         return $this->_description;
     }
-    
+
+    /**
+     * @return bool
+     */
     public function isActive()
     {
         return $this->_active == 1 ? true : false;
     }
-    
-    public function getAnswers($questionid = false)
-    {   
+
+
+    /**
+     * @param $questionid
+     * @return bool
+     */
+    public function getAnswers($questionid)
+    {
         if ($questionid)
         {
-            //pull answers from db for only this question ordered by correct answer first
-            $obj = \ORM::for_table('answers')->where('question_num', $questionid)->where('quiz_id', $this->_id)->order_by_desc('correct')->find_many();
-            foreach ($obj as $answer) {
-                array_push($this->_answers,$answer->text);
-            }
+            return $this->getQuestion($questionid)->getAnswers();
         }
-        else
-        {
-            //pull all answers from db grouped by question
-            $obj = \ORM::for_table('answers')->raw_query("SELECT group_concat( a.text ORDER BY a.correct DESC SEPARATOR '~' ) as grouped FROM answers a where a.quiz_id = :quizid GROUP BY a.question_num", array('quizid' => $this->_id) )->find_array();
-            foreach ($obj as $answers)
-            {   
-                $answerarray = explode('~', $answers['grouped']);
-                array_push($this->_answers,$answerarray);
-            }
+        else {
+            throw new \InvalidArgumentException("You must supply a question id");
         }
         
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllAnswersGroupedByQuestion()
+    {
+        //pull all answers from db grouped by question
+        $obj = \ORM::for_table('answers')->raw_query("SELECT group_concat( a.text ORDER BY a.correct DESC SEPARATOR '~' ) as grouped FROM answers a where a.quiz_id = :quizid GROUP BY a.question_num", array('quizid' => $this->_id) )->find_array();
+        foreach ($obj as $answers)
+        {
+            $answerarray = explode('~', $answers['grouped']);
+            array_push($this->_answers,$answerarray);
+        }
+
         return $this->_answers;
     }
-    
-    public function updateAnswers(Array $answers, $questionid) 
+
+    /**
+     * @param array $answers
+     * @param $questionid
+     * @return bool
+     */
+    public function updateAnswers(Array $answers, $questionid)
     {
-        $this->deleteAnswers($questionid);
-       
-        $this->addAnswers($questionid, $answers);
+        $this->getQuestion($questionid)->updateAnswers($answers);
 
         return true;
     }
-    
+
+    /**
+     * @param $questionid
+     * @return bool
+     */
     public function deleteAnswers($questionid)
     {
-        $deletedAnswers = \ORM::for_table('answers')->where('quiz_id', $this->_id)->where('question_num', $questionid)->delete_many();
-        
+        $this->getQuestion($questionid)->deleteAnswers();
         return true;
     }
-    
+
+    /**
+     * @param $questionid
+     * @param array $answers
+     * @return bool
+     */
     public function addAnswers($questionid, Array $answers)
     {
-        foreach ($answers as $answer) {
-            $newanswer = \ORM::for_table('answers')->create();
-            $newanswer->question_num = $questionid;
-            $newanswer->text = $answer[0];
-            $newanswer->correct = $answer[1];
-            $newanswer->quiz_id = $this->_id;
-            $newanswer->save();
-        }
-        return true;
+        $this->getQuestion($questionid)->addAnswers($answers);
     }
-    
-    public function addQuestion($question, Array $answers)
+
+    /**
+     * @param $text
+     * @param array $answers
+     * @return bool
+     */
+    public function addQuestion($text, Array $answers)
     {
         $max = \ORM::for_table('questions')->where('quiz_id', $this->_id)->max('num');
         $num = $max + 1;
-        
+
         //insert new question
-        $newquestion = \ORM::for_table('questions')->create();
-        $newquestion->num = $num;
-        $newquestion->quiz_id = $this->_id;
-        $newquestion->text = $question;
-        $newquestion->save(); 
+        $newquestion = \ORM::for_table('questions')->create(
+            [
+                'num' => $num,
+                'quiz_id' => $this->_id,
+                'text' => $text
+            ]
+        );
+        //save the new question in db then add to the question storage
+        if ($newquestion->save())
+        {
+            //create a new Question instance
+            $this->_question = new Question($newquestion->id(),$num, $this->_id, $text);
+            $this->_question->addAnswers($answers);
+            $this->_questions->attach($this->_question);
+
+            return true;
+        }
         
-        $this->addAnswers($num, $answers);
-        
-        return true;
+        return false;
     }
-    
-    public function updateQuestion($questionid, $text) 
+
+    /**
+     * @param $questionid
+     * @param $text
+     * @return bool
+     */
+    public function updateQuestion($questionid, $text)
     {
-        $q = \ORM::for_table('questions')->where('quiz_id', $this->_id)->where('num', $questionid)->find_one();
-        $q->set('text',$text);
-        $q->save();
-        
+        $this->getQuestion($questionid)->update($text);
+
         return true;
     }
-    
+
+    /**
+     * @param $questionid
+     * @return bool
+     */
     public function deleteQuestion($questionid)
     {
         //foreign_key constraints take care of deleting related answers
@@ -152,57 +204,87 @@ class Quiz implements Base\QuizInterface {
         foreach ($toupdate as $question) {
             $question->num = $question->num - 1;
         }
-        $toupdate->save();
-        
-        return true;
+
+        return $toupdate->save();
     }
 
-    public function getQuestion($questionid) 
+    /**
+     * @param $questionid
+     * @return bool|mixed|object
+     */
+    public function getQuestion($questionid)
     {
-        $q = \ORM::for_table('questions')
-                ->select('text')
-                ->where('num', $questionid)
-                ->where('quiz_id', $this->_id)
-                ->find_one();
-        $this->_question = $q->text;
-        
-        return $this->_question;
+        return $this->_questions->getById($questionid);
     }
-    
+
     public function getQuestions()
     {
         return $this->_questions;
     }
-    
+
+    /**
+     * @return int
+     */
+    public function countQuestions()
+    {
+        return count($this->_questions);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCategory()
     {
         return $this->_category;
     }
-    
-    public function populateQuestions() 
+
+
+    /**
+     * @return $this
+     */
+    public function populateQuestions()
     {
-        $questions = \ORM::for_table('questions')->where('quiz_id', $this->_id)->order_by_asc('num')->find_array();
-        foreach ($questions as $question)
+        $quizquestions = \ORM::for_table('questions')->where('quiz_id', $this->_id)->order_by_asc('num')->find_array();
+
+        foreach ($quizquestions as $question)
         {
-            $this->_questions[$question['num']] = $question['text'];
+            $questionObject = new Question($question['id'], $question['num'], $this->_id, $question['text']);
+            $this->_questions->attach($questionObject);
         }
+
+        return $this;
     }
+
     //following 2 methods to be combined
-    public function populateUsers() 
+    /**
+     *
+     */
+    public function populateUsers()
     {
         $this->_users = $this->_leaderboard->getMembers($this->_id);
     }
-    
+
+    /**
+     * @return mixed
+     */
     public function getUsers()
     {
         return $this->_users;
     }
-    
+
+    /**
+     * @param $num
+     * @return mixed
+     */
     public function getLeaders($num)
     {
         return $this->_leaderboard->getMembers($this->_id, $num);
     }
-    
+
+    /**
+     * @param $username
+     * @return bool
+     */
     public function registerUser($username)
     {
         //assuming no auth required
@@ -216,7 +298,15 @@ class Quiz implements Base\QuizInterface {
         }
         return true;
     }
-    
+
+    /**
+     * @param $user
+     * @param $score
+     * @param $start
+     * @param $end
+     * @param $timetaken
+     * @return bool
+     */
     public function addQuizTaker($user,$score,$start,$end,$timetaken)
     {
         $this->_leaderboard->addMember($this->_id, $user,$score,$start,$end,$timetaken);

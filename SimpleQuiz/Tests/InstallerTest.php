@@ -1,6 +1,8 @@
 <?php
 namespace SimpleQuiz\Tests;
 
+use SimpleQuiz\Utils\Base\Installer;
+
 require 'vendor/autoload.php';
 /**
 *
@@ -8,9 +10,11 @@ require 'vendor/autoload.php';
 */
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
+    public $installer;
+
     public function setUp()
     {
-        $this->installer = new \SimpleQuiz\Utils\Base\Installer();
+        $this->installer = new Installer();
     }
 
     public function testgetRequirements()

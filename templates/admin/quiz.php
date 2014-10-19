@@ -18,7 +18,8 @@ include'header.php';
                           <li class="list-group-item"><strong>Description</strong>: <?php echo $quiz->getDescription(); ?></li>
                           <li class="list-group-item"><strong>Category</strong>: <?php echo $quiz->getCategory(); ?></li>
                           <li class="list-group-item"><strong>Active? </strong><?php echo $quiz->isActive() ? '<span class="glyphicon glyphicon-ok">' : '<span class="glyphicon glyphicon-remove-circle">' ?></li>
-                          <li class="list-group-item"><strong>Number Of Questions</strong>: <span class="badge"><?php echo count($quiz->getQuestions()); ?></span></li>
+                          <li class="list-group-item"><strong>Number Of Questions</strong>: <span class="badge"><?php
+                                  echo $quiz->countQuestions(); ?></span></li>
                           <li class="list-group-item"><strong>Times Taken</strong>: <span class="badge"><?php echo count($quiz->getUsers()); ?></span></li>
                       </ul>
                         <button id="editquiz" title="Edit Quiz Details" type="button" class="btn btn-primary">Edit Quiz Details <span class="glyphicon glyphicon-pencil"></span></button>
@@ -33,13 +34,17 @@ include'header.php';
                           </thead>
                           <tbody>
                               <?php
-                              foreach ($quiz->getQuestions() as $id => $text) :?>
+                              foreach ($quiz->getQuestions() as $question) :?>
                               <tr class="question">
-                                  <td class="question"><?php echo $text; ?></td>
+                                  <td class="question"><?php echo $question->getText(); ?></td>
                                   <td style="text-align:center;">
-                                      <button data-question-id="<?php echo $id; ?>" title="Edit Question" class="edit btn btn-default btn-primary" type="button"><span class="glyphicon glyphicon-pencil"></span></button>
-                                      <a href="<?php echo $root; ?>/admin/quiz/<?php echo $quiz->getId(); ?>/question/<?php echo $id; ?>/edit/" title="Edit Answers" class="answerlink btn btn-default btn-primary"><span class="glyphicon glyphicon-list"></span></a>
-                                      <button data-question-id="<?php echo $id; ?>" data-quiz-id="<?php echo $quiz->getId(); ?>" title="Delete Question" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                      <button data-question-id="<?php echo $question->getNum(); ?>" title="Edit
+                                      Question" class="edit btn btn-default btn-primary" type="button"><span class="glyphicon glyphicon-pencil"></span></button>
+                                      <a href="<?php echo $root; ?>/admin/quiz/<?php echo $quiz->getId();
+                                      ?>/question/<?php echo $question->getNum(); ?>/edit/" title="Edit Answers"
+                                         class="answerlink btn btn-default btn-primary"><span class="glyphicon glyphicon-list"></span></a>
+                                      <button data-question-id="<?php echo $question->getNum(); ?>" data-quiz-id="<?php
+                                      echo $quiz->getId(); ?>" title="Delete Question" class="remove btn btn-default btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
                                   </td>
                               </tr>
                               <?php endforeach; ?>  

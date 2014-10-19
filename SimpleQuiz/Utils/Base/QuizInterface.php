@@ -12,8 +12,10 @@ interface QuizInterface {
     public function getDescription();
     
     public function isActive();
-    
-    public function getAnswers($questionid = false);
+
+    public function getAllAnswersGroupedByQuestion();
+
+    public function getAnswers($questionid);
     
     public function addAnswers($questionid, Array $answers);
     
@@ -28,8 +30,10 @@ interface QuizInterface {
     public function deleteAnswers($questionid);
     
     public function getQuestion($questionid);
-    
+
     public function getQuestions();
+    
+    public function countQuestions();
     
     public function getCategory();
     
@@ -43,4 +47,3 @@ interface QuizInterface {
     
     public function addQuizTaker($user,$score,$start,$end,$timetaken);
 }
-?>

@@ -1,13 +1,21 @@
 <?php
 namespace SimpleQuiz\Tests;
 
+use SimpleQuiz\Utils\LeaderBoard;
+use SimpleQuiz\Utils\Quiz;
+use Slim\Helper\Set;
+
 require 'vendor/autoload.php';
+
 /**
-*
-* @author elanman
-*/
+ * Class QuizTest
+ * @package SimpleQuiz\Tests
+ */
 class QuizTest extends \PHPUnit_Framework_TestCase
 {
+    public $app;
+    public $quiz;
+
     public function setUp()
     {
         \ORM::configure('mysql:dbname=simple-quiz;host=localhost');
@@ -15,18 +23,25 @@ class QuizTest extends \PHPUnit_Framework_TestCase
         \ORM::configure('password', '');
         \ORM::configure('return_result_sets', true);
 
-        $this->app = new \Slim\Helper\Set();
+        $this->app = new Set();
         $this->app->leaderboard = function() {
-            return new \SimpleQuiz\Utils\LeaderBoard();
+            return new LeaderBoard();
         };
-        $this->quiz = new \SimpleQuiz\Utils\Quiz($this->app);
+        $this->quiz = new Quiz($this->app);
     }
 
-    public function testsetId()
+    public function testCantSetIdToString()
     {
-        
         $result = $this->quiz->setId('ghj');
         
         $this->assertFalse($result);
+    }
+
+    public function testGetQuestionReturnsObject() {
+
+        $this->quiz->setId(8);
+        $this->quiz->populateQuestions();
+        $question = $this->quiz->getQuestion(1);
+        $this->assertInternalType('object', $question);
     }
 }
