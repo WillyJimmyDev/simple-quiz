@@ -156,17 +156,17 @@ class Quiz implements Base\QuizInterface {
 
         //insert new question
         $newquestion = \ORM::for_table('questions')->create(
-            [
+            array(
                 'num' => $num,
                 'quiz_id' => $this->_id,
                 'text' => $text
-            ]
+            )
         );
         //save the new question in db then add to the question storage
         if ($newquestion->save())
         {
             //create a new Question instance
-            $this->_question = new Question($newquestion->id(),$num, $this->_id, $text);
+            $this->_question = new RadioQuestion($newquestion->id(),$num, $this->_id, $text);
             $this->_question->addAnswers($answers);
             $this->_questions->attach($this->_question);
 
@@ -248,7 +248,7 @@ class Quiz implements Base\QuizInterface {
 
         foreach ($quizquestions as $question)
         {
-            $questionObject = new Question($question['id'], $question['num'], $this->_id, $question['text']);
+            $questionObject = new RadioQuestion($question['id'], $question['num'], $this->_id, $question['text']);
             $this->_questions->attach($questionObject);
         }
 

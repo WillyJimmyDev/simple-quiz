@@ -6,7 +6,7 @@ namespace SimpleQuiz\Utils;
 
 use SimpleQuiz\Utils\Base\QuestionInterface;
 
-class Question implements QuestionInterface {
+class RadioQuestion implements QuestionInterface {
 
     protected $_id;
     protected $_num;
