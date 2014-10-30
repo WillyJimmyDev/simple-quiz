@@ -8,7 +8,7 @@ include'header.php';
               <?php if (isset($flash['error'])) { echo '<div id="updater" class="alert alert-danger">'.$flash["error"].'</div>'; } ?>
               <div id="ajaxupdater" class="alert"></div>
           <h4>Welcome Quizmaster!</h4>
-          <p>Be careful; with great power comes great responsiblity.</p>    
+          <p>Be careful; with great power comes great responsibility.</p>
           <h4>Quizzes</h4>
           <?php if (count($quizzes) > 0): ?>
             <table id="quizzes" class="table table-striped">

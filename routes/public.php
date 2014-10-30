@@ -1,7 +1,7 @@
 <?php
 $app->get('/', function () use ($app) {
     $simple = $app->simple;
-    $quizzes = $simple->getQuizzes(true);
+    $quizzes = $simple->getQuizzes();
     $categories = $simple->getCategories();
 
     $session = $app->session;
@@ -18,6 +18,142 @@ $app->get('/requirements/', function () use ($app) {
     
     $app->render('requirements.php', array( 'categories' => $categories,'requirements' => $requirements));
     
+});
+
+$app->get('/login/', function () use ($app) {
+
+    $flash = $app->view()->getData('flash');
+    $errors = isset($flash['errors']) ? $flash['errors'] : false;
+
+    $simple = $app->simple;
+    $quizzes = $simple->getQuizzes();
+    $categories = $simple->getCategories();
+
+    $session = $app->session;
+    if ($session->get('user'))
+    {
+        $app->redirect($app->request->getRootUri() . '/');
+    }
+
+    $app->render('login.php', array('quizzes' => $quizzes, 'categories' => $categories, 'session' => $session,
+                                    'errors' => $errors));
+});
+
+$app->post('/login/', function () use ($app) {
+
+    $simple = $app->simple;
+    $session = $app->session;
+    $errors = array();
+
+    $email = trim($app->request()->post('email'));
+    $password = trim($app->request()->post('password'));
+
+    //need to check for 'emptiness' of inputs and display message instead of querying db
+    if ((! empty($email)) && (! empty($password) ) )
+    {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            $errors['loginerror'] = "The email address was invalid. Please try again.";
+        }
+        else
+        {
+            //pull details for this registered email
+            if ($authsql = \ORM::for_table('users')->select_many('id','pass','name','level')->where('email',
+                $email)->find_one())
+            {
+                //verify the password against hash
+                if (! password_verify($password, $authsql->pass))
+                {
+                    $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
+                }
+                else
+                {
+                    if ($authsql->level == 1)
+                    {
+                        //we have an admin user
+                        $user = new \SimpleQuiz\Utils\User\AdminUser($email, $authsql->name);
+                    }
+                    else
+                    {
+                        //registered user
+                        $user = new \SimpleQuiz\Utils\User\EndUser($email, $authsql->name);
+                    }
+
+                    $user->setId($authsql->id);
+
+                    $session->set('user', $user);
+                    $session->regenerate();
+                }
+            }
+            else
+            {
+                $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
+            }
+        }
+    }
+    else
+    {
+        $errors['loginerror'] = "Please check your email address and password and try again.";
+    }
+
+    if (count($errors) > 0)
+    {
+        $app->flash('errors', $errors);
+        $session->remove('user');
+        $app->redirect($app->request->getRootUri() . '/login/');
+    }
+
+    $simple::redirect($app, $session);
+});
+
+$app->post('/register/', function () use ($app) {
+
+    $simple = $app->simple;
+    $session = $app->session;
+    $errors = array();
+
+    $username = trim($app->request()->post('username'));
+    $email = trim($app->request()->post('email'));
+    $password = trim($app->request()->post('regpassword'));
+    $confpassword = trim($app->request()->post('regpasswordconf'));
+
+    //need to check for 'emptiness' of inputs and display message instead of querying db
+    if ((! empty($email)) && (! empty($password) ) && ($password == $confpassword) )
+    {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            $errors['registererror'] = "The email address was invalid. Please try again.";
+        }
+        else
+        {
+            $user = new \SimpleQuiz\Utils\User\EndUser($email, $username);
+            $user->setPassword(password_hash($password,1));
+
+            try
+            {
+                $user = $simple->registerUser($user);
+                $session->set('user', $user);
+                $session->regenerate();
+            }
+            catch (\SimpleQuiz\Utils\Exceptions\RegisterException $e)
+            {
+                $errors['registererror'] = $e->getMessage();
+            }
+        }
+    }
+    else
+    {
+        $errors['registererror'] = "There was an error with your username or password. Please try again.";
+    }
+
+    if (count($errors) > 0)
+    {
+        $app->flash('errors', $errors);
+        $session->remove('user');
+        $app->redirect($app->request->getRootUri() . '/login/');
+    }
+
+    $simple::redirect($app, $session);
 });
 
 $app->get('/categories/', function () use ($app) {
@@ -37,8 +173,15 @@ $app->get('/categories/:id', function ($id) use ($app) {
     $categories = $simple->getCategories();
 
     $session = $app->session;
-
-    $app->render('category.php', array('category' => $category, 'quizzes' => $quizzes, 'categories' => $categories, 'session' => $session));
+    if( $category )
+    {
+        $app->render('category.php', array('category' => $category, 'quizzes' => $quizzes, 'categories' => $categories, 'session' => $session));
+    }
+    else
+    {
+        $quizzes = $simple->getQuizzes(true);
+        $app->render('index.php', array('quizzes' => $quizzes, 'categories' => $categories, 'session' => $session));
+    }
 })->conditions(array('id' => '\d+'));
 
 $app->get('/quiz/:id/', function ($id) use ($app) {
@@ -47,6 +190,9 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
     $error = '';
     if (isset($flash['usererror'])) {
         $error = $flash['usererror'];
+    }
+    if (isset($flash['quizerror'])) {
+        $error = $flash['quizerror'];
     }
     
     $quiz = $app->quiz;
@@ -57,6 +203,9 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
     $categories = $simple->getCategories();
 
     if ($quiz->setId($id)) {
+        /**
+         * @todo remove all session shite below and store in db
+         */
         $quiz->populateQuestions();
         $quiz->populateUsers();
         $session->set('quizid', $id);
@@ -76,9 +225,11 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
     }
 })->conditions(array('id' => '\d+'));
 
-$app->post('/quiz/process/', function () use ($app) {
+$app->post('/quiz/process/', $authenticate($app), function () use ($app) {
 
+    $simple = $app->simple;
     $id = $app->request()->post('quizid');
+    $starter = $app->request()->post('starter');
 
     if (! ctype_digit($id)) {
         $app->redirect($app->request->getRootUri().'/');
@@ -86,88 +237,56 @@ $app->post('/quiz/process/', function () use ($app) {
 
     $session = $app->session;
 
-    /**
-     * @todo check if serialised quiz exists in session before instantiating new
-     */
-//    if ($session->get('quiz'))
-//    {
-//        $quiz = serialize($session->get('quiz'));
-//    }
-//    else{
-//        $quiz = $app->quiz;
-//    }
-    $quiz = $app->quiz;
-
-    $simple = $app->simple;
-    $categories = $simple->getCategories();
-
-    if ($quiz->setId($id)) {
-        
-        $quiz->populateUsers();
-        
-        $submitter = $app->request()->post('submitter');
-        $register = $app->request()->post('register');
-        $username = $app->request()->post('username');
-        $num = $app->request()->post('num');
-        $answers = $app->request()->post('answers');
-        
-        $nonce = $app->request()->post('nonce');
-        
-        //check for a valid nonce to prevent cached submissions e.g (back button)
-        if ($session->get('nonce') != $nonce)
+    if (isset($starter)) //beginning of the quiz
+    {
+        if ($simple->quizUserExists($id, $session->get('user')->getId()))
         {
-            $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+            $app->flash('quizerror', "You've already taken this quiz");
+            $app->redirect($app->request->getRootUri() . '/quiz/' . $id);
         }
+        $session->set('score', 0);
+        $session->set('correct', array());
+        $session->set('wrong', array());
+        $session->set('finished', 'no');
+        $session->set('num', 0);
+        $session->set('starttime', date('Y-m-d H:i:s'));
 
-        if (! isset($submitter)) { //register a user unless auth not required
-            if (! SimpleQuiz\Utils\Base\Config::$requireauth) {
-                $username = SimpleQuiz\Utils\Base\Config::$defaultUser;
-                if ($quiz->registerUser($username)) {
-                    $session->set('user', $username);
-                    $session->set('score', 0);
-                    $session->set('correct', array());
-                    $session->set('wrong', array());
-                    $session->set('finished', 'no');
-                    $session->set('num', 0);
-                    $session->set('starttime', date('Y-m-d H:i:s'));
+        $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+    }
+    else
+    { //quiz logic
 
-                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
-                } else {
-                    $app->flash('usererror', 'That name is already registered, please choose another.');
-                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
-                }
+        /**
+         * @todo check if serialised quiz exists in session before instantiating new
+         */
+        //    if ($session->get('quiz'))
+        //    {
+        //        $quiz = serialize($session->get('quiz'));
+        //    }
+        //    else{
+        //        $quiz = $app->quiz;
+        //    }
+        $quiz = $app->quiz;
+
+        $simple = $app->simple;
+        $categories = $simple->getCategories();
+
+        if ($quiz->setId($id))
+        {
+
+            $quiz->populateUsers();
+
+            $num = $app->request()->post('num');
+            $answers = $app->request()->post('answers');
+
+            $nonce = $app->request()->post('nonce');
+
+            //check for a valid nonce to prevent cached submissions e.g (back button)
+            if ($session->get('nonce') != $nonce)
+            {
+                $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
             }
-            else if (isset($register)) { //auth required, try and register a new user
-                if (empty($username)) {
-                    $app->flash('usererror', 'Please create a username.');
-                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
-                    
-                } else if ( (strlen($username) < 3) || (strlen($username) > 10)) {
-                    $app->flash('usererror', 'To register, please enter a username between 3 and 10 characters in length.');
-                    $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
-                    
-                } else {
-                    $username = trim(strip_tags(stripslashes($username)));
-                    if ($quiz->registerUser($username)) {
-                        $session->set('user', $username);
-                        $session->set('score', 0);
-                        $session->set('correct', array());
-                        $session->set('wrong', array());
-                        $session->set('finished', 'no');
-                        $session->set('num', 0);
-                        $session->set('starttime', date('Y-m-d H:i:s'));
 
-                        $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
-                    } else {
-                        $app->flash('usererror', 'That name is already registered, please choose another.');
-                        $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
-                    }
-                }
-            } else {
-                $app->flash('usererror', 'Please create a username.');
-                $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/');
-            }
-        } else { //quiz logic
             $quiz->populateQuestions();
             $quiz->populateUsers();
             $session->set('num', (int) $num);
@@ -175,29 +294,34 @@ $app->post('/quiz/process/', function () use ($app) {
             $numquestions = $quiz->countQuestions();
             $quizanswers = $quiz->getAnswers($num);
 
-            if ($answers == $quizanswers[0]) { //first answer in array is correct one
+            if ($answers == $quizanswers[0])
+            { //first answer in array is correct one
                 $score = $session->get('score');
                 $score++;
                 $session->set('score', $score);
-                $_SESSION['correct'][$num] = array($answers);
-            } else {
-                $_SESSION['wrong'][$num] = array($answers);
+                $_SESSION['correct'][ $num ] = array($answers);
+            } else
+            {
+                $_SESSION['wrong'][ $num ] = array($answers);
             }
-            if ($_SESSION['num'] < $numquestions) {
-                $_SESSION['num'] ++;
-            } else {
+            if ($_SESSION['num'] < $numquestions)
+            {
+                $_SESSION['num']++;
+            } else
+            {
                 $_SESSION['last'] = true;
                 $_SESSION['finished'] = 'yes';
             }
             $app->redirect($app->request->getRootUri() . '/quiz/' . $id . '/test');
+        } else
+        {
+            $app->flashnow('quizerror', 'There has been an error. Please return to the main quiz menu and try again');
+            $app->render('quiz/error.php', array('categories' => $categories, 'session' => $session));
         }
-    } else {
-        $app->flashnow('quizerror','There has been an error. Please return to the main quiz menu and try again');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
     }
 });
 
-$app->get('/quiz/:id/test/', function ($id) use ($app) {
+$app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
 
     $session = $app->session;
     
@@ -210,20 +334,13 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
         $app->stop();
     }
     
-    if (! $session->get('user')) {
-        $app->flashnow('quizerror','You need to register a username before taking a quiz');
-        $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
-        $app->stop();
-    }
-    
     $quiz = $app->quiz;
     /**
      * @todo implement serialize() on quiz object and store in session
      */
     if ($quiz->setId($id)) {
         $quiz->populateQuestions()->populateUsers();
-        //$quiz->populateUsers();
-        
+
         $timetaken = '';
         
         $nonce = md5(uniqid());
@@ -247,7 +364,8 @@ $app->get('/quiz/:id/test/', function ($id) use ($app) {
                 $timetaken = date("i:s", $time); //formatted as minutes:seconds
                 $_SESSION['timetaken'] = $timetaken;
                 if (SimpleQuiz\Utils\Base\Config::$requireauth) {
-                    $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime, $timetaken);
+                    $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime,
+                        $timetaken);
                 }
             } else {
                 $timetaken = $_SESSION['timetaken'];

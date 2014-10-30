@@ -1,4 +1,4 @@
-<?php 
+<?php
     include'quiz/header.php'; 
 ?>
     <div id="container" class="quiz">

@@ -8,7 +8,7 @@
                 $answers = $quiz->getAnswers($num);
             ?>
             <?php if ($requireauth) : ?>
-                <h4>Current tester: <strong><?php echo $user; ?></strong></h4>
+                <h4>Current tester: <strong><?php echo $user->getName(); ?></strong></h4>
             <?php endif; ?>
             <h2>Question <?php echo $num; ?>:</h2>
             <p><?php echo $question->getText(); ?></p>
@@ -30,24 +30,27 @@
                 <input type="hidden" name="nonce" value="<?php echo $nonce; ?>" />
                 <input type="hidden" name="num" value="<?php echo $num; ?>" />
                 <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
-                <input type="hidden" name="submitter" value="TRUE" />
                 <input type="submit" id="submit" class="btn btn-primary" name="submit" value="Submit Answer" />
             </p>
         </form>
-        <?php 
+        <?php
+            /**
+             * @todo extract following into helper function
+             */
         else :
             $timeportions = explode(':', $timetaken);
             $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
             $secs = $timeportions[1] . ' secs' ;
             $percentage = round(( (int) $session->get('score') / (int) $quiz->countQuestions() ) * 100);
             echo '<div id="finalscore">';
-            $user = $requireauth ? $user : "";
-            echo '<h2 id="score">' . $user . ' answered ' . $session->get('score') . ' correct out of a possible ' .
+            //$user = $requireauth ? $user : "";
+            echo '<h2 id="score">' . $user->getName() . ' answered ' . $session->get('score') . ' correct out of a
+            possible ' .
                 $quiz->countQuestions() . '</h2>' . PHP_EOL;
             echo '<h2 class="userscore">' .  $percentage . '%</h2>' . PHP_EOL;
             echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
 
-            echo '<p id="compare"><a href="'. $root . '/quiz/' . $quiz->getId() . '/results">See how you compare! <img src="images/arrow.png" /></a></p>';
+            echo '<p id="compare"><a href="'. $root . '/quiz/' . $quiz->getId() . '/results">See how you compare!</a></p>';
             echo '</div>';
         endif;
         ?>

@@ -1,5 +1,4 @@
 <?php
-//index.php
 #comment out the ini_set lines in production
 ini_set('error-reporting', E_ALL);
 ini_set('display_errors', 1);
@@ -20,8 +19,8 @@ $app = new \Slim\Slim(array(
 
 $app->session = $session;
 
-require '../routes/public.php';
 require '../routes/admin.php';
+require '../routes/public.php';
 
 $app->leaderboard = function() {
     return new \SimpleQuiz\Utils\LeaderBoard();

@@ -1,76 +1,32 @@
 <?php
-$authenticate = function ($app) {
-    
-    return function () use ($app) {
-        
-        if (! $app->session->get('adminuser')) {
-            $app->session->set('urlRedirect', $app->request()->getPathInfo());
-            $app->flash('error', 'Login required');
-            $app->redirect($app->request->getRootUri() . '/admin/login/');
+
+$authenticate = function ($app, $admin = false) {
+
+    return function () use ($app, $admin) {
+        //$errors = array();
+        if ($admin)
+        {
+            if (! $app->session->get('user') instanceof \SimpleQuiz\Utils\User\AdminUser)
+            {
+                $errors['loginerror'] = 'You do not have Administrator access.';
+                $app->session->set('urlRedirect', $app->request()->getPathInfo());
+                $app->flash('errors', $errors);
+                $app->redirect($app->request->getRootUri() . '/login/');
+            }
+        }
+        else if (\SimpleQuiz\Utils\Base\Config::$requireauth)
+        {
+            //stops admin user from taking quizzes too
+            if (! $app->session->get('user') instanceof \SimpleQuiz\Utils\User\EndUser)
+            {
+                $errors['loginerror'] = 'You need to login to take a quiz';
+                $app->session->set('urlRedirect', $app->request()->getPathInfo());
+                $app->flash('errors', $errors);
+                $app->redirect($app->request->getRootUri() . '/login/');
+            }
         }
     };
 };
-
-$app->get('/admin/login/', function () use ($app) {
-    
-    $session = $app->session;
-
-    $app->render('admin/login.php', array('session' => $session));
-});
-
-$app->post('/admin/login/', function () use ($app) {
-    
-    $session = $app->session;
-    $errors = array();
-    
-    $email = trim($app->request()->post('email'));
-    $password = trim($app->request()->post('password'));
-    
-    //need to check for 'emptiness' of inputs and display message instead of querying db
-    if ((! empty($email)) && (! empty($password) ) )
-    {
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['loginerror'] = "The email was invalid. Please try again.";
-        }
-        else {
-            //process inputs
-            $authsql = \ORM::for_table('users')->select_many('pass','name')->where('email', $email)->where('level', 1)->find_one();
-            
-            //verify the password against hash
-            if (! password_verify($password, $authsql->pass)) {
-                
-                $errors['loginerror'] = "The email or password do not match those in our system. Please try again.";
-            } else {
-                $name = $authsql->name;
-            }
-        }
-    }
-    else {
-        $errors['loginerror'] = "Please try again.";
-    }
-    
-    if (count($errors) > 0) {
-        $app->flash('errors', $errors);
-        $session->remove('user');
-        $session->remove('adminuser');
-        $app->redirect($app->request->getRootUri() . '/admin/login/');
-    }
-    
-    // We have a valid admin user
-    $session->set('adminuser', true);
-    $session->set('user', $name);
-    $session->regenerate();
-
-    // redirect them to intended url if not index
-    if ($session->get('urlRedirect')) {
-       $tmp = $session->get('urlRedirect');
-       $session->remove('urlRedirect');
-       $app->redirect($app->request->getRootUri() . $tmp);
-    }
-    
-    //logged in with no url 
-    $app->redirect($app->request->getRootUri() . '/admin/');
-});
 
 $app->get("/logout/", function () use ($app) {
     $session = $app->session;
@@ -78,7 +34,7 @@ $app->get("/logout/", function () use ($app) {
     $app->redirect($app->request->getRootUri().'/');
 });
 
-$app->get('/admin/', $authenticate($app), function () use ($app) {
+$app->get('/admin/', $authenticate($app, true), function () use ($app) {
     
     $simple = $app->simple;
     $quizzes = $simple->getQuizzes(false);
@@ -87,7 +43,7 @@ $app->get('/admin/', $authenticate($app), function () use ($app) {
     $app->render('admin/index.php', array('quizzes' => $quizzes, 'categories' => $categories));
 });
 
-$app->post("/admin/quiz/", $authenticate($app), function() use ($app) {
+$app->post("/admin/quiz/", $authenticate($app, true), function() use ($app) {
     
     $quizmeta = array();
     
@@ -121,7 +77,7 @@ $app->post("/admin/quiz/", $authenticate($app), function() use ($app) {
         
 });
 
-$app->put("/admin/quiz/", $authenticate($app), function() use ($app) {
+$app->put("/admin/quiz/", $authenticate($app, true), function() use ($app) {
     
     $quizmeta = array();
     
@@ -158,7 +114,7 @@ $app->put("/admin/quiz/", $authenticate($app), function() use ($app) {
         
 });
 
-$app->delete("/admin/quiz/", $authenticate($app), function() use ($app) {
+$app->delete("/admin/quiz/", $authenticate($app, true), function() use ($app) {
     
     $quizid = trim($app->request->post('quizid'));
     
@@ -179,7 +135,7 @@ $app->delete("/admin/quiz/", $authenticate($app), function() use ($app) {
         
 });
 
-$app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+$app->get("/admin/quiz/:id/", $authenticate($app, true), function($id) use ($app) {
 
     $quiz = $app->quiz;
     
@@ -194,7 +150,7 @@ $app->get("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
 })->conditions(array('id' => '\d+'));
 
 
-$app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+$app->put("/admin/quiz/:id/", $authenticate($app, true), function($id) use ($app) {
     
     $questionid = $app->request->put('questionid');
     $text = $app->request->put('questiontext');
@@ -228,7 +184,7 @@ $app->put("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         
 });
 
-$app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+$app->post("/admin/quiz/:id/", $authenticate($app, true), function($id) use ($app) {
     
     if  (! ctype_digit($id)) {
         $app->redirect($app->request->getRootUri().'/admin/');
@@ -260,7 +216,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
             $i++;
         }
         try {
-            $quiz->addQuestion($question, $answers);
+            $quiz->addQuestion($question, 'radio', $answers);
             $app->flashnow('success', 'New Question saved successfully');
         } catch (Exception $e ) {
             $app->flashnow('error', 'An error occurred creating a new question');
@@ -275,7 +231,7 @@ $app->post("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         
 });
 
-$app->delete("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
+$app->delete("/admin/quiz/:id/", $authenticate($app, true), function($id) use ($app) {
     
     $questionid = $app->request->post('questionid');
             
@@ -298,7 +254,8 @@ $app->delete("/admin/quiz/:id/", $authenticate($app), function($id) use ($app) {
         
 });
 
-$app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
+$app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app, true), function($quizid,
+                                                                                           $questionid) use ($app) {
    
     $quiz = $app->quiz;
     
@@ -313,7 +270,8 @@ $app->get("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app),
         
 })->conditions(array('quizid' => '\d+', 'questionid' => '\d+'));
 
-$app->put("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app), function($quizid, $questionid) use ($app) {
+$app->put("/admin/quiz/:quizid/question/:questionid/edit/", $authenticate($app, true), function($quizid,
+                                                                                           $questionid) use ($app) {
    
     if ( (! ctype_digit($quizid)) || (! ctype_digit($questionid))) {
         $app->redirect($app->request->getRootUri().'/admin/');

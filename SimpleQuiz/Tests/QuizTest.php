@@ -37,6 +37,14 @@ class QuizTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
+    public function testGetIdReturnsInt()
+    {
+        $this->quiz->setId(1);
+        $result = $this->quiz->getId();
+
+        $this->assertInternalType('int', $result);
+    }
+
     public function testGetQuestionReturnsObject() {
 
         $this->quiz->setId(8);

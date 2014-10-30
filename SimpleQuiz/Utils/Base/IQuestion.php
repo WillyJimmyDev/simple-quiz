@@ -4,7 +4,7 @@
 namespace SimpleQuiz\Utils\Base;
 
 
-interface QuestionInterface {
+interface IQuestion {
 
     public function getId();
 

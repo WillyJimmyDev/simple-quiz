@@ -1,9 +1,10 @@
 <?php
 namespace SimpleQuiz\Utils;
 
+use SimpleQuiz\Utils\Base\User;
 use Slim\Helper\Set;
 
-class Quiz implements Base\QuizInterface {
+class Quiz implements Base\IQuiz {
 
     protected $_id;
     protected $_name;
@@ -47,11 +48,11 @@ class Quiz implements Base\QuizInterface {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
-        return $this->_id;
+        return (int) $this->_id;
     }
 
     /**
@@ -146,10 +147,11 @@ class Quiz implements Base\QuizInterface {
 
     /**
      * @param $text
+     * @param $type
      * @param array $answers
      * @return bool
      */
-    public function addQuestion($text, Array $answers)
+    public function addQuestion($text, $type, Array $answers)
     {
         $max = \ORM::for_table('questions')->where('quiz_id', $this->_id)->max('num');
         $num = $max + 1;
@@ -165,8 +167,10 @@ class Quiz implements Base\QuizInterface {
         //save the new question in db then add to the question storage
         if ($newquestion->save())
         {
+            //create a question of desired type
+            $questionType = ucfirst($type) . 'Question';
             //create a new Question instance
-            $this->_question = new RadioQuestion($newquestion->id(),$num, $this->_id, $text);
+            $this->_question = new $questionType($newquestion->id(),$num, $this->_id, $text);
             $this->_question->addAnswers($answers);
             $this->_questions->attach($this->_question);
 
@@ -282,34 +286,15 @@ class Quiz implements Base\QuizInterface {
     }
 
     /**
-     * @param $username
-     * @return bool
-     */
-    public function registerUser($username)
-    {
-        //assuming no auth required
-        if ($username == Base\Config::$defaultUser) {
-            return true;
-        }
-        foreach ($this->_users as $user) {
-            if ($user['name'] == $username) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param $user
+     * @param User $user
      * @param $score
      * @param $start
      * @param $end
      * @param $timetaken
      * @return bool
      */
-    public function addQuizTaker($user,$score,$start,$end,$timetaken)
+    public function addQuizTaker(User $user,$score,$start,$end,$timetaken)
     {
-        $this->_leaderboard->addMember($this->_id, $user,$score,$start,$end,$timetaken);
-        return true;
+        return $this->_leaderboard->addMember($this->_id, $user,$score,$start,$end,$timetaken);
     }
 }

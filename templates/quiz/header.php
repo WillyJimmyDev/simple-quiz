@@ -32,15 +32,26 @@ $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
               <li class="dropdown active">
                 <a href="<?php echo $root; ?>/categories/" class="dropdown-toggle" data-toggle="dropdown">Categories <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <?php foreach ($categories as $category): ?>
-                       <li><a href="<?php echo $root; ?>/categories/<?php echo $category->id ;?>"><?php echo $category->name; ?></a></li> 
+                    <?php foreach ($categories as $cat): ?>
+                       <li><a href="<?php echo $root; ?>/categories/<?php echo $cat->id ;?>"><?php echo $cat->name; ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="<?php echo $root; ?>/admin/">Admin</a></li>
+              <?php if ($user): ?>
+                  <li><a href="<?php echo $root; ?>/logout/">Logout</a></li>
+                  <?php if($user->isAdmin()) :?>
+                      <li><a href="<?php echo $root; ?>/admin/">Admin</a></li>
+                  <?php endif; ?>
+              <?php else : ?>
+                  <li><a href="<?php echo $root; ?>/login/">Login</a></li>
+              <?php endif; ?>
           </ul>
+            <?php if ($user) : ?>
+                <p class="signed navbar-text pull-right"><span class="glyphicon glyphicon-user"></span> Signed in as
+                <strong><?php echo $user->getName(); ?></strong></p>
+            <?php endif; ?>
         </div><!--/.nav-collapse -->
       </div>
     </div>

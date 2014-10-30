@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-5 col-md-offset-2">
                 <?php if ($requireauth) : ?>
-                    <h2>The Results Page For <span><?php echo $user;  ?></span></h2> 
+                    <h2>The Results Page For <span><?php echo $user->getName();  ?></span></h2>
                 <?php else: ?>
                     <h2>The Results Page</h2>
                 <?php endif; ?>
@@ -61,7 +61,7 @@
                     foreach ($leaders as $leader) :
                         $name = '';
                         //if current user, bolden the username
-                        if ($leader['name'] == $user) :
+                        if ($leader['name'] == $user->getName()) :
                             $name = '<strong class="currentuser">' . $leader['name'] . '</strong>';
                         else:
                             $name = $leader['name'];

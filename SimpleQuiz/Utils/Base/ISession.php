@@ -7,7 +7,7 @@ namespace SimpleQuiz\Utils\Base;
  *  
  */
 
-interface SessionInterface {
+interface ISession {
 
     public function set($key, $value);
     

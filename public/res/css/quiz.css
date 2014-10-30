@@ -21,6 +21,7 @@
 #leaders-score {
     padding:10px;
     background: #f8f8f8;
+    margin-bottom: 20px;
 }
 ul {
     list-style: none;
@@ -82,3 +83,4 @@ a#editor {cursor:pointer;}
 #updater, #ajaxupdater {display:none;position: absolute;width:30%; text-align: center;left:25%;}
 p.signed {padding-right:20px;}
 .helper { display:none;}
+#submitstart{padding: 10px 30px;}

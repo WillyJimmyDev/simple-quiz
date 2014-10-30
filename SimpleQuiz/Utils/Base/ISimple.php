@@ -1,7 +1,7 @@
 <?php
 namespace SimpleQuiz\Utils\Base;
 
-interface SimpleInterface {
+interface ISimple {
     
     public function addQuiz(Array $quizmeta);
     

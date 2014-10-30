@@ -1,7 +1,7 @@
 <?php
 namespace SimpleQuiz\Utils\Base;
 
-interface QuizInterface {
+interface IQuiz {
     
     public function setId($id);
     
@@ -19,7 +19,7 @@ interface QuizInterface {
     
     public function addAnswers($questionid, Array $answers);
     
-    public function addQuestion($question, Array $answers);
+    public function addQuestion($question, $type, Array $answers);
     
     public function updateQuestion ($questionnum, $text);
     
@@ -43,7 +43,5 @@ interface QuizInterface {
     
     public function getLeaders($num);
     
-    public function registerUser($username);
-    
-    public function addQuizTaker($user,$score,$start,$end,$timetaken);
+    public function addQuizTaker(User $user,$score,$start,$end,$timetaken);
 }

@@ -5,7 +5,7 @@ namespace SimpleQuiz\Utils;
  * Basic session class to store sessions in db
  */
 
-class Session implements Base\SessionInterface {
+class Session implements Base\ISession {
 
     public function __construct() {
         

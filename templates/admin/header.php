@@ -38,7 +38,8 @@
                 </ul>
             </li>
           </ul>
-            <p class="signed navbar-text pull-right"><span class="glyphicon glyphicon-user"></span> Signed in as <strong><?php echo $user; ?></strong></p>
+            <p class="signed navbar-text pull-right"><span class="glyphicon glyphicon-user"></span> Signed in as
+                <strong><?php echo $user->getName(); ?></strong></p>
         </div><!--/.nav-collapse -->
       </div>
     </div>

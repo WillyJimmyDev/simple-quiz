@@ -1,7 +1,11 @@
 <?php
 namespace SimpleQuiz\Utils;
 
-class Simple implements Base\SimpleInterface {
+use SimpleQuiz\Utils\Base\User;
+use SimpleQuiz\Utils\Exceptions\RegisterException;
+use Slim\Slim;
+
+class Simple implements Base\ISimple {
     
     public function addQuiz(Array $quizmeta)
     {
@@ -51,7 +55,9 @@ class Simple implements Base\SimpleInterface {
     
     public function getCategories($active = true) {
         if ($active) {
-            $categories = \ORM::for_table('categories')->join('quizzes', array('quizzes.category', '=', 'categories.id'))->select_many('categories.id','categories.name','categories.description','quizzes.category')->find_many(); 
+            $categories = \ORM::for_table('categories')->join('quizzes', array('quizzes.category', '=',
+                'categories.id'))->select_many('categories.id','categories.name','categories.description',
+                'quizzes.category','quizzes.active')->where('quizzes.active', 1)->find_many();
         }
         else {
             $categories = \ORM::for_table('categories')->find_many();
@@ -73,8 +79,71 @@ class Simple implements Base\SimpleInterface {
         return $quizzes;
     }
     
-    public function getUsers($quizid = false)
+    public function getUsers($quizid = true)
     {
-        
+//        if($quizid)
+//        {
+//            $users = \ORM::for_table('quiz_users')->join('quizzes', array('quiz_users.quiz_id', '=',
+//                'quizzes.id'))->join('users', array('quiz_users.user_id', '=', 'users.id'))->select_many('users.name')
+//            ;
+//        }
+    }
+
+    public function quizUserExists($quizid, $userid){
+
+        $user = \ORM::for_table('quiz_users')->where( array('quiz_id' => $quizid, 'user_id' => $userid) )->find_one();
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     * @return User $user
+     * @throws RegisterException
+     */
+    public function registerUser(User $user)
+    {
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+
+        $userexists =  \ORM::for_table('users')->where_any_is(
+                array(
+                    array('name' => $name),
+                    array('email' => $email)
+                )
+            )->find_one();
+
+        if ($userexists)
+        {
+            throw new RegisterException;
+        }
+        else
+        {
+            //register a new user
+            $newuser = \ORM::for_table('users')->create();
+            $newuser->set('name', $name);
+            $newuser->set('email', $email);
+            $newuser->set('pass', $password);
+            $newuser->save();
+            $user->setId($newuser->id());
+
+            return $user;
+        }
+    }
+
+    public static function redirect(Slim $app, Session $session){
+
+        // redirect them to intended url if not index
+        if ($session->get('urlRedirect'))
+        {
+            $tmp = $session->get('urlRedirect');
+            $session->remove('urlRedirect');
+            $app->redirect($app->request->getRootUri() . $tmp);
+        }
+        else
+        {
+            //log them in with no redirect url
+            $app->redirect($app->request->getRootUri() . '/');
+        }
     }
 }

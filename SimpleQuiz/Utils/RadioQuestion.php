@@ -4,9 +4,9 @@
 namespace SimpleQuiz\Utils;
 
 
-use SimpleQuiz\Utils\Base\QuestionInterface;
+use SimpleQuiz\Utils\Base\IQuestion;
 
-class RadioQuestion implements QuestionInterface {
+class RadioQuestion implements IQuestion {
 
     protected $_id;
     protected $_num;
