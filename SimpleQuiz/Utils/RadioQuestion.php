@@ -95,7 +95,7 @@ class RadioQuestion implements IQuestion {
      */
     public function deleteAnswers()
     {
-        \ORM::for_table('answers')->where('quiz_id', $this->_id)->where('question_num',
+        \ORM::for_table('answers')->where('quiz_id', $this->_quizid)->where('question_num',
             $this->_num)->delete_many();
 
         return true;
