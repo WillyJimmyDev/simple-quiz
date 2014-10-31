@@ -24,30 +24,72 @@ Within the download you'll find the following directories and files:
     /
     ├── SimpleQuiz/
     │   ├── Utils/
-    │       ├── Base/
-    │       │   ├── Config.php
-    │       │   ├── Installer.php
-    │       │   ├── LeaderBoardInterface.php
-    │       │   ├── QuizInterface.php
-    │       │   ├── SessionInterface.php
-    │       │   ├── SimpleInterface.php
-    │       │   ├── UserInterface.php
-    │       │   └── setup.php
-    │       ├── LeaderBoard.php
-    │       ├── Quiz.php
-    │       ├── Session.php
-    │       └── Simple.php
-    │       └── User.php
+    │   │   ├── Base/
+    │   │   │   ├── Config.php
+    │   │   │   ├── Installer.php
+    │   │   │   ├── IQuestion.php    
+    │   │   │   ├── IQuiz.php
+    │   │   │   ├── ISession.php
+    │   │   │   ├── ISimple.php
+    │   │   │   ├── User.php
+    │   │   │   └── setup.php
+    │   │   ├── Exceptions/
+    │   │   │   ├── LoginException.php        
+    │   │   │   ├── RegisterException.php 
+    │   │   ├── User/ 
+    │   │   │   ├── AdminUser.php
+    │   │   │   ├── EndUser.php
+    │   │   │   ├── GuestUser.php                   
+    │   │   ├── LeaderBoard.php
+    │   │   ├── Quiz.php
+    │   │   ├── QuestionStorage.php    
+    │   │   ├── Session.php
+    │   │   └── Simple.php
+    │   │   └── RadioQuestion.php
+    │   ├── Tests/
+    │       ├── Base/      
+    │       │   ├── InstallerTest.php
+    │       └── QuizTest.php
     ├── public/ (**this is your document root**)
     │   ├── images/
+    │   │    ├── ajax-loader.gif
+    │   │    ├── sq.png   
     │   ├── res/
     │   │    ├── bootstrap/
+    │   │    │      ├── assets/ 
+    │   │    │      ├── dist/  
     │   │    ├── css/
+    │   │    │      ├── quiz.css  
     │   │    ├── js/
+    │   │    │      ├── admin.js
+    │   │    │      ├── form.js 
+    │   │    │      ├── general.js 
+    │   │    │      ├── login.js
+    │   │    │      ├── start.js                  
     │   ├── .htaccess
     │   └── index.php
     ├── routes/
+    │   ├── admin.php
+    │   ├── public.php        
     ├── templates/
+    │   ├── admin/
+    │   │    ├── editanswers.php
+    │   │    ├── footer.php
+    │   │    ├── header.php
+    │   │    ├── index.php
+    │   │    ├── login.php    
+    │   │    └── quiz.php     
+    │   ├── quiz/
+    │   │    ├── error.php    
+    │   │    ├── footer.php  
+    │   │    ├── header.php  
+    │   │    ├── quiz.php  
+    │   │    ├── results.php  
+    │   │    ├── test.php                      
+    │   ├── category.php 
+    │   ├── index.php
+    │   ├── login.php
+    │   └── requirements.php                     
     └── vendor/
 
 

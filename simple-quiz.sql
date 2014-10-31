@@ -253,10 +253,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `name`, `pass`, `email`, `level`) VALUES
 (157, 'Admin', '$2y$10$LK9O0BesGScRkDWPnpVP3uGVcN6JqB/xsuFTq/xQFpNjsx2DvTOl2', 'example@gmail.com', 1),
-(192, 'dsa', '$2y$10$D2tpVb9i6GsPawn1H18tCu2s.2T9uHHWMQY7Osyeh12AzJsJ9Y5VO', 'examples@gmail.com', 0),
-(193, 'benny the king', '$2y$10$DOueZ880b4buKA2sm0a67OzZNSfv3ev7DT31tI53Moq1pGA9h/Dx6', 'example2@gmail.com', 0),
-(194, 'anyone', '$2y$10$cUcIj1qyd1rWYE3vQTXW8emBx27Je9ZWcgNMDUnKN3a5n9kCED/S2', 'example@gmail.com1', 0),
-(195, 'dsadsa', '$2y$10$n1Y3HJSwWxq0toQa8pQzb.kra1mfMySsaCsC/bH0/oE3oMNLM7GmO', 'example@gmail.com432432', 0);
+(192, 'user1', '$2y$10$D2tpVb9i6GsPawn1H18tCu2s.2T9uHHWMQY7Osyeh12AzJsJ9Y5VO', 'examples@gmail.com', 0),
+(193, 'user2', '$2y$10$DOueZ880b4buKA2sm0a67OzZNSfv3ev7DT31tI53Moq1pGA9h/Dx6', 'example2@gmail.com', 0),
+(194, 'user3', '$2y$10$cUcIj1qyd1rWYE3vQTXW8emBx27Je9ZWcgNMDUnKN3a5n9kCED/S2', 'example@gmail.com1', 0),
+(195, 'user3', '$2y$10$n1Y3HJSwWxq0toQa8pQzb.kra1mfMySsaCsC/bH0/oE3oMNLM7GmO', 'example@gmail.com432432', 0);
 
 --
 -- Constraints for dumped tables
