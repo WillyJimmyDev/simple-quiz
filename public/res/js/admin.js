@@ -1,5 +1,5 @@
 $(function(){
-
+    $('#updater').fadeIn('slow').delay(2000).fadeOut('slow');
     var context = $('#contextual');
     var context2 = $('#contextual2');
     var addanswer = $('#addanswer');

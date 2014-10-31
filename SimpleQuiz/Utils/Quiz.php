@@ -252,6 +252,9 @@ class Quiz implements Base\IQuiz {
 
         foreach ($quizquestions as $question)
         {
+            /**
+             * @todo make the instance name dynamic
+             */
             $questionObject = new RadioQuestion($question['id'], $question['num'], $this->_id, $question['text']);
             $this->_questions->attach($questionObject);
         }
