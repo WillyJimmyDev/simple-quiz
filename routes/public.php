@@ -187,7 +187,8 @@ $app->get('/categories/:id', function ($id) use ($app) {
 $app->get('/quiz/:id/', function ($id) use ($app) {
     
     $flash = $app->view()->getData('flash'); 
-    $error = '';
+    $error = null;
+
     if (isset($flash['usererror'])) {
         $error = $flash['usererror'];
     }
@@ -261,7 +262,7 @@ $app->post('/quiz/process/', $authenticate($app), function () use ($app) {
          */
         //    if ($session->get('quiz'))
         //    {
-        //        $quiz = serialize($session->get('quiz'));
+        //        $quiz = unserialize($session->get('quiz'));
         //    }
         //    else{
         //        $quiz = $app->quiz;
@@ -403,9 +404,6 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
         $quiz->populateQuestions();
         $quiz->populateUsers();
         $session->set('last', null);
-
-        //destroy the session
-        $session->end();
 
         $app->render('quiz/results.php', array('quiz' => $quiz, 'categories' => $categories, 'session' => $session));
     } else {

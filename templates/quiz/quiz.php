@@ -1,17 +1,13 @@
-<?php 
+<?php
     include'header.php';
     $numquestions = $quiz->countQuestions();
     $leadersToShow = 10;
 ?>
     <div id="container" class="quiz">
       <div class="row">
-          <?php
-          /**
-           * @todo make error message pop/fade away
-           */
-          ?>
-          <?php if (isset($error)) echo $error; ?>
           <div id="intro" class="col-md-6 col-md-offset-3">
+              <?php if (isset($error)) { echo '<div id="updater" class="alert alert-danger">'.$error
+                  .'</div>'; } ?>
           <h2><?php echo $quiz->getName(); ?></h2>
           <h4><?php echo $quiz->getDescription(); ?></h4>
           <p>Once you have started the quiz, you must answer all of the questions. If you try to go back to the previous question, your score will be reset and you will be sent back to the start.</p>

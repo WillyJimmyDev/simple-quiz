@@ -91,8 +91,7 @@ class Simple implements Base\ISimple {
 
     public function quizUserExists($quizid, $userid){
 
-        $user = \ORM::for_table('quiz_users')->where( array('quiz_id' => $quizid, 'user_id' => $userid) )->find_one();
-        return $user;
+        return \ORM::for_table('quiz_users')->where( array('quiz_id' => $quizid, 'user_id' => $userid) )->find_one();
     }
 
     /**
@@ -131,18 +130,21 @@ class Simple implements Base\ISimple {
         }
     }
 
-    public static function redirect(Slim $app, Session $session){
+    public static function redirect(Slim $app, Session $session, $forward = false){
 
-        // redirect them to intended url if not index
-        if ($session->get('urlRedirect'))
+        // redirect them to intended url if required
+        if ($forward)
         {
-            $tmp = $session->get('urlRedirect');
-            $session->remove('urlRedirect');
-            $app->redirect($app->request->getRootUri() . $tmp);
+            if ($session->get('urlRedirect'))
+            {
+                $tmp = $session->get('urlRedirect');
+                $session->remove('urlRedirect');
+                $app->redirect($app->request->getRootUri() . $tmp);
+            }
         }
         else
         {
-            //log them in with no redirect url
+            //log them in and send to home page
             $app->redirect($app->request->getRootUri() . '/');
         }
     }

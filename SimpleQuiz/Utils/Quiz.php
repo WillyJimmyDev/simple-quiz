@@ -168,7 +168,7 @@ class Quiz implements Base\IQuiz {
         if ($newquestion->save())
         {
             //create a question of desired type
-            $questionType = ucfirst($type) . 'Question';
+            $questionType = __NAMESPACE__  . '\\' . ucfirst($type) . 'Question';
             //create a new Question instance
             $this->_question = new $questionType($newquestion->id(),$num, $this->_id, $text);
             $this->_question->addAnswers($answers);

@@ -6,5 +6,6 @@
         <?php if (! $session->get('last')) : ?>
         <script type="text/javascript" src="<?php echo $root; ?>/res/js/form.js"></script>
         <?php endif; ?>
+    <script type="text/javascript" src="<?php echo $root; ?>/res/js/general.js"></script>
 </body>
 </html>
