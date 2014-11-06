@@ -2,8 +2,8 @@
 <div id="container" class="quiz">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-        <?php 
-            if (! $session->get('last') ) : 
+        <?php
+        if (! $session->get('last') ) :
                 $question = $quiz->getQuestion($num);
                 $answers = $quiz->getAnswers($num);
             ?>
@@ -33,27 +33,19 @@
                 <input type="submit" id="submit" class="btn btn-primary" name="submit" value="Submit Answer" />
             </p>
         </form>
-        <?php
-            /**
-             * @todo extract following into helper function
-             */
-        else :
-            $timeportions = explode(':', $timetaken);
-            $mins = $timeportions[0] == '00' ? '' : ltrim($timeportions[0],'0') . ' mins ';
-            $secs = $timeportions[1] . ' secs' ;
-            $percentage = round(( (int) $session->get('score') / (int) $quiz->countQuestions() ) * 100);
-            echo '<div id="finalscore">';
-            //$user = $requireauth ? $user : "";
-            echo '<h2 id="score">' . $user->getName() . ' answered ' . $session->get('score') . ' correct out of a
-            possible ' .
-                $quiz->countQuestions() . '</h2>' . PHP_EOL;
-            echo '<h2 class="userscore">' .  $percentage . '%</h2>' . PHP_EOL;
-            echo '<h3 id="time">Time Taken: ' . $mins.$secs . '</h3>' . PHP_EOL;
+        <?php else:
+            $percentage = round(((int) $session->get('score') / (int) $quiz->countQuestions()) * 100);
+            ?>
+            <div id="finalscore">
+            <h2 id="score"><?php echo $user->getName(); ?> answered <?php echo $session->get('score'); ?> correct out
+                of a possible <?php echo $quiz->countQuestions(); ?></h2>
+            <h2 class="userscore"><?php echo $percentage; ?>%</h2>
+            <h3 id="time">Time Taken: <?php echo $timetaken['mins'] . $timetaken['secs']; ?></h3>
 
-            echo '<p id="compare"><a href="'. $root . '/quiz/' . $quiz->getId() . '/results">See how you compare!</a></p>';
-            echo '</div>';
-        endif;
-        ?>
+            <p id="compare"><a href="<?php echo $root; ?>/quiz/<?php echo $quiz->getId(); ?>/results">See how you
+            compare!</a></p>
+            </div>
+        <?php endif; ?>
         </div>
     </div>
 </div><!--container-->

@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="shortcut icon" href="<?php echo $root; ?>/favicon.ico">
     <link rel="stylesheet" href="<?php echo $root; ?>/res/bootstrap/dist/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="<?php echo $root; ?>/res/css/quiz.css" />
     <title>Simple Quiz :: Admin</title>

@@ -336,6 +336,7 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
     }
     
     $quiz = $app->quiz;
+
     /**
      * @todo implement serialize() on quiz object and store in session
      */
@@ -359,21 +360,26 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
 
             //store $timetaken in session
             if (!isset($_SESSION['timetaken'])) {
+
                 $end = time();
                 $start = strtotime($starttime);
                 $time = $end - $start;
-                $timetaken = date("i:s", $time); //formatted as minutes:seconds
+
+                $timetaken = calculateTimeTaken($time);
+
                 $_SESSION['timetaken'] = $timetaken;
                 if (SimpleQuiz\Utils\Base\Config::$requireauth) {
                     $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime,
-                        $timetaken);
+                        $time);
                 }
             } else {
                 $timetaken = $_SESSION['timetaken'];
             }
         }
 
-        $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'nonce' => $nonce, 'timetaken' => $timetaken, 'categories' => $categories, 'session' => $session));
+        $app->render('quiz/test.php', array('quiz' => $quiz, 'num' => $num, 'nonce' => $nonce,
+                                            'timetaken' => $timetaken, 'categories' =>
+        $categories, 'session' => $session));
     } else {
         $app->flashnow('quizerror','The quiz you have selected does not exist. Return to the main menu to try again');
         $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
