@@ -10,17 +10,18 @@ $app->get('/', function () use ($app) {
 });
 
 $app->get('/requirements/', function () use ($app) {
-    
+
     $installer = $app->installer;
     $requirements = $installer->getRequirements();
     $simple = $app->simple;
     $categories = $simple->getCategories();
-    
+
     $app->render('requirements.php', array( 'categories' => $categories,'requirements' => $requirements));
-    
+
 });
 
-$app->get('/login/', function () use ($app) {
+//route for 'get' on login or register
+$app->get('/:route/', function () use ($app) {
 
     $flash = $app->view()->getData('flash');
     $errors = isset($flash['errors']) ? $flash['errors'] : false;
@@ -37,7 +38,7 @@ $app->get('/login/', function () use ($app) {
 
     $app->render('login.php', array('quizzes' => $quizzes, 'categories' => $categories, 'session' => $session,
                                     'errors' => $errors));
-});
+})->conditions(array("route" => "(login|register)"));
 
 $app->post('/login/', function () use ($app) {
 
@@ -109,6 +110,8 @@ $app->post('/login/', function () use ($app) {
 $app->post('/register/', function () use ($app) {
 
     $simple = $app->simple;
+    $quizzes = $simple->getQuizzes(true);
+    $categories = $simple->getCategories();
     $session = $app->session;
     $errors = array();
 
@@ -132,8 +135,18 @@ $app->post('/register/', function () use ($app) {
             try
             {
                 $user = $simple->registerUser($user);
-                $session->set('user', $user);
-                $session->regenerate();
+
+                $mailer = new \SimpleQuiz\Utils\Base\Mailer();
+                if ( $mailer->sendConfirmationEmail($user))
+                {
+                    $session->set('user', $user);
+                    $session->regenerate();
+                }
+            }
+            catch (\Swift_TransportException $e)
+            {
+                $errors['registererror'] = 'There was an error trying to send a confirmation email. Please contact an
+                 Administrator';
             }
             catch (\SimpleQuiz\Utils\Exceptions\RegisterException $e)
             {
@@ -153,7 +166,47 @@ $app->post('/register/', function () use ($app) {
         $app->redirect($app->request->getRootUri() . '/login/');
     }
 
-    $simple::redirect($app, $session);
+    //$simple::redirect($app, $session);
+    $app->render('emailsent.php', array('quizzes' => $quizzes, 'categories' => $categories,
+                                             'session' => $session));
+});
+
+$app->get('/confirm-registration/:hash', function($hash) use ($app) {
+
+    $simple = $app->simple;
+    $quizzes = $simple->getQuizzes(true);
+    $categories = $simple->getCategories();
+    $session = $app->session;
+
+    if ( strlen($hash) == 40 )
+    {
+        /**
+         * @todo lookup user with valid confirmhash field
+         * then check for valid expiry time for hashstamp
+         * if all valid, update fields and redirect to login screen
+         * else say there has been an error, please contact admin etc
+         */
+        $user = \ORM::for_table('users')->select_many('id', 'hashstamp')->where('confirmhash', $hash)->find_one();
+        if ($user)
+        {
+            // null timestamp and hash, set to confirmed status
+            $user->set('hashstamp');
+            $user->set('confirmhash');
+            $user->set('confirmed', 1);
+            $user->save();
+
+            $app->render('emailconfirmed.php', array('quizzes' => $quizzes, 'categories' => $categories,
+                                                      'session' => $session));
+        }
+        else
+        {
+            //no user with that hash
+        }
+    }
+    else
+    {
+        // not a correct hash
+    }
 });
 
 $app->get('/categories/', function () use ($app) {
@@ -185,8 +238,8 @@ $app->get('/categories/:id', function ($id) use ($app) {
 })->conditions(array('id' => '\d+'));
 
 $app->get('/quiz/:id/', function ($id) use ($app) {
-    
-    $flash = $app->view()->getData('flash'); 
+
+    $flash = $app->view()->getData('flash');
     $error = null;
 
     if (isset($flash['usererror'])) {
@@ -195,11 +248,11 @@ $app->get('/quiz/:id/', function ($id) use ($app) {
     if (isset($flash['quizerror'])) {
         $error = $flash['quizerror'];
     }
-    
+
     $quiz = $app->quiz;
 
     $session = $app->session;
-    
+
     $simple = $app->simple;
     $categories = $simple->getCategories();
 
@@ -325,7 +378,7 @@ $app->post('/quiz/process/', $authenticate($app), function () use ($app) {
 $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
 
     $session = $app->session;
-    
+
     $simple = $app->simple;
     $categories = $simple->getCategories();
 
@@ -334,7 +387,7 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
         $app->render('quiz/error.php', array( 'categories' => $categories,'session' => $session));
         $app->stop();
     }
-    
+
     $quiz = $app->quiz;
 
     /**
@@ -344,16 +397,16 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
         $quiz->populateQuestions()->populateUsers();
 
         $timetaken = '';
-        
+
         $nonce = md5(uniqid());
         $session->set('nonce', $nonce);
 
         $num = $session->get('num') ? $session->get('num') : 1;
 
         if (isset($_SESSION['last']) && $_SESSION['last'] == true) {
-            
+
             $session->set('nonce', null);
-            
+
             //first two vars formatted for insertion into database as datetime fields
             $starttime = $session->get('starttime');
             $endtime = date('Y-m-d H:i:s');
@@ -392,10 +445,10 @@ $app->get('/quiz/:id/results/', function ($id) use ($app) {
     $quiz = $app->quiz;
 
     $session = $app->session;
-    
+
     $simple = $app->simple;
     $categories = $simple->getCategories();
-    
+
     if ($session->get('finished') != 'yes') {
         $app->redirect($app->request->getRootUri().'/');
     }

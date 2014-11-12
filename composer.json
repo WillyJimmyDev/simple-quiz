@@ -5,7 +5,8 @@
     "require": {
         "slim/slim": "2.*",
         "j4mie/idiorm": "dev-master",
-        "ircmaxell/password-compat": "dev-master"
+        "ircmaxell/password-compat": "dev-master",
+        "swiftmailer/swiftmailer": "~5.3@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "4.4.*@dev"
