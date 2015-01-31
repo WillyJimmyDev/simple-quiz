@@ -4,7 +4,7 @@
 
 Simple-Quiz is a simple framework for creating quizzes for the web, created and maintained by [Ben Hall](http://twitter.com/elanman).
 
-PHP version > 5.3.7 is required
+PHP version > 5.4 is required
 
 
 ## Quick start
