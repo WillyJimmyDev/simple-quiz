@@ -17,13 +17,12 @@ include 'quiz/header.php';
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
                 <div class="sidebar-nav">
                     <div class="list-group">
-                        <?php foreach ($quizzes as $quiz) :
-                            echo '<a href="'.$root . '/quiz/' . $quiz->id .'" class="list-group-item">';
-                            echo '<h4 class="list-group-item-heading">'. $quiz->name . '</h4>';
-                            echo '<p class="list-group-item-text">'. $quiz->description . '</p>';
-                            echo '</a>';
-                        endforeach;
-                        ?>
+                        <?php foreach ($quizzes as $quiz) : ?>
+                            <a href="<?php echo $root . '/quiz/' . $quiz->id; ?>" class="list-group-item">
+                            <h4 class="list-group-item-heading"><?php echo $quiz->name; ?></h4>
+                            <p class="list-group-item-text"><?php echo $quiz->description; ?></p>
+                            </a>
+                        <?php endforeach; ?>
                     </div>
                 </div><!--/.sidebar-nav -->
             </div><!--/span-->
