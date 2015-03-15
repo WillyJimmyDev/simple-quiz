@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Simple Quiz by ElanMan</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Simple Quiz</h1>
+          <h2>A simple quiz administration written in PHP with a MySQL backend. Uses Bootstrap 3 and Slim PHP micro framework</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/ElanMan/simple-quiz/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/ElanMan/simple-quiz/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/ElanMan/simple-quiz" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="simple-quiz" class="anchor" href="#simple-quiz" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="http://quiz.elanman.com">Simple-Quiz</a>
+</h1>
+
+<p><a href="LICENSE"><img src="http://img.shields.io/badge/license-apache2-brightgreen.svg" alt="Software License"></a>
+<a href="https://travis-ci.org/ElanMan/simple-quiz"><img src="https://travis-ci.org/ElanMan/simple-quiz.png?branch=master" alt="Build Status"></a></p>
+
+<p>Simple-Quiz is a simple framework for creating quizzes for the web, created and maintained by <a href="http://twitter.com/elanman">Ben Hall</a>.</p>
+
+<p>PHP version &gt; 5.4 is required</p>
+
+<h2>
+<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick start</h2>
+
+<p>Three quick start options are available:</p>
+
+<ul>
+<li>
+<a href="https://github.com/elanman/simple-quiz/releases/latest">Download the latest release (github)</a>.</li>
+<li>
+<a href="https://sourceforge.net/projects/simple-quiz/">Download the latest release (sourceforge)</a>.</li>
+<li>Clone the repo: <code>git clone https://github.com/elanman/simple-quiz.git</code>.</li>
+</ul>
+
+<h3>
+<a id="whats-included" class="anchor" href="#whats-included" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's included</h3>
+
+<p>Within the download you'll find the following directories and files:</p>
+
+<pre><code>/
+├── SimpleQuiz/
+│   ├── Utils/
+│   │   ├── Base/
+│   │   │   ├── Config.php
+│   │   │   ├── Installer.php
+│   │   │   ├── IQuestion.php    
+│   │   │   ├── IQuiz.php
+│   │   │   ├── ISession.php
+│   │   │   ├── ISimple.php
+│   │   │   ├── User.php
+│   │   │   └── setup.php
+│   │   ├── Exceptions/
+│   │   │   ├── LoginException.php        
+│   │   │   ├── RegisterException.php 
+│   │   ├── User/ 
+│   │   │   ├── AdminUser.php
+│   │   │   ├── EndUser.php
+│   │   │   ├── GuestUser.php                   
+│   │   ├── LeaderBoard.php
+│   │   ├── Quiz.php
+│   │   ├── QuestionStorage.php    
+│   │   ├── Session.php
+│   │   └── Simple.php
+│   │   └── RadioQuestion.php
+│   ├── Tests/
+│       ├── Base/      
+│       │   ├── InstallerTest.php
+│       └── QuizTest.php
+├── public/ (**this is your document root**)
+│   ├── images/
+│   │    ├── ajax-loader.gif
+│   │    ├── sq.png   
+│   ├── res/
+│   │    ├── bootstrap/
+│   │    │      ├── assets/ 
+│   │    │      ├── dist/  
+│   │    ├── css/
+│   │    │      ├── quiz.css  
+│   │    ├── js/
+│   │    │      ├── admin.js
+│   │    │      ├── form.js 
+│   │    │      ├── general.js 
+│   │    │      ├── login.js
+│   │    │      ├── start.js                  
+│   ├── .htaccess
+│   └── index.php
+├── routes/
+│   ├── admin.php
+│   ├── public.php        
+├── templates/
+│   ├── admin/
+│   │    ├── editanswers.php
+│   │    ├── footer.php
+│   │    ├── header.php
+│   │    ├── index.php
+│   │    ├── login.php    
+│   │    └── quiz.php     
+│   ├── quiz/
+│   │    ├── error.php    
+│   │    ├── footer.php  
+│   │    ├── header.php  
+│   │    ├── quiz.php  
+│   │    ├── results.php  
+│   │    ├── test.php                      
+│   ├── category.php 
+│   ├── index.php
+│   ├── login.php
+│   └── requirements.php                     
+└── vendor/
+</code></pre>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<ul>
+<li>Get The Code
+If you are downloading from SourceForge, you don't need to have composer installed to add the project dependencies as they are bundled with the project.
+If, however, you are cloning from GitHub, you must run composer install to get the latest changes as new dependencies are being added all the time and the vendor directory is no longer in version control.</li>
+<li>Unpack the zip archive.</li>
+<li>Place the contents of the /public directory inside your document root.</li>
+<li>All other directories should be placed outside of the document root and not accessible via a web browser (look at the above diagram to see the structure).</li>
+<li>The mod_rewrite module (if using apache server) will need to be enabled in your server configuration.</li>
+<li>Create a MySQL database called 'simple-quiz'</li>
+<li>Import simple-quiz.sql into MySQL using a tool like phpmyadmin.</li>
+<li>Change credentials in /SimpleQuiz/Utils/Base/Config.php.</li>
+<li>If users aren't required to login to take a quiz, change $requireauth to false in /SimpleQuiz/Utils/Base/Config.php.</li>
+<li>Default web admin user is <a href="mailto:example@gmail.com">example@gmail.com</a> with password of 123456</li>
+<li>Navigate to the web accessible folder in your browser.</li>
+</ul>
+
+<h2>
+<a id="twitter-stuff" class="anchor" href="#twitter-stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Twitter Stuff</h2>
+
+<ul>
+<li><a href="http://twitter.com/QuizSimple">http://twitter.com/QuizSimple</a></li>
+</ul>
+
+<h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<p><strong>Ben Hall</strong></p>
+
+<ul>
+<li><a href="http://twitter.com/elanman">http://twitter.com/elanman</a></li>
+<li><a href="http://github.com/elanman">http://github.com/elanman</a></li>
+</ul>
+
+<h2>
+<a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h2>
+
+<p>Copyright 2013 Ben Hall under <a href="LICENSE">the Apache 2.0 license</a>.</p>
+        </section>
+
+        <footer>
+          Simple Quiz is maintained by <a href="https://github.com/ElanMan">ElanMan</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-2845820-5");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
+  </body>
+</html>
