@@ -3,7 +3,7 @@
 $authenticate = function ($app, $admin = false) {
 
     return function () use ($app, $admin) {
-        //$errors = array();
+        $errors = array();
         if ($admin)
         {
             if (! $app->session->get('user') instanceof \SimpleQuiz\Utils\User\AdminUser)
@@ -24,6 +24,10 @@ $authenticate = function ($app, $admin = false) {
                 $app->flash('errors', $errors);
                 $app->redirect($app->request->getRootUri() . '/login/');
             }
+            /*
+             * @todo update session with dynamic user data from db
+             */
+            //if ( $app->session->get('user')-> )
         }
     };
 };

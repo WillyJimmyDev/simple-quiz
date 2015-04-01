@@ -126,4 +126,3 @@ Within the download you'll find the following directories and files:
 ## Copyright and license
 
 Copyright 2013 Ben Hall under [the Apache 2.0 license](LICENSE).
-
