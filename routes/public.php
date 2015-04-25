@@ -137,11 +137,12 @@ $app->post('/register/', function () use ($app) {
                 $user = $simple->registerUser($user);
 
                 $mailer = new \SimpleQuiz\Utils\Base\Mailer();
-                if ( $mailer->sendConfirmationEmail($user))
+                $mailer->sendConfirmationEmail($user);
+                /*if ( $mailer->sendConfirmationEmail($user))
                 {
                     $session->set('user', $user);
                     $session->regenerate();
-                }
+                }*/
             }
             catch (\Swift_TransportException $e)
             {
