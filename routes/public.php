@@ -120,7 +120,6 @@ $app->post('/register/', function () use ($app) {
     $password = trim($app->request()->post('regpassword'));
     $confpassword = trim($app->request()->post('regpasswordconf'));
 
-    //need to check for 'emptiness' of inputs and display message instead of querying db
     if ((! empty($email)) && (! empty($password) ) && ($password == $confpassword) )
     {
         if (! filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -138,11 +137,6 @@ $app->post('/register/', function () use ($app) {
 
                 $mailer = new \SimpleQuiz\Utils\Base\Mailer();
                 $mailer->sendConfirmationEmail($user);
-                /*if ( $mailer->sendConfirmationEmail($user))
-                {
-                    $session->set('user', $user);
-                    $session->regenerate();
-                }*/
             }
             catch (\Swift_TransportException $e)
             {
@@ -179,36 +173,29 @@ $app->get('/confirm-registration/:hash', function($hash) use ($app) {
     $categories = $simple->getCategories();
     $session = $app->session;
 
-    if ( strlen($hash) == 40 )
-    {
-        /**
-         * @todo lookup user with valid confirmhash field
-         * then check for valid expiry time for hashstamp
-         * if all valid, update fields and redirect to login screen
-         * else say there has been an error, please contact admin etc
-         */
-        $user = \ORM::for_table('users')->select_many('id', 'hashstamp')->where('confirmhash', $hash)->find_one();
-        if ($user)
-        {
-            // null timestamp and hash, set to confirmed status
-            $user->set('hashstamp');
-            $user->set('confirmhash');
-            $user->set('confirmed', 1);
-            $user->save();
+    /**
+     * @todo lookup user with valid confirmhash field
+     * then check for valid expiry time for hashstamp
+     * if all valid, update fields and redirect to login screen
+     * else say there has been an error, please contact admin etc
+     */
+    $user = \ORM::for_table('users')->select_many('id', 'hashstamp')->where('confirmhash', $hash)->find_one();
+    if ($user) {
+        // null timestamp and hash, set to confirmed status
+        $user->set('hashstamp');
+        $user->set('confirmhash');
+        $user->set('confirmed', 1);
+        $user->save();
 
-            $app->render('emailconfirmed.php', array('quizzes' => $quizzes, 'categories' => $categories,
-                                                      'session' => $session));
-        }
-        else
-        {
-            //no user with that hash
-        }
+        $app->render('emailconfirmed.php', array(
+            'quizzes'    => $quizzes,
+            'categories' => $categories,
+            'session'    => $session
+        ));
+    } else {
+        //no user with that hash, redirect to error page
     }
-    else
-    {
-        // not a correct hash
-    }
-});
+})->conditions(array("hash" => "[0-9a-f]{40}"));
 
 $app->get('/categories/', function () use ($app) {
     $simple = $app->simple;
