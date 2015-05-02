@@ -1,9 +1,3 @@
-<?php
-//echo '<pre>';
-//print_r($_SESSION);
-//echo '</pre>';
-//exit;
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,9 +28,6 @@
           <ul class="nav navbar-nav">
             <li><a href="<?php echo $root; ?>/">Quizzes</a></li>
           </ul>
-<!--          <ul class="nav navbar-nav navbar-right">-->
-<!--            <li><a href="--><?php //echo $root; ?><!--/admin/">Admin</a></li>-->
-<!--          </ul>-->
         </div><!--/.nav-collapse -->
       </div>
     </div>

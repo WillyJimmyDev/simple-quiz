@@ -161,7 +161,6 @@ $app->post('/register/', function () use ($app) {
         $app->redirect($app->request->getRootUri() . '/login/');
     }
 
-    //$simple::redirect($app, $session);
     $app->render('emailsent.php', array('quizzes' => $quizzes, 'categories' => $categories,
                                              'session' => $session));
 });
@@ -301,13 +300,6 @@ $app->post('/quiz/process/', $authenticate($app), function () use ($app) {
         /**
          * @todo check if serialised quiz exists in session before instantiating new
          */
-        //    if ($session->get('quiz'))
-        //    {
-        //        $quiz = unserialize($session->get('quiz'));
-        //    }
-        //    else{
-        //        $quiz = $app->quiz;
-        //    }
         $quiz = $app->quiz;
 
         $simple = $app->simple;

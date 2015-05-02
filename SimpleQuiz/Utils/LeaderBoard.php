@@ -2,7 +2,6 @@
 namespace SimpleQuiz\Utils;
 
 use SimpleQuiz\Utils\Base\User;
-use SimpleQuiz\Utils\Base\Utils;
 
 class LeaderBoard {
     
