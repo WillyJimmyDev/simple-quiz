@@ -24,10 +24,6 @@ $authenticate = function ($app, $admin = false) {
                 $app->flash('errors', $errors);
                 $app->redirect($app->request->getRootUri() . '/login/');
             }
-            /*
-             * @todo update session with dynamic user data from db
-             */
-            //if ( $app->session->get('user')-> )
         }
     };
 };
