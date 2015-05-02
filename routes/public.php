@@ -391,7 +391,7 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
 
         $num = $session->get('num') ? $session->get('num') : 1;
 
-        if (isset($_SESSION['last']) && $_SESSION['last'] == true) {
+        if (isset($_SESSION['last']) && $_SESSION['last'] === true) {
 
             $session->set('nonce', null);
 
@@ -406,7 +406,7 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
                 $start = strtotime($starttime);
                 $time = $end - $start;
 
-                $timetaken = calculateTimeTaken($time);
+                $timetaken = SimpleQuiz\Utils\Base\Utils::calculateTimeTaken($time);
 
                 $_SESSION['timetaken'] = $timetaken;
                 if (SimpleQuiz\Utils\Base\Config::$requireauth) {

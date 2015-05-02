@@ -2,6 +2,7 @@
 namespace SimpleQuiz\Utils;
 
 use SimpleQuiz\Utils\Base\User;
+use SimpleQuiz\Utils\Base\Utils;
 
 class LeaderBoard {
     
@@ -15,7 +16,7 @@ class LeaderBoard {
         
         if ($number)
         {
-            usort($members, 'memberSort');
+            usort($members, array('\SimpleQuiz\Utils\Base\Utils', 'memberSort') );
             return array_slice($members, 0, $number, true);
         }
         

@@ -114,7 +114,7 @@ class Session implements Base\ISession {
     public function clean($max)
     {
         $old = time() - $max;
-        $sql = \ORM::for_table('sessions')->where_lt('access', $old)->delete_many();
+        \ORM::for_table('sessions')->where_lt('access', $old)->delete_many();
         
         return true;
     }
