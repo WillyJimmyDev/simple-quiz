@@ -1,7 +1,4 @@
 <?php
-#comment out the ini_set lines in production
-ini_set('error-reporting', E_ALL);
-ini_set('display_errors', 1);
 require '../vendor/autoload.php';
 
 ORM::configure('mysql:host=' . \SimpleQuiz\Utils\Base\Config::$dbhost. ';dbname=' . \SimpleQuiz\Utils\Base\Config::$dbname);
