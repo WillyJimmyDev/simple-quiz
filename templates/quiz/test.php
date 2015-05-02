@@ -15,7 +15,7 @@
             <form id="questionBox" method="post" action="<?php echo $root; ?>/quiz/process">
                 <ul>
                 <?php 
-                $shuffledAnswers = SimpleQuiz\Utils\Base\Utils::shuffle_assoc($answers);
+                $shuffledAnswers = SimpleQuiz\Utils\Base\Utils::shuffleAssoc($answers);
 
                 $acount = 0;
                 foreach ($shuffledAnswers as $answer) 

@@ -8,6 +8,6 @@ use SimpleQuiz\Utils\Base\User;
 
 class GuestUser extends User{
 
-    private $name = 'Guest';
+   // private $name = 'Guest';
 
 }

@@ -3,7 +3,7 @@ namespace SimpleQuiz\Utils\Base;
 
 class Utils {
 
-    public static function shuffle_assoc($array)
+    public static function shuffleAssoc($array)
     {
         $keys = array_keys($array);
         shuffle($keys);
