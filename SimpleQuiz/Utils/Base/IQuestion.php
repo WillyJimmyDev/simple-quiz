@@ -21,4 +21,4 @@ interface IQuestion {
     public function updateAnswers(Array $answers);
 
     public function deleteAnswers();
-} 
+}

@@ -11,4 +11,4 @@
             </div>
         </div>
     </div><!--container-->
-<?php include 'footer.php'; ?>
+<?php include 'footer.php';

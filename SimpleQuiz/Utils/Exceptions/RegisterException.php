@@ -10,4 +10,4 @@ class RegisterException extends \Exception {
     {
         parent::__construct("A user already exists with those credentials. Please try again.");
     }
-} 
+}

@@ -11,4 +11,4 @@ class LoginException extends \Exception {
             parent::__construct("There was an error trying to log you in to the application. If the proble persists,
             please contact the site administrator.");
         }
-} 
+}

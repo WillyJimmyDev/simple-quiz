@@ -12,4 +12,4 @@ class AdminUser extends User{
     {
         parent::__construct($email, $name);
     }
-} 
+}
