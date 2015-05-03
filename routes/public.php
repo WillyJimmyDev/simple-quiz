@@ -172,17 +172,11 @@ $app->get('/confirm-registration/:hash', function($hash) use ($app) {
     $categories = $simple->getCategories();
     $session = $app->session;
 
-    /**
-     * @todo lookup user with valid confirmhash field
-     * then check for valid expiry time for hashstamp
-     * if all valid, update fields and redirect to login screen
-     * else say there has been an error, please contact admin etc
-     */
-    $user = \ORM::for_table('users')->select_many('id', 'hashstamp')->where('confirmhash', $hash)->find_one();
+    $user = \ORM::for_table('users')->select_many('id', 'hashstamp')->where('confirmhash', $hash)->where_raw('TIMESTAMPDIFF(HOUR, hashstamp, NOW()) < 24')->find_one();
     if ($user) {
-        // null timestamp and hash, set to confirmed status
-        $user->set('hashstamp');
-        $user->set('confirmhash');
+
+        $user->set('hashstamp'); //null
+        $user->set('confirmhash'); //null
         $user->set('confirmed', 1);
         $user->save();
 
@@ -192,7 +186,8 @@ $app->get('/confirm-registration/:hash', function($hash) use ($app) {
             'session'    => $session
         ));
     } else {
-        //no user with that hash, redirect to error page
+        //no user with that hash or timestamp expired. Redirect to home page
+        $app->redirect($app->request->getRootUri().'/');
     }
 })->conditions(array("hash" => "[0-9a-f]{40}"));
 

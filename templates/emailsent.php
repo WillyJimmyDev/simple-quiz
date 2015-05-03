@@ -8,7 +8,7 @@ include 'quiz/header.php';
                     <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
                 </p>
                 <div class="jumbotron">
-                    <p>Thank you for registering. Please check your inbox. An email has been sent to your registered email
+                    <p>Thank you for registering. Please check your inbox. An email has been sent to your email
                         address. You will need to confirm your email before you can take a quiz.</p>
                 </div>
             </div><!--/span-->
