@@ -16,9 +16,6 @@ class Config
     static $dbname = 'simple-quiz';
     static $dbuser = '';
     static $dbpassword = '';
-    static $requireauth = true;//change to false if no auth required for quizzes
-    //only used if requireauth == false
-    static $defaultUser = 'default';
 
     //mailer config. Change as required.
     /*

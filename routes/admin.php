@@ -14,9 +14,9 @@ $authenticate = function ($app, $admin = false) {
                 $app->redirect($app->request->getRootUri() . '/login/');
             }
         }
-        else if (\SimpleQuiz\Utils\Base\Config::$requireauth)
+        else
         {
-            //stops admin user from taking quizzes too
+            //stops non-registered users and admin user from taking quizzes too
             if (! $app->session->get('user') instanceof \SimpleQuiz\Utils\User\EndUser)
             {
                 $errors['loginerror'] = 'You need to login to take a quiz';

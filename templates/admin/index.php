@@ -26,10 +26,11 @@ include'header.php';
             </table>
           <?php else: ?>
           <p>There aren't any quizzes at the moment. Why not create one now?</p>
-          <p>Just click the 'Add' button below...</p>
+          <p>Just click the 'Create New Quiz' button below...</p>
           <?php endif; ?>
             <p>
-                <button id="addquiz" title="Add New Quiz" type="button" class="btn btn-primary pull-right">Add <span class="glyphicon glyphicon-plus-sign"></span></button>
+                <button id="addquiz" title="Add New Quiz" type="button" class="btn btn-primary pull-right">Create New
+                    Quiz <span class="glyphicon glyphicon-plus-sign"></span></button>
             </p>
         </div>
       </div><!-- /.row -->
@@ -62,9 +63,9 @@ include'header.php';
                 </p>
                 <h4>Active?</h4>
                 <p><label for="quizactiveyes"> Yes: </label>
-                   <input name="active" id="quizactiveyes" value="1" type="radio" class="form-control radio-inline" />
+                   <input name="active" id="quizactiveyes" value="1" type="radio" class="radio-inline" />
                    <label for="quizactiveno"> No: </label>
-                   <input name="active" id="quizactiveno" value="0" type="radio" class="form-control radio-inline" />
+                   <input name="active" id="quizactiveno" value="0" type="radio" class="radio-inline" />
                 </p>
             </div>
             <div class="modal-footer">

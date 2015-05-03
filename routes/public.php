@@ -396,10 +396,8 @@ $app->get('/quiz/:id/test/', $authenticate($app), function ($id) use ($app) {
                 $timetaken = SimpleQuiz\Utils\Base\Utils::calculateTimeTaken($time);
 
                 $_SESSION['timetaken'] = $timetaken;
-                if (SimpleQuiz\Utils\Base\Config::$requireauth) {
-                    $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime,
-                        $time);
-                }
+                $quiz->addQuizTaker($session->get('user'), $session->get('score'), $starttime, $endtime, $time);
+
             } else {
                 $timetaken = $_SESSION['timetaken'];
             }

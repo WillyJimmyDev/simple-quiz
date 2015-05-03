@@ -7,9 +7,7 @@
                 $question = $quiz->getQuestion($num);
                 $answers = $quiz->getAnswers($num);
             ?>
-            <?php if ($requireauth) : ?>
-                <h4>Current tester: <strong><?php echo $user->getName(); ?></strong></h4>
-            <?php endif; ?>
+            <h4>Current tester: <strong><?php echo $user->getName(); ?></strong></h4>
             <h2>Question <?php echo $num; ?>:</h2>
             <p><?php echo $question->getText(); ?></p>
             <form id="questionBox" method="post" action="<?php echo $root; ?>/quiz/process">

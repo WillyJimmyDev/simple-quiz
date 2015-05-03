@@ -183,10 +183,10 @@ include'header.php';
                    </select>
                 </p>
                 <h4>Active?</h4>
-                <p><label for="quizactiveyes"> Yes: </label>
-                   <input name="active" id="quizactiveyes" value="1" <?php if ($quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control radio-inline" />
+                <p><label for="quizactiveyes" class="inline"> Yes: </label>
+                   <input name="active" id="quizactiveyes" value="1" <?php if ($quiz->isActive()) { echo 'checked';} ?> type="radio" class="" /><br />
                    <label for="quizactiveno"> No: </label>
-                   <input name="active" id="quizactiveno" value="0" <?php if (! $quiz->isActive()) { echo 'checked';} ?> type="radio" class="form-control radio-inline" />
+                   <input name="active" id="quizactiveno" value="0" <?php if (! $quiz->isActive()) { echo 'checked';} ?> type="radio" class="radio-inline" />
                    <input type="hidden" name="_METHOD" value="PUT" />
                    <input type="hidden" name="quizid" value="<?php echo $quiz->getId(); ?>" />
                 </p>
