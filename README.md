@@ -110,15 +110,18 @@ Within the download you'll find the following directories and files:
 
 ## Installation
 
-* Get The Code
- If you are downloading from SourceForge, you don't need to have composer installed to add the project dependencies as they are bundled with the project.
- If, however, you are cloning from GitHub, you must run composer install to get the latest changes as new dependencies are being added all the time and the vendor directory is no longer in version control.
-* Unpack the zip archive.
+### Get The Code.
+* If you are downloading from SourceForge, all project dependencies are bundled with the project.
+If, however, you are cloning from GitHub or downloading the release zip file, you must run 'composer install' to 
+ download all of the dependencies.
+* If you don't know what composer is, take a look here: [Composer](https://getcomposer.org/)
+* Unpack the downloaded code zip archive.
 * Place the contents of the /public directory inside your document root.
 * All other directories should be placed outside of the document root and not accessible via a web browser (look at the above diagram to see the structure).
-* The mod_rewrite module (if using apache server) will need to be enabled in your server configuration.
+* The mod_rewrite module (if using apache server) or ISAPI_Rewrite module (if using IIS) will need to be enabled in 
+your server configuration.
 * Create a MySQL database called 'simple-quiz'
-* Import simple-quiz.sql into MySQL using a tool like phpmyadmin.
+* Import simple-quiz.sql into MySQL using a tool like phpmyadmin or using the MySQL 'source' command.
 * Change credentials in /SimpleQuiz/Utils/Base/SampleConfig.php.
 * Rename SampleConfig.php to Config.php
 * Default web admin user is example@gmail.com with password of 123456
