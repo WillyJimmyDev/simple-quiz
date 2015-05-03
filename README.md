@@ -1,6 +1,7 @@
-# [Simple-Quiz](http://quiz.elanman.com)
+# [Simple-Quiz](https://simplequiz.co.uk)
 [![Software License](http://img.shields.io/badge/license-apache2-brightgreen.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/ElanMan/simple-quiz.png?branch=master)](https://travis-ci.org/ElanMan/simple-quiz)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/77dcca19-1dd0-4a47-86b7-1ac6142e1bbd/mini.png)](https://insight.sensiolabs.com/projects/77dcca19-1dd0-4a47-86b7-1ac6142e1bbd)
 
 Simple-Quiz is a simple framework for creating quizzes for the web, created and maintained by [Ben Hall](http://twitter.com/elanman).
 
@@ -126,4 +127,3 @@ Within the download you'll find the following directories and files:
 ## Copyright and license
 
 Copyright 2013 Ben Hall under [the Apache 2.0 license](LICENSE).
-

@@ -81,12 +81,14 @@ class Simple implements Base\ISimple {
     
     public function getUsers($quizid = true)
     {
-//        if($quizid)
-//        {
-//            $users = \ORM::for_table('quiz_users')->join('quizzes', array('quiz_users.quiz_id', '=',
-//                'quizzes.id'))->join('users', array('quiz_users.user_id', '=', 'users.id'))->select_many('users.name')
-//            ;
-//        }
+        if($quizid)
+        {
+            $users = \ORM::for_table('quiz_users')->join('quizzes', array('quiz_users.quiz_id', '=',
+                'quizzes.id'))->join('users', array('quiz_users.user_id', '=', 'users.id'))->select_many('users.name')
+            ;
+
+            return $users;
+        }
     }
 
     public function quizUserExists($quizid, $userid){

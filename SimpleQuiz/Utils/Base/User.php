@@ -73,4 +73,8 @@ class User {
         $this->password = $password;
     }
 
+    public function getHash()
+    {
+        return $this->hash;
+    }
 }

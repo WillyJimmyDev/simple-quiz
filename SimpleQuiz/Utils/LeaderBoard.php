@@ -15,7 +15,7 @@ class LeaderBoard {
         
         if ($number)
         {
-            usort($members, 'memberSort');
+            usort($members, array('\SimpleQuiz\Utils\Base\Utils', 'memberSort') );
             return array_slice($members, 0, $number, true);
         }
         

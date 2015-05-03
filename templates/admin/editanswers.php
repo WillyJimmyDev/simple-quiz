@@ -12,8 +12,6 @@ include'header.php';
                 <div class="row">
                     <div class="col-md-7">
                         <h4><?php echo $question->getText(); ?></h4>
-                        <!--<h4><span id="questiontext"><?php //echo $question; ?></span> <a id="editor" class="edit"><span class="glyphicon glyphicon-pencil"></span></a></h4>-->
-
                             <form id="answeredit" action="" method="post">
                             <table id="answers" class="table table-responsive table-hover table-bordered">
                                 <thead>

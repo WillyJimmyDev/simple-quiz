@@ -5,16 +5,16 @@
     "require": {
         "slim/slim": "2.*",
         "j4mie/idiorm": "dev-master",
-        "ircmaxell/password-compat": "dev-master"
+        "ircmaxell/password-compat": "dev-master",
+        "swiftmailer/swiftmailer": "~5.3@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "4.4.*@dev"
     },
     "minimum-stability": "dev",
     "autoload": {
-        "files" : ["SimpleQuiz/Utils/Base/setup.php"],
-        "psr-0": {
-            "SimpleQuiz": ""
+        "psr-4": {
+            "SimpleQuiz\\": "SimpleQuiz"
         }
     }
 }

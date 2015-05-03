@@ -1,0 +1,7 @@
+Hey {username}, welcome to Simple Quiz.
+
+To complete your registration, please confirm your email address by going to the following URL:
+
+{sitename}confirm-registration/{hash}
+
+This link will expire after 24 hours.

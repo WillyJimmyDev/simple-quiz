@@ -1,7 +1,4 @@
 <?php
-//echo '<pre>';
-//print_r($_SESSION);
-//echo '</pre>';
 $title = isset($quiz) ? 'Simple Quiz :: ' . $quiz->getName() : 'Simple Quiz';
 ?>
 <!DOCTYPE html>
