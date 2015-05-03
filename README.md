@@ -26,7 +26,7 @@ Within the download you'll find the following directories and files:
     ├── SimpleQuiz/
     │   ├── Utils/
     │   │   ├── Base/
-    │   │   │   ├── Config.php
+    │   │   │   ├── SampleConfig.php
     │   │   │   ├── Installer.php
     │   │   │   ├── IQuestion.php    
     │   │   │   ├── IQuiz.php
@@ -79,7 +79,10 @@ Within the download you'll find the following directories and files:
     │   │    ├── header.php
     │   │    ├── index.php
     │   │    ├── login.php    
-    │   │    └── quiz.php     
+    │   │    └── quiz.php
+    │   ├── email/
+    │   │    ├── registerconfirm.html
+    │   │    └── registerconfirm.txt     
     │   ├── quiz/
     │   │    ├── error.php    
     │   │    ├── footer.php  
@@ -88,11 +91,21 @@ Within the download you'll find the following directories and files:
     │   │    ├── results.php  
     │   │    ├── test.php                      
     │   ├── category.php 
+    │   ├── emailconfirmed.php
+    │   ├── emailsent.php    
     │   ├── index.php
     │   ├── login.php
     │   └── requirements.php                     
-    └── vendor/
-
+    ├── vendor/
+    ├── .gitignore  
+    ├── .travis.yml
+    ├── composer.json
+    ├── composer.lock
+    ├── LICENSE
+    ├── phpunit.xml
+    ├── .gitignore
+    ├── README.md
+    └── simple-quiz.sql
 
 
 ## Installation
@@ -106,8 +119,10 @@ Within the download you'll find the following directories and files:
 * The mod_rewrite module (if using apache server) will need to be enabled in your server configuration.
 * Create a MySQL database called 'simple-quiz'
 * Import simple-quiz.sql into MySQL using a tool like phpmyadmin.
-* Change credentials in /SimpleQuiz/Utils/Base/Config.php.
-* If users aren't required to login to take a quiz, change $requireauth to false in /SimpleQuiz/Utils/Base/Config.php.
+* Change credentials in /SimpleQuiz/Utils/Base/SampleConfig.php.
+* If users aren't required to login to take a quiz, change $requireauth to false in /SimpleQuiz/Utils/Base/SampleConfig
+.php.
+* Rename SampleConfig.php to Config.php
 * Default web admin user is example@gmail.com with password of 123456
 * Navigate to the web accessible folder in your browser.
 
