@@ -74,6 +74,7 @@ class Session implements Base\ISession {
         if ($sql) {
             return $sql->data;
         }
+        return '';
     }
 
     public function write($id,$data)
